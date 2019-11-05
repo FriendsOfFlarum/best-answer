@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Flarum\Group\Group;
 use Flarum\Group\Permission;
 use Illuminate\Database\Schema\Builder;
 
+$permissionKey = 'discussion.selectBestAnswerOwnDiscussion';
+
 return [
-    'up' => function (Builder $schema) {
+    'up' => function (Builder $schema) use ($permissionKey) {
         /**
          * @var \Flarum\Settings\SettingsRepositoryInterface
          */
@@ -26,13 +29,26 @@ return [
             }
         }
 
-        Permission::query()
-            ->where('permission', 'discussion.selectBestAnswer')
-            ->update([
-                'permission' => 'discussion.selectBestAnswerOwnDiscussion',
-            ]);
+        $db = $schema->getConnection();
+        $permission = $db->table('group_permission')
+            ->where('permission', 'discussion.selectBestAnswer');
+
+        if (!Permission::query()->where('permission', $permissionKey)->exists()) {
+            if ($permission->exists()) {
+                $permission->update([
+                    'permission' => $permissionKey,
+                ]);
+            } else {
+                $db->table('group_permission')->insert([
+                    'group_id' => Group::MEMBER_ID,
+                    'permission' => $permissionKey
+                ]);
+            }
+        }
     },
-    'down' => function (Builder $schema) {
-        //
+    'down' => function (Builder $schema) use ($permissionKey) {
+        $db = $schema->getConnection();
+
+        $db->table('group_permission')->where('permission', $permissionKey)->delete();
     },
 ];
