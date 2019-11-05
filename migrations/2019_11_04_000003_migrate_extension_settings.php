@@ -40,8 +40,8 @@ return [
                 ]);
             } else {
                 $db->table('group_permission')->insert([
-                    'group_id' => Group::MEMBER_ID,
-                    'permission' => $permissionKey
+                    'group_id'   => Group::MEMBER_ID,
+                    'permission' => $permissionKey,
                 ]);
             }
         }
