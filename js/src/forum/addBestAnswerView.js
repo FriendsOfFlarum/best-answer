@@ -1,7 +1,6 @@
 import { extend } from 'flarum/extend';
 import CommentPost from 'flarum/components/CommentPost';
 import PostComponent from 'flarum/components/Post';
-import icon from 'flarum/helpers/icon';
 import PostMeta from 'flarum/components/PostMeta';
 import username from 'flarum/helpers/username';
 import userOnline from 'flarum/helpers/userOnline';
@@ -45,11 +44,15 @@ export default () => {
                         <ul>
                             <li className="item-user">
                                 <div className="PostUser">
-                                    {userOnline(user)}
+                                    {user && userOnline(user)}
                                     <h3>
-                                        <a href={app.route.user(user)} config={m.route}>
-                                            {username(user)}
-                                        </a>
+                                        {user ? (
+                                            <a href={app.route.user(user)} config={m.route}>
+                                                {username(user)}
+                                            </a>
+                                        ) : (
+                                            username(user)
+                                        )}
                                     </h3>
                                 </div>
                             </li>
