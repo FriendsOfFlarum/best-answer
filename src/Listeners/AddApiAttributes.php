@@ -1,10 +1,16 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) 2019 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace FoF\BestAnswer\Listeners;
 
-
-use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Event\WillGetData;
@@ -12,7 +18,6 @@ use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Event\GetApiRelationship;
 use Flarum\Event\GetModelRelationship;

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) 2019 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Console;
 
 use Carbon\Carbon;
@@ -46,11 +55,12 @@ class NotifyCommand extends Command
         $time = Carbon::today()->addDay(-$days);
 
         if ($days <= 0) {
-            $this->info("Reminders are disabled");
+            $this->info('Reminders are disabled');
+
             return;
         }
 
-        $this->info("Looking at discussions before " . $time->toDateString());
+        $this->info('Looking at discussions before '.$time->toDateString());
 
         $query = Discussion::query()
             ->whereNull('best_answer_post_id')
@@ -61,17 +71,18 @@ class NotifyCommand extends Command
         $count = $query->count();
 
         if ($count == 0) {
-            $this->info("Nothing to do");
+            $this->info('Nothing to do');
+
             return;
         }
 
         $errors = [];
 
         $query->chunk(20, function ($discussions) use (&$errors) {
-            /**
+            /*
              * @var $discussions Discussion[]
              */
-            $this->output->write("<info>Sending " . sizeof($discussions) . " notifications </info>");
+            $this->output->write('<info>Sending '.count($discussions).' notifications </info>');
 
             foreach ($discussions as $d) {
                 try {
@@ -80,29 +91,29 @@ class NotifyCommand extends Command
                         [$d->user]
                     );
 
-                    $this->output->write("<info>#</info>");
+                    $this->output->write('<info>#</info>');
 
                     $d->best_answer_notified = true;
                     $d->save();
                 } catch (Throwable $e) {
-                    $this->output->write("<error>#</error>");
+                    $this->output->write('<error>#</error>');
                     $errors[] = $e;
                 }
             }
 
-            $this->line("");
+            $this->line('');
         });
 
-        if (sizeof($errors) > 0) {
+        if (count($errors) > 0) {
             $this->line("\n");
-            $this->alert("Failed to send " . sizeof($errors) . " notifications");
-            $this->warn("");
+            $this->alert('Failed to send '.count($errors).' notifications');
+            $this->warn('');
 
             foreach ($errors as $i => $e) {
                 $n = $i + 1;
 
                 $this->output->writeln("<warning>$n >>>>>></warning> <error>$e</error>");
-                $this->line("");
+                $this->line('');
             }
         }
     }

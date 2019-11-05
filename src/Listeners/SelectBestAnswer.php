@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) 2019 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Listeners;
 
 use Flarum\Discussion\Event\Saving;
@@ -26,7 +35,9 @@ class SelectBestAnswer
 
     public function handle(Saving $event)
     {
-        if (!Arr::has($event->data, $this->key)) return;
+        if (!Arr::has($event->data, $this->key)) {
+            return;
+        }
 
         $discussion = $event->discussion;
         $id = (int) Arr::get($event->data, $this->key);
@@ -38,7 +49,7 @@ class SelectBestAnswer
         $post = $event->discussion->posts()->find($id);
 
         if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post)) {
-            throw new PermissionDeniedException;
+            throw new PermissionDeniedException();
         }
 
         if ($id > 0) {
@@ -46,7 +57,7 @@ class SelectBestAnswer
             $discussion->best_answer_user_id = $event->actor->id;
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-        } else if ($id == 0) {
+        } elseif ($id == 0) {
             $discussion->best_answer_post_id = null;
             $discussion->best_answer_user_id = null;
         }

@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) 2019 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Notification;
 
-use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Discussion\Discussion;
+use Flarum\Notification\Blueprint\BlueprintInterface;
 
 class SelectBestAnswerBlueprint implements BlueprintInterface
 {
