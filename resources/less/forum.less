@@ -30,9 +30,21 @@
   }
 }
 
+.CommentPost {
+  .Post-body {
+    clear: both;
+  }
+
+  .Post-header > ul {
+    position: relative;
+  }
+}
+
 .Post--BestAnswer {
   background: @best-answer-badge-color;
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
   border: 0 none !important;
   border-radius: 5px;
   padding: 2px 5px;
@@ -49,5 +61,13 @@
     margin-left: 7.5px;
     text-align: right;
     font-size: .9em;
+  }
+}
+
+@media only screen and (max-device-width: 480px) {
+  .Post--BestAnswer {
+    .BestAnswer--User {
+      display: block;
+    }
   }
 }
