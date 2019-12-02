@@ -1,9 +1,11 @@
 import { extend } from 'flarum/extend';
 import PermissionGrid from 'flarum/components/PermissionGrid';
+import { settings } from '@fof-components';
 
-import SettingsModal from '@fof/components/admin/settings/SettingsModal';
-import BooleanItem from '@fof/components/admin/settings/items/BooleanItem';
-import IntegerItem from '@fof/components/admin/settings/items/NumberItem';
+const {
+    SettingsModal,
+    items: { BooleanItem, NumberItem },
+} = settings;
 
 app.initializers.add('fof/best-answer', () => {
     app.extensionSettings['fof-best-answer'] = () =>
@@ -15,9 +17,9 @@ app.initializers.add('fof/best-answer', () => {
                     <BooleanItem key="fof-best-answer.allow_select_own_post">
                         {app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post')}
                     </BooleanItem>,
-                    <IntegerItem key="fof-best-answer.select_best_answer_reminder_days" min="0" placeholder="0">
+                    <NumberItem key="fof-best-answer.select_best_answer_reminder_days" min="0" placeholder="0">
                         {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
-                    </IntegerItem>,
+                    </NumberItem>,
                 ],
             })
         );

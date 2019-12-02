@@ -18,12 +18,14 @@ use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
+use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
 use FoF\Console\Extend\ScheduleCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Events\Dispatcher;
 
 return [
+    new AddFofComponents(),
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less'),
