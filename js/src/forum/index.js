@@ -13,6 +13,7 @@ app.initializers.add('fof/best-answer', () => {
     Discussion.prototype.startUserId = Model.attribute('startUserId', Number);
     Discussion.prototype.firstPostId = Model.attribute('firstPostId', Number);
     Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
+    Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt');
 
     app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
 

@@ -1,5 +1,6 @@
 import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
+import humanTime from 'flarum/helpers/humanTime';
 
 export default class SelectBestAnswerItem extends Component {
     view() {
@@ -22,10 +23,18 @@ export default class SelectBestAnswerItem extends Component {
                 <span className="BestAnswer--User">
                     {app.translator.trans('fof-best-answer.forum.best_answer_label', {
                         user: discussion.bestAnswerUser(),
+                        time_set: this.getSetTime(discussion),
                         a: <a onclick={() => m.route(app.route.user(discussion.bestAnswerUser()))} />,
                     })}
                 </span>
             </div>
         );
+    }
+
+    getSetTime(discussion) {
+        if (discussion.bestAnswerSetAt() === null) {
+            return;
+        }
+        return humanTime(discussion.bestAnswerSetAt());
     }
 }
