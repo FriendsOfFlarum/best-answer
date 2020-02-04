@@ -11,6 +11,7 @@
 
 namespace FoF\BestAnswer\Listeners;
 
+use Carbon\Carbon;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
@@ -55,11 +56,13 @@ class SelectBestAnswer
         if ($id > 0) {
             $discussion->best_answer_post_id = $id;
             $discussion->best_answer_user_id = $event->actor->id;
+            $discussion->best_answer_set_at = Carbon::now();
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
         } elseif ($id == 0) {
             $discussion->best_answer_post_id = null;
             $discussion->best_answer_user_id = null;
+            $discussion->best_answer_set_at = null;
         }
 
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));

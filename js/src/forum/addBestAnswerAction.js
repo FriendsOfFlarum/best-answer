@@ -21,11 +21,13 @@ export default () => {
                 icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
                 onclick: () => {
                     isBestAnswer = !isBestAnswer;
+                    let bestAnswerSetAt = Date.now();
 
                     discussion
                         .save({
                             bestAnswerPostId: isBestAnswer ? post.id() : 0,
                             bestAnswerUserId: app.session.user.id(),
+                            bestAnswerSetAt: bestAnswerSetAt,
                             relationships: isBestAnswer
                                 ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
                                 : delete discussion.data.relationships.bestAnswerPost,
@@ -33,6 +35,7 @@ export default () => {
                         .then(() => {
                             if (app.current instanceof DiscussionPage) {
                                 app.current.stream.update();
+                                discussion.pushAttributes({ bestAnswerSetAt });
                             }
 
                             m.redraw();

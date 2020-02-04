@@ -12,7 +12,7 @@ fof-best-answer:
     this_best_answer: Select Best Answer
     remove_best_answer: Unselect Best Answer
     best_answer_button: Best Answer
-    best_answer_label: set by <a>{username}</a>
+    best_answer_label: set by <a>{username}</a> {time_set}
 
     notification:
       content: Please select a Best Answer if your question has been answered

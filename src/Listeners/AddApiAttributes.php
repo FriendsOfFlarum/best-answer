@@ -74,6 +74,9 @@ class AddApiAttributes
             $event->attributes['hasBestAnswer'] = $event->model->bestAnswerPost()->exists();
             $event->attributes['startUserId'] = $event->model->user_id;
             $event->attributes['firstPostId'] = $event->model->first_post_id;
+            if ($event->model->best_answer_set_at) {
+                $event->attributes['bestAnswerSetAt'] = $event->model->best_answer_set_at;
+            }
         }
 
         if ($event->isSerializer(ForumSerializer::class)) {
