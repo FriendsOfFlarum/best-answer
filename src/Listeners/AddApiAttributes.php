@@ -11,6 +11,8 @@
 
 namespace FoF\BestAnswer\Listeners;
 
+use Carbon\Carbon;
+use DateTime;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Event\WillGetData;
@@ -75,7 +77,7 @@ class AddApiAttributes
             $event->attributes['startUserId'] = $event->model->user_id;
             $event->attributes['firstPostId'] = $event->model->first_post_id;
             if ($event->model->best_answer_set_at) {
-                $event->attributes['bestAnswerSetAt'] = $event->model->best_answer_set_at;
+                $event->attributes['bestAnswerSetAt'] = Carbon::createFromTimeString($event->model->best_answer_set_at)->format(DateTime::RFC3339);
             }
         }
 
@@ -88,6 +90,8 @@ class AddApiAttributes
     {
         if ($event->isController(ShowDiscussionController::class)) {
             $event->addInclude('bestAnswerPost');
+            $event->addInclude('bestAnswerPost.discussion');
+            $event->addInclude('bestAnswerPost.user');
             $event->addInclude('bestAnswerUser');
         }
     }
