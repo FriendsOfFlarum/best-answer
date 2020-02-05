@@ -14,17 +14,31 @@ namespace FoF\BestAnswer\Notification;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
+use Flarum\User\User;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
+class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterface
 {
+    /**
+     * @var Discussion
+     */
     public $discussion;
+
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
-    public function __construct(Discussion $discussion, TranslatorInterface $translator)
+    /**
+     * @var User
+     */
+    public $actor;
+
+    public function __construct(Discussion $discussion, User $actor, TranslatorInterface $translator)
     {
         $this->discussion = $discussion;
         $this->translator = $translator;
+        $this->actor = $actor;
     }
 
     /**
@@ -32,7 +46,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      */
     public function getFromUser()
     {
-        return $this->discussion->user;
+        return $this->actor;
     }
 
     /**
@@ -57,7 +71,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      */
     public static function getType()
     {
-        return 'selectBestAnswer';
+        return 'awardedBestAnswer';
     }
 
     /**
@@ -77,17 +91,18 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      */
     public function getEmailView()
     {
-        return ['text' => 'fof-best-answer::emails.selectBestAnswer'];
+        return ['text' => 'fof-best-answer::emails.awardedBestAnswer'];
     }
 
     /**
-     * Get the subject line for a notification email.
+     * Get the subject line for the notification email.
      *
      * @return string
      */
     public function getEmailSubject()
     {
-        return $this->trans->trans('fof-best-answer.forum.notification.select-email-title', [
+        return $this->translator->trans('fof-best-answer.forum.notification.awarded-email', [
+            'user'  => $this->actor->username,
             'title' => $this->discussion->title,
         ]);
     }

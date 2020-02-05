@@ -17,11 +17,13 @@ use Flarum\Discussion\Event\Saving;
 use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use FoF\BestAnswer\Console\NotifyCommand;
+use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
 use FoF\Console\Extend\ScheduleCommand;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
 
 return [
@@ -42,7 +44,7 @@ return [
             ->appendOutputTo(storage_path('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
     }),
 
-    new Extend\Compat(function (Dispatcher $events) {
+    new Extend\Compat(function (Dispatcher $events, Factory $views) {
         $events->listen(Configuring::class, function (Configuring $event) {
             if ($event->app->bound(Schedule::class)) {
                 $event->addCommand(NotifyCommand::class);
@@ -50,10 +52,13 @@ return [
         });
 
         $events->listen(ConfigureNotificationTypes::class, function (ConfigureNotificationTypes $event) {
-            $event->add(SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert']);
+            $event->add(SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email']);
+            $event->add(AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert']);
         });
 
         $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
+
+        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
     }),
 ];
