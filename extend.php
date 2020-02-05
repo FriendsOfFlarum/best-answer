@@ -16,7 +16,6 @@ use Flarum\Console\Event\Configuring;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
-use Flarum\Foundation\Application;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
@@ -24,6 +23,7 @@ use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
 use FoF\Console\Extend\ScheduleCommand;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
 
 return [
@@ -44,7 +44,7 @@ return [
             ->appendOutputTo(storage_path('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
     }),
 
-    new Extend\Compat(function (Application $app, Dispatcher $events) {
+    new Extend\Compat(function (Dispatcher $events, Factory $views) {
         $events->listen(Configuring::class, function (Configuring $event) {
             if ($event->app->bound(Schedule::class)) {
                 $event->addCommand(NotifyCommand::class);
@@ -59,6 +59,6 @@ return [
         $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
 
-        $app->register(Provider\ViewProvider::class);
+        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
     }),
 ];

@@ -89,8 +89,6 @@ class SelectBestAnswer
 
     public function getUserFromPost(int $post_id): User
     {
-        $p = Post::where('id', $post_id)->first();
-
-        return User::where('id', $p->user_id)->first();
+        return Post::find($post_id)->user;
     }
 }

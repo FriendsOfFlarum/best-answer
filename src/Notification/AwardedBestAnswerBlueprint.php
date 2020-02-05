@@ -28,7 +28,6 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
      * @var TranslatorInterface
      */
     protected $translator;
-    protected $sender;
 
     /**
      * @var User
