@@ -86,7 +86,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
     }
 
     /**
-     * Get the name of the view to construct a notification email with
+     * Get the name of the view to construct a notification email with.
      * 
      * @return string
      */
@@ -96,14 +96,14 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
     }
 
     /**
-     * Get the subject line for the notification email
+     * Get the subject line for the notification email.
      * 
      * @return string
      */
     public function getEmailSubject()
     {
         return $this->translator->trans('fof-best-answer.forum.notification.awarded-email', [
-            'user' => $this->actor->username,
+            'user'  => $this->actor->username,
             'title' => $this->discussion->title,
         ]);
     }
