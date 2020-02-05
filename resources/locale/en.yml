@@ -16,3 +16,8 @@ fof-best-answer:
 
     notification:
       content: Please select a Best Answer if your question has been answered
+      awarded: Your post was set as the best answer by {username}
+      awarded-email: Your post was set as the best answer by user
+      select-email-title: Did you manage to sort your problem?
+      preferences:
+        awarded-best-answer: When someone sets my post as a best answer
