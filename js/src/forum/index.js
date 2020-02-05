@@ -25,11 +25,11 @@ app.initializers.add('fof/best-answer', () => {
     addBestAnswerAction();
     addBestAnswerView();
 
-    extend(NotificationGrid.prototype, 'notificationTypes', function (items) {
+    extend(NotificationGrid.prototype, 'notificationTypes', function(items) {
         items.add('awardedBestAnswer', {
             name: 'awardedBestAnswer',
             icon: 'fas fa-check',
-            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded-best-answer')
+            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded-best-answer'),
         });
-    })
+    });
 });
