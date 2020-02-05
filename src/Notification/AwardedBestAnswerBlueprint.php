@@ -87,7 +87,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
 
     /**
      * Get the name of the view to construct a notification email with.
-     * 
+     *
      * @return string
      */
     public function getEmailView()
@@ -97,7 +97,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
 
     /**
      * Get the subject line for the notification email.
-     * 
+     *
      * @return string
      */
     public function getEmailSubject()
