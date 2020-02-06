@@ -16,12 +16,13 @@ use Flarum\Console\Event\Configuring;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
+use Flarum\Foundation\Application;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
+use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
-use FoF\Console\Extend\ScheduleCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
@@ -29,22 +30,16 @@ use Illuminate\Events\Dispatcher;
 return [
     new AddFofComponents(),
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
-    new Extend\Locales(__DIR__.'/resources/locale'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     new EnableConsole(),
-    new ScheduleCommand(function (Schedule $schedule) {
-        $schedule->command(NotifyCommand::class)
-            ->hourly()
-            ->withoutOverlapping()
-            ->appendOutputTo(storage_path('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
-    }),
 
-    new Extend\Compat(function (Dispatcher $events, Factory $views) {
+    new Extend\Compat(function (Application $app, Dispatcher $events, Factory $views) {
         $events->listen(Configuring::class, function (Configuring $event) {
             if ($event->app->bound(Schedule::class)) {
                 $event->addCommand(NotifyCommand::class);
@@ -59,6 +54,8 @@ return [
         $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
 
-        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
+        $views->addNamespace('fof-best-answer', __DIR__ . '/resources/views');
+
+        $app->register(ConsoleProvider::class);
     }),
 ];

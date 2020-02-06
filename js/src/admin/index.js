@@ -20,6 +20,15 @@ app.initializers.add('fof/best-answer', () => {
                     <NumberItem key="fof-best-answer.select_best_answer_reminder_days" min="0" placeholder="0">
                         {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
                     </NumberItem>,
+                    <BooleanItem key="fof-best-answer.schedule-on-one-server">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule-on-one-server')}
+                    </BooleanItem>,
+                    <BooleanItem key="fof-best-answer.stop-overnight">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule-stop-overnight')}
+                    </BooleanItem>,
+                    <BooleanItem key="fof-best-answer.store-log-output">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule-log-output')}
+                    </BooleanItem>
                 ],
             })
         );
