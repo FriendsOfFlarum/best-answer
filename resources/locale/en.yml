@@ -10,6 +10,7 @@ fof-best-answer:
       schedule-on-one-server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
       schedule-stop-overnight: Prevent the reminder scheduler from running during unsocial hours (9pm - 8am server time)
       schedule-log-output: Append scheduler output to log storage
+      remind-tag-ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
   forum:
     answered_badge: Answered
     this_best_answer: Select Best Answer
