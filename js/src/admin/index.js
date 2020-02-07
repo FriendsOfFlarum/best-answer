@@ -17,6 +17,9 @@ app.initializers.add('fof/best-answer', () => {
                     <BooleanItem key="fof-best-answer.allow_select_own_post">
                         {app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post')}
                     </BooleanItem>,
+                    <BooleanItem key="fof-best-answer.use-alternative-ui">
+                        {app.translator.trans('fof-best-answer.admin.settings.use-alt-ui')}
+                    </BooleanItem>,
                     <NumberItem key="fof-best-answer.select_best_answer_reminder_days" min="0" placeholder="0">
                         {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
                     </NumberItem>,

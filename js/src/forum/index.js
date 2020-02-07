@@ -1,4 +1,5 @@
 import { extend } from 'flarum/extend';
+import app from 'flarum/app';
 import Discussion from 'flarum/models/Discussion';
 import Model from 'flarum/Model';
 import NotificationGrid from 'flarum/components/NotificationGrid';
