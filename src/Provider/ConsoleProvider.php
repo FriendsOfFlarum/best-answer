@@ -41,7 +41,8 @@ class ConsoleProvider extends AbstractServiceProvider
             }
 
             if ((bool) $settings->get('fof-best-answer.stop-overnight')) {
-                $build->between('9:00', '21:00');
+                $build->between('8:00', '21:00');
+                //TODO expose times back to config options
             }
 
             if ((bool) $settings->get('fof-best-answer.store-log-output')) {
