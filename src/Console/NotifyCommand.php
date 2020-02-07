@@ -79,7 +79,7 @@ class NotifyCommand extends Command
         $query = Discussion::query();
 
         if ($this->extensions->isEnabled('flarum-tags')) {
-            $tags = explode(',', $this->settings->get('fof-best-answer.remind-tag-ids'));
+            $tags = explode(',', $this->settings->get('fof-best-answer.remind_tag_ids'));
             if ($tags) {
                 $query->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id');
                 $query->whereIn('discussion_tag.tag_id', $tags);

@@ -17,20 +17,23 @@ app.initializers.add('fof/best-answer', () => {
                     <BooleanItem key="fof-best-answer.allow_select_own_post">
                         {app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post')}
                     </BooleanItem>,
+                    <BooleanItem key="fof-best-answer.use_alternative_ui">
+                        {app.translator.trans('fof-best-answer.admin.settings.use_alt_ui')}
+                    </BooleanItem>,
                     <NumberItem key="fof-best-answer.select_best_answer_reminder_days" min="0" placeholder="0">
                         {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
                     </NumberItem>,
-                    <StringItem key="fof-best-answer.remind-tag-ids">
-                        {app.translator.trans('fof-best-answer.admin.settings.remind-tag-ids')}
+                    <StringItem key="fof-best-answer.remind_tag_ids">
+                        {app.translator.trans('fof-best-answer.admin.settings.remind_tag_ids')}
                     </StringItem>,
-                    <BooleanItem key="fof-best-answer.schedule-on-one-server">
-                        {app.translator.trans('fof-best-answer.admin.settings.schedule-on-one-server')}
+                    <BooleanItem key="fof-best-answer.schedule_on_one_server">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server')}
                     </BooleanItem>,
-                    <BooleanItem key="fof-best-answer.stop-overnight">
-                        {app.translator.trans('fof-best-answer.admin.settings.schedule-stop-overnight')}
+                    <BooleanItem key="fof-best-answer.stop_overnight">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule_stop_overnight')}
                     </BooleanItem>,
-                    <BooleanItem key="fof-best-answer.store-log-output">
-                        {app.translator.trans('fof-best-answer.admin.settings.schedule-log-output')}
+                    <BooleanItem key="fof-best-answer.store_log_output">
+                        {app.translator.trans('fof-best-answer.admin.settings.schedule_log_output')}
                     </BooleanItem>,
                 ],
             })

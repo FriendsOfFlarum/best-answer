@@ -1,4 +1,5 @@
 import { extend } from 'flarum/extend';
+import app from 'flarum/app';
 import Discussion from 'flarum/models/Discussion';
 import Model from 'flarum/Model';
 import NotificationGrid from 'flarum/components/NotificationGrid';
@@ -29,7 +30,7 @@ app.initializers.add('fof/best-answer', () => {
         items.add('awardedBestAnswer', {
             name: 'awardedBestAnswer',
             icon: 'fas fa-check',
-            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded-best-answer'),
+            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded_best_answer'),
         });
     });
 });

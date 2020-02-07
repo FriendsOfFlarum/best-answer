@@ -7,10 +7,11 @@ fof-best-answer:
       title: FriendsOfFlarum Best Answer
       allow_select_own_post: Allow users to select their own posts
       select_best_answer_reminder_days: Remind users to select a best answer after X days
-      schedule-on-one-server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
-      schedule-stop-overnight: Prevent the reminder scheduler from running during unsocial hours (9pm - 8am server time)
-      schedule-log-output: Append scheduler output to log storage
-      remind-tag-ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
+      schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
+      schedule_stop_overnight: Prevent the reminder scheduler from running during unsocial hours (9pm - 8am server time)
+      schedule_log_output: Append scheduler output to log storage
+      remind_tag_ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
+      use_alt_ui: Use alternative layout (best answer buttons in post footer)
   forum:
     answered_badge: Answered
     this_best_answer: Select Best Answer
@@ -21,7 +22,7 @@ fof-best-answer:
     notification:
       content: Please select a Best Answer if your question has been answered
       awarded: Your post was set as the best answer by {username}
-      awarded-email: Your post was set as the best answer by user
-      select-email-title: Did you manage to sort your problem?
+      awarded_email: Your post was set as the best answer by user
+      select_email_title: Did you manage to sort your problem?
       preferences:
-        awarded-best-answer: When someone sets my post as a best answer
+        awarde_best_answer: When someone sets my post as a best answer
