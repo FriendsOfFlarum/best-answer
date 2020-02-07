@@ -36,7 +36,7 @@ app.initializers.add('fof/best-answer', () => {
             })
         );
 
-    extend(PermissionGrid.prototype, 'replyItems', function (items) {
+    extend(PermissionGrid.prototype, 'replyItems', function(items) {
         items.add('selectBestAnswer', {
             icon: 'far fa-comment',
             label: app.translator.trans('fof-best-answer.admin.permissions.best_answer'),
