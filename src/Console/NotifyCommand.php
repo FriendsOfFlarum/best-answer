@@ -13,6 +13,7 @@ namespace FoF\BestAnswer\Console;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
+use Flarum\Extension\ExtensionManager;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
@@ -37,13 +38,19 @@ class NotifyCommand extends Command
      */
     private $translator;
 
-    public function __construct(SettingsRepositoryInterface $settings, NotificationSyncer $notifications, TranslatorInterface $translator)
+    /**
+     * @var ExtensionManager
+     */
+    private $extensions;
+
+    public function __construct(SettingsRepositoryInterface $settings, NotificationSyncer $notifications, TranslatorInterface $translator, ExtensionManager $extensions)
     {
         parent::__construct();
 
         $this->settings = $settings;
         $this->notifications = $notifications;
         $this->translator = $translator;
+        $this->extensions = $extensions;
     }
 
     /**
@@ -59,7 +66,7 @@ class NotifyCommand extends Command
     public function handle()
     {
         $days = (int) $this->settings->get('fof-best-answer.select_best_answer_reminder_days');
-        $time = Carbon::today()->addDay(-$days);
+        $time = Carbon::now()->subDays($days);
 
         if ($days <= 0) {
             $this->info('Reminders are disabled');
@@ -67,13 +74,24 @@ class NotifyCommand extends Command
             return;
         }
 
-        $this->info('Looking at discussions before '.$time->toDateString());
+        $this->info('Looking at discussions before '.$time->toDateTimeString());
 
-        $query = Discussion::query()
-            ->whereNull('best_answer_post_id')
-            ->where('best_answer_notified', false)
-            ->where('comment_count', '>', 1)
-            ->whereDate('created_at', '<', $time);
+        $query = Discussion::query();
+
+        if ($this->extensions->isEnabled('flarum-tags')) {
+            $tags = explode(',', $this->settings->get('fof-best-answer.remind-tag-ids'));
+            if ($tags) {
+                $query->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id');
+                $query->whereIn('discussion_tag.tag_id', $tags);
+            }
+        }
+
+        $query->whereNull('discussions.best_answer_post_id')
+            ->whereNull('discussions.hidden_at')
+            ->where('discussions.best_answer_notified', false)
+            ->where('discussions.comment_count', '>', 1)
+            ->where('discussions.is_private', 0)
+            ->whereDate('discussions.created_at', '<', $time);
 
         $count = $query->count();
 
