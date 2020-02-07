@@ -90,12 +90,8 @@ class NotifyCommand extends Command
             ->whereNull('discussions.hidden_at')
             ->where('discussions.best_answer_notified', false)
             ->where('discussions.comment_count', '>', 1)
+            ->where('discussions.is_private', 0)
             ->whereDate('discussions.created_at', '<', $time);
-
-        // If fof/byobu is installed, don't prompt a reminder for private discussions
-        if ($this->extensions->isEnabled('fof-byobu')) {
-            $query->where('discussions.is_private', 0);
-        }
 
         $count = $query->count();
 
