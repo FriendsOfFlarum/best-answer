@@ -13,12 +13,14 @@ export default () => {
 
         post.pushAttributes({ isBestAnswer });
 
+        if (post.contentType() !== 'comment') return;
+
         if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
 
         items.add(
             'bestAnswer',
             Button.component({
-                children: app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer'),
+                children: actionLabel(isBestAnswer),
                 icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
                 onclick: () => {
                     isBestAnswer = !isBestAnswer;
@@ -44,9 +46,7 @@ export default () => {
         items.add(
             'bestAnswer',
             Button.component({
-                children: app.translator.trans(
-                    isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer'
-                ),
+                children: actionLabel(isBestAnswer),
                 className: !hasBestAnswer ? 'Button Button--primary' : (isBestAnswer ? 'Button Button--primary' : 'Button Button--link'),
                 onclick: function onclick() {
                     hasBestAnswer = !hasBestAnswer;
@@ -56,7 +56,6 @@ export default () => {
                 },
             })
         );
-
     });
 
     const ineligible = (discussion, post) => {
@@ -69,6 +68,10 @@ export default () => {
 
     const isThisBestAnswer = (discussion, post) => {
         return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+    };
+
+    const actionLabel = (isBestAnswer) => {
+        return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
     };
 
     const saveDiscussion = (discussion, isBestAnswer, post) => {
