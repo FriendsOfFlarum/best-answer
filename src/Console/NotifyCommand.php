@@ -66,7 +66,7 @@ class NotifyCommand extends Command
     public function handle()
     {
         $days = (int) $this->settings->get('fof-best-answer.select_best_answer_reminder_days');
-        $time = Carbon::now()->addDay(-$days);
+        $time = Carbon::now()->subDays($days);
 
         if ($days <= 0) {
             $this->info('Reminders are disabled');

@@ -39,6 +39,8 @@ return [
 
     new EnableConsole(),
 
+    new DefaultSettings(),
+
     new Extend\Compat(function (Application $app, Dispatcher $events, Factory $views) {
         $events->listen(Configuring::class, function (Configuring $event) {
             if ($event->app->bound(Schedule::class)) {
