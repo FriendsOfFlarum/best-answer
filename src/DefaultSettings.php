@@ -45,7 +45,6 @@ class DefaultSettings implements LifecycleInterface
 
     public function onDisable(Container $container, Extension $extension)
     {
-
     }
 
     public function extend(Container $container, Extension $extension = null)
