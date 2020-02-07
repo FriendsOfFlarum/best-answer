@@ -9,13 +9,11 @@ export default () => {
         if (app.forum.attribute('useAlternativeBestAnswerUi')) return;
 
         const discussion = post.discussion();
-        let isBestAnswer = discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+        let isBestAnswer = isThisBestAnswer(discussion, post);
 
         post.pushAttributes({ isBestAnswer });
 
-        if (post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user) return;
-
-        if (!app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id()) return;
+        if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
 
         items.add(
             'bestAnswer',
@@ -25,25 +23,7 @@ export default () => {
                 onclick: () => {
                     isBestAnswer = !isBestAnswer;
 
-                    discussion
-                        .save({
-                            bestAnswerPostId: isBestAnswer ? post.id() : 0,
-                            bestAnswerUserId: app.session.user.id(),
-                            relationships: isBestAnswer
-                                ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
-                                : delete discussion.data.relationships.bestAnswerPost,
-                        })
-                        .then(() => {
-                            if (app.current instanceof DiscussionPage) {
-                                app.current.stream.update();
-                            }
-
-                            m.redraw();
-
-                            if (isBestAnswer) {
-                                m.route(app.route.discussion(discussion));
-                            }
-                        });
+                    saveDiscussion(discussion, isBestAnswer, post);
                 },
             })
         );
@@ -54,25 +34,13 @@ export default () => {
 
         const post = this.props.post;
         const discussion = this.props.post.discussion();
-        let isBestAnswer = discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+        let isBestAnswer = isThisBestAnswer(discussion, post);
         let hasBestAnswer = discussion.bestAnswerPost() !== false;
 
         post.pushAttributes({ isBestAnswer });
 
-        if (post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user) return;
+        if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
 
-        if (discussion.startUserId() === Number.parseInt(app.session.user.id()) && discussion.canSelectBestAnswer()) {
-            commonItem(items, post, discussion, isBestAnswer);
-        }
-
-        if (!discussion.canSelectBestAnswer()
-            || discussion.startUserId() === Number.parseInt(app.session.user.id())) return;
-
-        commonItem(items, post, discussion, isBestAnswer, hasBestAnswer);
-
-    });
-
-    const commonItem = (items, post, discussion, isBestAnswer, hasBestAnswer) => {
         items.add(
             'bestAnswer',
             Button.component({
@@ -84,27 +52,44 @@ export default () => {
                     hasBestAnswer = !hasBestAnswer;
                     isBestAnswer = !isBestAnswer;
 
-                    discussion
-                        .save({
-                            bestAnswerPostId: isBestAnswer ? post.id() : 0,
-                            bestAnswerUserId: app.session.user.id(),
-                            relationships: isBestAnswer
-                                ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
-                                : delete discussion.data.relationships.bestAnswerPost,
-                        })
-                        .then(() => {
-                            if (app.current instanceof DiscussionPage) {
-                                app.current.stream.update();
-                            }
-
-                            m.redraw();
-
-                        });
-                    if (isBestAnswer) {
-                        m.route(app.route.discussion(discussion));
-                    }
+                    saveDiscussion(discussion, isBestAnswer, post);
                 },
             })
         );
+
+    });
+
+    const ineligible = (discussion, post) => {
+        return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user
+    };
+
+    const blockSelectOwnPost = (post) => {
+        return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id();
+    };
+
+    const isThisBestAnswer = (discussion, post) => {
+        return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+    };
+
+    const saveDiscussion = (discussion, isBestAnswer, post) => {
+        discussion
+            .save({
+                bestAnswerPostId: isBestAnswer ? post.id() : 0,
+                bestAnswerUserId: app.session.user.id(),
+                relationships: isBestAnswer
+                    ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
+                    : delete discussion.data.relationships.bestAnswerPost,
+            })
+            .then(() => {
+                if (app.current instanceof DiscussionPage) {
+                    app.current.stream.update();
+                }
+
+                m.redraw();
+
+                if (isBestAnswer) {
+                    m.route(app.route.discussion(discussion));
+                }
+            });
     };
 };
