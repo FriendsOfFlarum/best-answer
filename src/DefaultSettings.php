@@ -22,12 +22,12 @@ class DefaultSettings implements LifecycleInterface
      * @var SettingsRepositoryInterface
      */
     private $settings;
-    
+
     public function __construct()
     {
         $this->settings = app('flarum.settings');
     }
-    
+
     public function onEnable(Container $container, Extension $extension)
     {
         if ($extension->name === 'fof/best-answer') {
@@ -45,7 +45,7 @@ class DefaultSettings implements LifecycleInterface
 
     public function onDisable(Container $container, Extension $extension)
     {
-        
+
     }
 
     public function extend(Container $container, Extension $extension = null)
