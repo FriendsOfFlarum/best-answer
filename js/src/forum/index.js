@@ -30,7 +30,7 @@ app.initializers.add('fof/best-answer', () => {
         items.add('awardedBestAnswer', {
             name: 'awardedBestAnswer',
             icon: 'fas fa-check',
-            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded-best-answer'),
+            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded_best_answer'),
         });
     });
 });

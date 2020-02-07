@@ -36,16 +36,16 @@ class ConsoleProvider extends AbstractServiceProvider
                 ->hourly()
                 ->withoutOverlapping();
 
-            if ((bool) $settings->get('fof-best-answer.schedule-on-one-server')) {
+            if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
                 $build->onOneServer();
             }
 
-            if ((bool) $settings->get('fof-best-answer.stop-overnight')) {
+            if ((bool) $settings->get('fof-best-answer.stop_overnight')) {
                 $build->between('8:00', '21:00');
                 //TODO expose times back to config options
             }
 
-            if ((bool) $settings->get('fof-best-answer.store-log-output')) {
+            if ((bool) $settings->get('fof-best-answer.store_log_output')) {
                 $build->appendOutputTo(storage_path('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
             }
         });

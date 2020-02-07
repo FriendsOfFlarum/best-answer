@@ -83,7 +83,7 @@ class AddApiAttributes
 
         if ($event->isSerializer(ForumSerializer::class)) {
             $event->attributes['canSelectBestAnswerOwnPost'] = (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
-            $event->attributes['useAlternativeBestAnswerUi'] = (bool) app('flarum.settings')->get('fof-best-answer.use-alternative-ui', false);
+            $event->attributes['useAlternativeBestAnswerUi'] = (bool) app('flarum.settings')->get('fof-best-answer.use_alternative_ui', false);
         }
     }
 

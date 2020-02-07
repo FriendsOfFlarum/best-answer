@@ -31,14 +31,14 @@ class DefaultSettings implements LifecycleInterface
     public function onEnable(Container $container, Extension $extension)
     {
         if ($extension->name === 'fof/best-answer') {
-            if (($this->settings->get('fof-best-answer.schedule-on-one-server')) === null) {
-                $this->settings->set('fof-best-answer.schedule-on-one-server', false);
+            if (($this->settings->get('fof-best-answer.schedule_on_one_server')) === null) {
+                $this->settings->set('fof-best-answer.schedul_on_one_server', false);
             }
-            if (($this->settings->get('fof-best-answer.stop-overnight')) === null) {
-                $this->settings->set('fof-best-answer.stop-overnight', false);
+            if (($this->settings->get('fof-best-answer.stop_overnight')) === null) {
+                $this->settings->set('fof-best-answer.stop_overnight', false);
             }
-            if (($this->settings->get('fof-best-answer.store-log-output')) === null) {
-                $this->settings->set('fof-best-answer.store-log-output', true);
+            if (($this->settings->get('fof-best-answer.store_log_output')) === null) {
+                $this->settings->set('fof-best-answer.store_log_output', true);
             }
         }
     }

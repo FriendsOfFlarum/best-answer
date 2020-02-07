@@ -5,6 +5,44 @@ import DiscussionPage from 'flarum/components/DiscussionPage';
 import CommentPost from 'flarum/components/CommentPost';
 
 export default () => {
+    const ineligible = (discussion, post) => {
+        return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user
+    };
+
+    const blockSelectOwnPost = (post) => {
+        return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id();
+    };
+
+    const isThisBestAnswer = (discussion, post) => {
+        return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+    };
+
+    const actionLabel = (isBestAnswer) => {
+        return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
+    };
+
+    const saveDiscussion = (discussion, isBestAnswer, post) => {
+        discussion
+            .save({
+                bestAnswerPostId: isBestAnswer ? post.id() : 0,
+                bestAnswerUserId: app.session.user.id(),
+                relationships: isBestAnswer
+                    ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
+                    : delete discussion.data.relationships.bestAnswerPost,
+            })
+            .then(() => {
+                if (app.current instanceof DiscussionPage) {
+                    app.current.stream.update();
+                }
+
+                m.redraw();
+
+                if (isBestAnswer) {
+                    m.route(app.route.discussion(discussion));
+                }
+            });
+    };
+
     extend(PostControls, 'moderationControls', function (items, post) {
         if (app.forum.attribute('useAlternativeBestAnswerUi')) return;
 
@@ -57,42 +95,4 @@ export default () => {
             })
         );
     });
-
-    const ineligible = (discussion, post) => {
-        return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user
-    };
-
-    const blockSelectOwnPost = (post) => {
-        return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id();
-    };
-
-    const isThisBestAnswer = (discussion, post) => {
-        return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
-    };
-
-    const actionLabel = (isBestAnswer) => {
-        return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
-    };
-
-    const saveDiscussion = (discussion, isBestAnswer, post) => {
-        discussion
-            .save({
-                bestAnswerPostId: isBestAnswer ? post.id() : 0,
-                bestAnswerUserId: app.session.user.id(),
-                relationships: isBestAnswer
-                    ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
-                    : delete discussion.data.relationships.bestAnswerPost,
-            })
-            .then(() => {
-                if (app.current instanceof DiscussionPage) {
-                    app.current.stream.update();
-                }
-
-                m.redraw();
-
-                if (isBestAnswer) {
-                    m.route(app.route.discussion(discussion));
-                }
-            });
-    };
 };
