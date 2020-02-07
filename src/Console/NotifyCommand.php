@@ -74,7 +74,7 @@ class NotifyCommand extends Command
             return;
         }
 
-        $this->info('Looking at discussions before ' . $time->toDateTimeString());
+        $this->info('Looking at discussions before '.$time->toDateTimeString());
 
         $query = Discussion::query();
 
@@ -107,7 +107,7 @@ class NotifyCommand extends Command
             /*
              * @var $discussions Discussion[]
              */
-            $this->output->write('<info>Sending ' . count($discussions) . ' notifications </info>');
+            $this->output->write('<info>Sending '.count($discussions).' notifications </info>');
 
             foreach ($discussions as $d) {
                 try {
@@ -131,7 +131,7 @@ class NotifyCommand extends Command
 
         if (count($errors) > 0) {
             $this->line("\n");
-            $this->alert('Failed to send ' . count($errors) . ' notifications');
+            $this->alert('Failed to send '.count($errors).' notifications');
             $this->warn('');
 
             foreach ($errors as $i => $e) {

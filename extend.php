@@ -30,12 +30,12 @@ use Illuminate\Events\Dispatcher;
 return [
     new AddFofComponents(),
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less'),
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/resources/less/admin.less'),
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     new EnableConsole(),
 
@@ -54,7 +54,7 @@ return [
         $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
 
-        $views->addNamespace('fof-best-answer', __DIR__ . '/resources/views');
+        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
 
         $app->register(ConsoleProvider::class);
     }),

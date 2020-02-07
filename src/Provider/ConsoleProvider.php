@@ -11,10 +11,10 @@
 
 namespace FoF\BestAnswer\Provider;
 
-use FoF\Console\Providers\ConsoleProvider as Console;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Console\NotifyCommand;
+use FoF\Console\Providers\ConsoleProvider as Console;
 use Illuminate\Console\Scheduling\Schedule;
 
 class ConsoleProvider extends AbstractServiceProvider
