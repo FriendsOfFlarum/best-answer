@@ -25,4 +25,4 @@ fof-best-answer:
       awarded_email: Your post was set as the best answer by user
       select_email_title: Did you manage to sort your problem?
       preferences:
-        awarde_best_answer: When someone sets my post as a best answer
+        awarded_best_answer: When someone sets my post as a best answer
