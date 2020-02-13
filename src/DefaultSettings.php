@@ -32,7 +32,7 @@ class DefaultSettings implements LifecycleInterface
     {
         if ($extension->name === 'fof/best-answer') {
             if (($this->settings->get('fof-best-answer.schedule_on_one_server')) === null) {
-                $this->settings->set('fof-best-answer.schedul_on_one_server', false);
+                $this->settings->set('fof-best-answer.schedule_on_one_server', false);
             }
             if (($this->settings->get('fof-best-answer.stop_overnight')) === null) {
                 $this->settings->set('fof-best-answer.stop_overnight', false);
