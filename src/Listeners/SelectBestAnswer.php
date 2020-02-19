@@ -22,7 +22,6 @@ use FoF\BestAnswer\Helpers;
 use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Support\Arr;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class SelectBestAnswer
 {
@@ -33,15 +32,9 @@ class SelectBestAnswer
      */
     private $notifications;
 
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    public function __construct(NotificationSyncer $notifications, TranslatorInterface $translator)
+    public function __construct(NotificationSyncer $notifications)
     {
         $this->notifications = $notifications;
-        $this->translator = $translator;
     }
 
     public function handle(Saving $event)
@@ -76,7 +69,7 @@ class SelectBestAnswer
             $discussion->best_answer_set_at = null;
         }
 
-        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion, $this->translator));
+        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
     }
 
     public function notifyUserOfBestAnswerSet(Saving $event): void
@@ -85,7 +78,7 @@ class SelectBestAnswer
         $bestAnswerAuthoredBy = $this->getUserFromPost($event->discussion->best_answer_post_id);
 
         if ($bestAnswerAuthoredBy->id !== $actor->id) {
-            $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor, $this->translator), [$bestAnswerAuthoredBy]);
+            $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor), [$bestAnswerAuthoredBy]);
         }
     }
 
