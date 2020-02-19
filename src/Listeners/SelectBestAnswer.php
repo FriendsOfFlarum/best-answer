@@ -84,7 +84,9 @@ class SelectBestAnswer
         $actor = $event->actor;
         $bestAnswerAuthoredBy = $this->getUserFromPost($event->discussion->best_answer_post_id);
 
-        $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor, $this->translator), [$bestAnswerAuthoredBy]);
+        if ($bestAnswerAuthoredBy->id !== $actor->id) {
+            $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor, $this->translator), [$bestAnswerAuthoredBy]);
+        }
     }
 
     public function getUserFromPost(int $post_id): User
