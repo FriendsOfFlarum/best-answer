@@ -56,6 +56,8 @@ return [
         $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
 
+        $events->subscribe(Listeners\QueueNotificationJobs::class);
+
         $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
 
         $app->register(ConsoleProvider::class);

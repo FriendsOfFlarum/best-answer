@@ -18,9 +18,11 @@ use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
 use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
+use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Helpers;
 use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
 
 class SelectBestAnswer
@@ -32,9 +34,12 @@ class SelectBestAnswer
      */
     private $notifications;
 
-    public function __construct(NotificationSyncer $notifications)
+    private $bus;
+
+    public function __construct(NotificationSyncer $notifications, Dispatcher $bus)
     {
         $this->notifications = $notifications;
+        $this->bus = $bus;
     }
 
     public function handle(Saving $event)
@@ -62,7 +67,7 @@ class SelectBestAnswer
             $discussion->best_answer_set_at = Carbon::now();
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-            $this->notifyUserOfBestAnswerSet($event);
+            $this->notifyUsersOfBestAnswerSet($event);
         } elseif ($id == 0) {
             $discussion->best_answer_post_id = null;
             $discussion->best_answer_user_id = null;
@@ -72,18 +77,27 @@ class SelectBestAnswer
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
     }
 
-    public function notifyUserOfBestAnswerSet(Saving $event): void
+    public function notifyUsersOfBestAnswerSet(Saving $event)
     {
         $actor = $event->actor;
-        $bestAnswerAuthoredBy = $this->getUserFromPost($event->discussion->best_answer_post_id);
 
-        if ($bestAnswerAuthoredBy->id !== $actor->id) {
-            $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor), [$bestAnswerAuthoredBy]);
-        }
+        $event->discussion->afterSave(function ($discussion) use ($actor) {
+            $this->bus->dispatch(new BestAnswerSet($discussion, $actor));
+        });
     }
 
-    public function getUserFromPost(int $post_id): User
-    {
-        return Post::find($post_id)->user;
-    }
+    // public function notifyUserOfBestAnswerSet(Saving $event): void
+    // {
+    //     $actor = $event->actor;
+    //     $bestAnswerAuthoredBy = $this->getUserFromPost($event->discussion->best_answer_post_id);
+
+    //     if ($bestAnswerAuthoredBy->id !== $actor->id) {
+    //         $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor), [$bestAnswerAuthoredBy]);
+    //     }
+    // }
+
+    // public function getUserFromPost(int $post_id): User
+    // {
+    //     return Post::find($post_id)->user;
+    // }
 }
