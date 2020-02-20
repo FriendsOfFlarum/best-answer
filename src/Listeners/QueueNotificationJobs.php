@@ -11,8 +11,6 @@
 
 namespace FoF\BestAnswer\Listeners;
 
-use Flarum\Post\Post;
-use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Jobs;
 use Illuminate\Events\Dispatcher;

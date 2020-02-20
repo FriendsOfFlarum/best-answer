@@ -29,8 +29,8 @@ class BestAnswerSet
     /**
      * BestAnswerSet constructor.
      *
-     * @param Discussion         $discussion
-     * @param User               $actor
+     * @param Discussion $discussion
+     * @param User       $actor
      */
     public function __construct(Discussion $discussion, User $actor)
     {
