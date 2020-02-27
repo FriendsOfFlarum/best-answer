@@ -18,8 +18,7 @@ use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use Flarum\Foundation\Application;
 use FoF\BestAnswer\Console\NotifyCommand;
-use FoF\BestAnswer\Notification\AwardedBestAnswerBlueprint;
-use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
+use FoF\BestAnswer\Notification;
 use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
@@ -49,8 +48,9 @@ return [
         });
 
         $events->listen(ConfigureNotificationTypes::class, function (ConfigureNotificationTypes $event) {
-            $event->add(SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email']);
-            $event->add(AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert']);
+            $event->add(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email']);
+            $event->add(Notification\AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert']);
+            $event->add(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []);
         });
 
         $events->subscribe(Listeners\AddApiAttributes::class);

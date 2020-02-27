@@ -55,11 +55,11 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
         }
 
         // Send notifications to other participants of the discussion
-        // $recipients = $this->discussion->posts->users->reject(function ($user) use ($bestAnswerAuthor) {
-        //     return ($user->id === $this->actor->id || $user->id === $bestAnswerAuthor->id);
-        // });
+        $recipients = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id))
+            ->whereNotIn('id', [$bestAnswerAuthor->id, $this->actor->id])
+            ->get();
 
-        // $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
+        $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
     }
 
     public function getUserFromPost(int $post_id): User

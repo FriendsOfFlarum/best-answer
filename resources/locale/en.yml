@@ -20,9 +20,11 @@ fof-best-answer:
     best_answer_label: set by <a>{username}</a> {time_set}
 
     notification:
+      best_answer_in_discussion: "{username} set a best answer in this discussion"
       content: Please select a Best Answer if your question has been answered
       awarded: Your post was set as the best answer by {username}
       awarded_email: Your post was set as the best answer by user
       select_email_title: Did you manage to sort your problem?
       preferences:
         awarded_best_answer: When someone sets my post as a best answer
+        best_answer_in_discussion: When a best answer is set in a discussion I participated in
