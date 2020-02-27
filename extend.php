@@ -18,7 +18,6 @@ use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use Flarum\Foundation\Application;
 use FoF\BestAnswer\Console\NotifyCommand;
-use FoF\BestAnswer\Notification;
 use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
