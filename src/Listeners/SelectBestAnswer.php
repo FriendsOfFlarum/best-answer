@@ -85,19 +85,4 @@ class SelectBestAnswer
             $this->bus->dispatch(new BestAnswerSet($discussion, $actor));
         });
     }
-
-    // public function notifyUserOfBestAnswerSet(Saving $event): void
-    // {
-    //     $actor = $event->actor;
-    //     $bestAnswerAuthoredBy = $this->getUserFromPost($event->discussion->best_answer_post_id);
-
-    //     if ($bestAnswerAuthoredBy->id !== $actor->id) {
-    //         $this->notifications->sync(new AwardedBestAnswerBlueprint($event->discussion, $actor), [$bestAnswerAuthoredBy]);
-    //     }
-    // }
-
-    // public function getUserFromPost(int $post_id): User
-    // {
-    //     return Post::find($post_id)->user;
-    // }
 }
