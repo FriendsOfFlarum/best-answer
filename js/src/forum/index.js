@@ -9,6 +9,7 @@ import addBestAnswerAction from './addBestAnswerAction';
 import addBestAnswerView from './addBestAnswerView';
 import addAnsweredBadge from './addAnsweredBadge';
 import AwardedBestAnswerNotification from './components/AwardedBestAnswerNotification';
+import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscussionNotification';
 
 app.initializers.add('fof/best-answer', () => {
     Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
@@ -21,6 +22,7 @@ app.initializers.add('fof/best-answer', () => {
 
     app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
     app.notificationComponents.awardedBestAnswer = AwardedBestAnswerNotification;
+    app.notificationComponents.bestAnswerInDiscussion = BestAnswerInDiscussionNotification;
 
     addAnsweredBadge();
     addBestAnswerAction();
@@ -31,6 +33,11 @@ app.initializers.add('fof/best-answer', () => {
             name: 'awardedBestAnswer',
             icon: 'fas fa-check',
             label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded_best_answer'),
+        });
+        items.add('bestAnswerInDiscussion', {
+            name: 'bestAnswerInDiscussion',
+            icon: 'fas fa-check',
+            label: app.translator.trans('fof-best-answer.forum.notification.preferences.best_answer_in_discussion'),
         });
     });
 });
