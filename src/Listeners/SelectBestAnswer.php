@@ -54,7 +54,7 @@ class SelectBestAnswer
 
         $post = $event->discussion->posts()->find($id);
 
-        if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post)) {
+        if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post) || $id > 0 && !Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
             throw new PermissionDeniedException();
         }
 
