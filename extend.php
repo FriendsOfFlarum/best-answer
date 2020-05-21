@@ -13,10 +13,13 @@ namespace FoF\BestAnswer;
 
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Console\Event\Configuring;
+use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use Flarum\Foundation\Application;
+use Flarum\Post\Post;
+use Flarum\User\User;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
@@ -38,6 +41,10 @@ return [
     new EnableConsole(),
 
     new DefaultSettings(),
+
+    (new Extend\Model(Discussion::class))
+        ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
+        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
     new Extend\Compat(function (Application $app, Dispatcher $events, Factory $views) {
         $events->listen(Configuring::class, function (Configuring $event) {
