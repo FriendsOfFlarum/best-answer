@@ -33,4 +33,9 @@ class Helpers
             ? $canSelectOwnPost && $can
             : $can;
     }
+
+    public static function postBelongsToTargetDiscussion(Post $post, Discussion $discussion): bool
+    {
+        return $post->discussion_id === $discussion->id;
+    }
 }
