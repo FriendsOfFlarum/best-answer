@@ -56,8 +56,7 @@ class SelectBestAnswer
         $post = $event->discussion->posts()->find($id);
 
         // If 'id' = 0, then we are removing a best answer.
-        //
-        if ($id > 0 && Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
+       if ($id > 0 && Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
             throw new ValidationException(
                 [
                     'error' => app('translator')->trans('fof-best-answer.forum.errors.mismatch'),
