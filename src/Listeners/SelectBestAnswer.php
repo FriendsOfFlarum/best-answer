@@ -13,6 +13,7 @@ namespace FoF\BestAnswer\Listeners;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Event\Saving;
+use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\User\Exception\PermissionDeniedException;
@@ -54,7 +55,17 @@ class SelectBestAnswer
 
         $post = $event->discussion->posts()->find($id);
 
-        if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post) || $id > 0 && !Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
+        // If 'id' = 0, then we are removing a best answer.
+        // 
+        if ($id > 0 && Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
+            throw new ValidationException(
+                [
+                    'error' => app('translator')->trans('fof-best-answer.forum.errors.mismatch')
+                ]
+            );
+        }
+
+        if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post)) {
             throw new PermissionDeniedException();
         }
 
