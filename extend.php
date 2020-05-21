@@ -12,7 +12,6 @@
 namespace FoF\BestAnswer;
 
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
-use Flarum\Console\Event\Configuring;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Event\ConfigureNotificationTypes;
@@ -21,12 +20,12 @@ use Flarum\Foundation\Application;
 use Flarum\Post\Post;
 use Flarum\User\User;
 use FoF\BestAnswer\Console\NotifyCommand;
+use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
-use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Events\Dispatcher;
 
 return [
     new AddFofComponents(),
@@ -46,12 +45,11 @@ return [
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
-    new Extend\Compat(function (Application $app, Dispatcher $events, Factory $views) {
-        $events->listen(Configuring::class, function (Configuring $event) {
-            if ($event->app->bound(Schedule::class)) {
-                $event->addCommand(NotifyCommand::class);
-            }
-        });
+    (new Extend\Console())
+        ->command(NotifyCommand::class),
+
+    function (Dispatcher $events) {
+        $events->subscribe(Listeners\AddApiAttributes::class);
 
         $events->listen(ConfigureNotificationTypes::class, function (ConfigureNotificationTypes $event) {
             $event->add(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email']);
@@ -59,13 +57,15 @@ return [
             $event->add(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []);
         });
 
-        $events->subscribe(Listeners\AddApiAttributes::class);
         $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
+        $events->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class);
+    },
 
-        $events->subscribe(Listeners\QueueNotificationJobs::class);
-
-        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
-
+    function (Application $app) {
         $app->register(ConsoleProvider::class);
-    }),
+    },
+
+    function (Factory $views) {
+        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
+    },
 ];
