@@ -64,7 +64,7 @@ class SelectBestAnswer
             );
         }
 
-        if ($post && !Helpers::canSelectPostAsBestAnswer($event->actor, $post) || $post && !$post->isVisibleTo($event->actor)) {
+        if ($post && (!Helpers::canSelectPostAsBestAnswer($event->actor, $post) || !$post->isVisibleTo($event->actor))) {
             throw new PermissionDeniedException();
         }
 
