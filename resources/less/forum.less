@@ -60,10 +60,16 @@
   }
 }
 
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-device-width: 560px) {
   .Post--BestAnswer {
-    .BestAnswer--User {
-      display: block;
+    position: initial;
+
+    .Post-header &{
+      margin-left: 40px;
+    }
+
+    .Post-footer &{
+      margin-left: 20px;
     }
   }
 }
