@@ -7,9 +7,9 @@
   "type": "flarum-extension",
   "license": "MIT",
   "require": {
-    "flarum/core": "^0.1.0-beta.9",
+    "flarum/core": "^0.1.0-beta.13",
     "fof/components": ">=0.1.0",
-    "fof/console": "^0.5.0"
+    "fof/console": "^0.5.3"
   },
   "replace": {
     "wiwatsrt/flarum-ext-best-answer": "*"
@@ -23,6 +23,11 @@
     {
       "name": "David Sevilla Martin",
       "email": "me+fof@datitisev.me",
+      "role": "Developer"
+    },
+    {
+      "name": "Ian Morland",
+      "email": "ian@flarumite.com",
       "role": "Developer"
     }
   ],
@@ -41,7 +46,7 @@
       }
     },
     "flagrow": {
-      "discuss": "https://discuss.flarum.org/d/21894-friendsofflarum-best-answer"
+      "discuss": "https://discuss.flarum.org/d/21894"
     }
   }
 }

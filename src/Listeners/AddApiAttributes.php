@@ -20,12 +20,8 @@ use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Discussion\Discussion;
 use Flarum\Event\GetApiRelationship;
-use Flarum\Event\GetModelRelationship;
-use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\User\User;
 use FoF\BestAnswer\Helpers;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -43,20 +39,9 @@ class AddApiAttributes
 
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(GetModelRelationship::class, [$this, 'getModelRelationship']);
         $events->listen(GetApiRelationship::class, [$this, 'getApiAttributes']);
         $events->listen(Serializing::class, [$this, 'prepareApiAttributes']);
         $events->listen(WillGetData::class, [$this, 'includeBestAnswerPost']);
-    }
-
-    public function getModelRelationship(GetModelRelationship $event)
-    {
-        if ($event->isRelationship(Discussion::class, 'bestAnswerPost')) {
-            return $event->model->belongsTo(Post::class, 'best_answer_post_id');
-        }
-        if ($event->isRelationship(Discussion::class, 'bestAnswerUser')) {
-            return $event->model->belongsTo(User::class, 'best_answer_user_id');
-        }
     }
 
     public function getApiAttributes(GetApiRelationship $event)

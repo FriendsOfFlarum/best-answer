@@ -13,16 +13,10 @@ namespace FoF\BestAnswer\Listeners;
 
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Jobs;
-use Illuminate\Events\Dispatcher;
 
 class QueueNotificationJobs
 {
-    public function subscribe(Dispatcher $events)
-    {
-        $events->listen(BestAnswerSet::class, [$this, 'bestAnswerSet']);
-    }
-
-    public function bestAnswerSet(BestAnswerSet $event)
+    public function handle(BestAnswerSet $event)
     {
         app('flarum.queue.connection')->push(
             new Jobs\SendNotificationWhenBestAnswerSetInDiscussion($event->discussion, $event->actor)
