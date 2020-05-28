@@ -52,9 +52,7 @@
   }
 
   .BestAnswer--User {
-    margin-left: 7.5px;
-    text-align: right;
-    font-size: .9em;
+    display: none;
   }
 }
 
@@ -75,6 +73,12 @@
     position: absolute;
     top: 0;
     right: 0;
+
+    .BestAnswer--User {
+      display: initial;
+      margin-left: 7.5px;
+      font-size: .9em;
+    }
   }
 }
 
