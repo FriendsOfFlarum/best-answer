@@ -1,0 +1,32 @@
+fof-best-answer:
+  admin:
+    permissions:
+      best_answer: Выбрать лучший ответ (Создатель дискуссии)
+      best_answer_not_own_discussion: Выбрать лучший ответ (Пользователи форума)
+    settings:
+      title: FoF Лучший ответ
+      allow_select_own_post: Разрешить пользователям выбирать свои собственные сообщения
+      select_best_answer_reminder_days: Напомните пользователям, чтобы выбрать лучший ответ через X дней
+      schedule_on_one_server: Использовать директиву 'onOneServer()' для планировщика задач (требуется Redis/Memcache)
+      schedule_stop_overnight: Запретить работу планировщика в нерабочее время (с 9:00 до 8:00 по времени сервера)
+      schedule_log_output: Добавить вывод планировщика в хранилище журналов
+      remind_tag_ids: Чтобы ограничить напоминания определенными тегами, введите идентификаторы тегов здесь (через запятую)
+      use_alt_ui: Использовать альтернативный макет (кнопка лучшего ответа в нижнем колонтитуле)
+  forum:
+    answered_badge: Ответил
+    this_best_answer: Выбрать лучший ответ
+    remove_best_answer: Снять лучший ответ
+    best_answer_button: Лучший ответ
+    best_answer_label: "установлен: <a>{username}</a> {time_set}"
+    errors:
+      mismatch: "Выбранный пост не существует в этой дискуссии"
+
+    notification:
+      best_answer_in_discussion: "{username} установил лучший ответ в этой дискуссии"
+      content: Пожалуйста выберите лучший ответ, если на ваш вопрос ответили
+      awarded: "Ваш пост был признан лучшим ответом: {username}"
+      awarded_email: "Ваш пост был признан лучшим ответом:"
+      select_email_title: Вам удалось разобраться в вашей проблеме?
+      preferences:
+        awarded_best_answer: Когда кто-то устанавливает мой пост как лучший ответ
+        best_answer_in_discussion: Когда лучший ответ установлен в обсуждении, в котором я участвовал
