@@ -5,6 +5,13 @@
   background-color: @best-answer-badge-color;
 }
 
+.Post-header{
+  & > ul > li.item-isBestAnswer{
+    display: inline-block;
+    margin-top: 3px;
+  }
+}
+
 .Post-footer {
   .item-bestAnswerPost {
     padding: 10px;
@@ -30,18 +37,9 @@
   }
 }
 
-.CommentPost {
-  .Post-header > ul {
-    position: relative;
-  }
-}
-
 .Post--BestAnswer {
   background: @best-answer-badge-color;
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: 0 none !important;
+  display: inline-block;
   border-radius: 5px;
   padding: 2px 5px;
 
@@ -54,16 +52,32 @@
   }
 
   .BestAnswer--User {
-    margin-left: 7.5px;
-    text-align: right;
-    font-size: .9em;
+    display: none;
   }
 }
 
-@media only screen and (max-device-width: 480px) {
+@media @desktop-up{
+  .CommentPost {
+    .Post-header > ul {
+      position: relative;
+    }
+  }
+
+  .Post-header{
+    & > ul > li.item-isBestAnswer{
+      margin-top: 0;
+    }
+  }
+
   .Post--BestAnswer {
+    position: absolute;
+    top: 0;
+    right: 0;
+
     .BestAnswer--User {
-      display: block;
+      display: initial;
+      margin-left: 7.5px;
+      font-size: .9em;
     }
   }
 }
