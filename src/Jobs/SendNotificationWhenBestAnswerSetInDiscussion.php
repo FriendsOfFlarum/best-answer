@@ -47,6 +47,10 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
 
     public function handle(NotificationSyncer $notifications)
     {
+        if ($this->discussion === null || $this->discussion->best_answer_post_id === null) {
+            return;
+        }
+        
         $bestAnswerAuthor = $this->getUserFromPost($this->discussion->best_answer_post_id);
 
         // Send notification to the post author that has been awarded the best answer, except if the best answer was set by the author
