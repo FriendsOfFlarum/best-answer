@@ -36,6 +36,6 @@ class Helpers
 
     public static function postBelongsToTargetDiscussion(Post $post, Discussion $discussion): bool
     {
-        return $post->discussion_id === $discussion->id;
+        return $post && $post->discussion_id === $discussion->id;
     }
 }
