@@ -23,6 +23,7 @@ fof-best-answer:
 
     notification:
       best_answer_in_discussion: "{username} set a best answer in this discussion"
+      best_answer_set_in_discussion_email: A best answer was set
       content: Please select a Best Answer if your question has been answered
       awarded: Your post was set as the best answer by {username}
       awarded_email: Your post was set as the best answer by user
