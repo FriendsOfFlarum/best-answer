@@ -7,9 +7,9 @@
   "type": "flarum-extension",
   "license": "MIT",
   "require": {
-    "flarum/core": "^0.1.0-beta.13",
-    "fof/components": ">=0.1.0",
-    "fof/console": "^0.5.3"
+    "flarum/core": "^0.1.0-beta.14",
+    "fof/components": ">=0.1.1",
+    "fof/console": ">=0.5.3"
   },
   "replace": {
     "wiwatsrt/flarum-ext-best-answer": "*"
