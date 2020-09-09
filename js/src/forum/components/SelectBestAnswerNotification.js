@@ -6,7 +6,7 @@ export default class SelectBestAnswerNotification extends Notification {
     }
 
     href() {
-        const notification = this.props.notification;
+        const notification = this.attrs.notification;
         const discussion = notification.subject();
 
         return app.route.discussion(discussion);

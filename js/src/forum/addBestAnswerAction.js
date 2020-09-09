@@ -38,7 +38,7 @@ export default () => {
                 m.redraw();
 
                 if (isBestAnswer) {
-                    m.route(app.route.discussion(discussion));
+                    m.route.set(app.route.discussion(discussion));
                 }
             });
     };
@@ -58,22 +58,21 @@ export default () => {
         items.add(
             'bestAnswer',
             Button.component({
-                children: actionLabel(isBestAnswer),
                 icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
                 onclick: () => {
                     isBestAnswer = !isBestAnswer;
 
                     saveDiscussion(discussion, isBestAnswer, post);
                 },
-            })
+            }, actionLabel(isBestAnswer))
         );
     });
 
     extend(CommentPost.prototype, 'actionItems', function (items) {
         if (!app.forum.attribute('useAlternativeBestAnswerUi')) return;
 
-        const post = this.props.post;
-        const discussion = this.props.post.discussion();
+        const post = this.attrs.post;
+        const discussion = this.attrs.post.discussion();
         let isBestAnswer = isThisBestAnswer(discussion, post);
         let hasBestAnswer = discussion.bestAnswerPost() !== false;
 
@@ -84,7 +83,6 @@ export default () => {
         items.add(
             'bestAnswer',
             Button.component({
-                children: actionLabel(isBestAnswer),
                 className: !hasBestAnswer ? 'Button Button--primary' : (isBestAnswer ? 'Button Button--primary' : 'Button Button--link'),
                 onclick: function onclick() {
                     hasBestAnswer = !hasBestAnswer;
@@ -92,7 +90,7 @@ export default () => {
 
                     saveDiscussion(discussion, isBestAnswer, post);
                 },
-            })
+            }, actionLabel(isBestAnswer))
         );
     });
 };

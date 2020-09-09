@@ -9,7 +9,7 @@ import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
 export default () => {
     extend(CommentPost.prototype, 'headerItems', function(items) {
-        const post = this.props.post;
+        const post = this.attrs.post;
 
         if (
             post.discussion().bestAnswerPost() &&
@@ -30,7 +30,7 @@ export default () => {
     });
 
     extend(CommentPost.prototype, 'footerItems', function(items) {
-        const thisPost = this.props.post;
+        const thisPost = this.attrs.post;
         const discussion = thisPost.discussion();
         const post = discussion.bestAnswerPost();
 
@@ -47,7 +47,7 @@ export default () => {
                                     {user && userOnline(user)}
                                     <h3>
                                         {user ? (
-                                            <a href={app.route.user(user)} config={m.route}>
+                                            <a route={app.route.user(user)}>
                                                 {username(user)}
                                             </a>
                                         ) : (
@@ -71,7 +71,7 @@ export default () => {
     });
 
     extend(PostComponent.prototype, 'attrs', function(attrs) {
-        const post = this.props.post;
+        const post = this.attrs.post;
 
         if (
             post.discussion().bestAnswerPost() &&
