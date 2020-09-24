@@ -48,6 +48,9 @@ return [
     (new Extend\Console())
         ->command(NotifyCommand::class),
 
+    (new Extend\View)
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
+
     function (Dispatcher $events) {
         $events->subscribe(Listeners\AddApiAttributes::class);
 
@@ -63,9 +66,5 @@ return [
 
     function (Application $app) {
         $app->register(ConsoleProvider::class);
-    },
-
-    function (Factory $views) {
-        $views->addNamespace('fof-best-answer', __DIR__.'/resources/views');
     },
 ];
