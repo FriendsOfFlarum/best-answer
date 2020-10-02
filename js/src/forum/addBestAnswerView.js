@@ -40,7 +40,7 @@ export default () => {
 
             items.add(
                 'bestAnswerPost',
-                <div className="CommentPost" onclick={() => app.current.get('stream').goToNumber(thisPost.number())}>
+                <div className="CommentPost" onclick={() => app.current.get('stream').goToNumber(post.number())}>
                     <div className="Post-header">
                         <ul>
                             <li className="item-user">
