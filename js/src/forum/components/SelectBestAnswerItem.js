@@ -1,6 +1,7 @@
 import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import humanTime from 'flarum/helpers/humanTime';
+import Link from 'flarum/components/Link';
 
 export default class SelectBestAnswerItem extends Component {
     view() {
@@ -14,10 +15,10 @@ export default class SelectBestAnswerItem extends Component {
                         {app.translator.trans('fof-best-answer.forum.best_answer_button')}
                     </span>
                 ) : (
-                    <a route={app.route.post(post)} data-number={post.number()}>
+                    <Link href={app.route.post(post)} data-number={post.number()}>
                         {icon('fas fa-check')}
                         {app.translator.trans('fof-best-answer.forum.best_answer_button')}
-                    </a>
+                    </Link>
                 )}
 
                 <span className="BestAnswer--User">

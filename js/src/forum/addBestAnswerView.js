@@ -4,6 +4,7 @@ import PostComponent from 'flarum/components/Post';
 import PostMeta from 'flarum/components/PostMeta';
 import username from 'flarum/helpers/username';
 import userOnline from 'flarum/helpers/userOnline';
+import Link from 'flarum/utils/Link';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
@@ -47,9 +48,9 @@ export default () => {
                                     {user && userOnline(user)}
                                     <h3>
                                         {user ? (
-                                            <a route={app.route.user(user)}>
+                                            <Link href={app.route.user(user)}>
                                                 {username(user)}
-                                            </a>
+                                            </Link>
                                         ) : (
                                             username(user)
                                         )}
