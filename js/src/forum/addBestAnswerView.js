@@ -4,7 +4,7 @@ import PostComponent from 'flarum/components/Post';
 import PostMeta from 'flarum/components/PostMeta';
 import username from 'flarum/helpers/username';
 import userOnline from 'flarum/helpers/userOnline';
-import Link from 'flarum/utils/Link';
+import Link from 'flarum/components/Link';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
@@ -40,7 +40,7 @@ export default () => {
 
             items.add(
                 'bestAnswerPost',
-                <div className="CommentPost">
+                <div className="CommentPost" onclick={() => app.current.get('stream').goToNumber(thisPost.number())}>
                     <div className="Post-header">
                         <ul>
                             <li className="item-user">
