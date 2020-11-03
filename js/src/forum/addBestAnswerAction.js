@@ -6,10 +6,10 @@ import CommentPost from 'flarum/components/CommentPost';
 
 export default () => {
     const ineligible = (discussion, post) => {
-        return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user
+        return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user;
     };
 
-    const blockSelectOwnPost = (post) => {
+    const blockSelectOwnPost = post => {
         return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id();
     };
 
@@ -17,7 +17,7 @@ export default () => {
         return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
     };
 
-    const actionLabel = (isBestAnswer) => {
+    const actionLabel = isBestAnswer => {
         return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
     };
 
@@ -43,7 +43,7 @@ export default () => {
             });
     };
 
-    extend(PostControls, 'moderationControls', function (items, post) {
+    extend(PostControls, 'moderationControls', function(items, post) {
         if (app.forum.attribute('useAlternativeBestAnswerUi')) return;
 
         const discussion = post.discussion();
@@ -57,18 +57,21 @@ export default () => {
 
         items.add(
             'bestAnswer',
-            Button.component({
-                icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
-                onclick: () => {
-                    isBestAnswer = !isBestAnswer;
+            Button.component(
+                {
+                    icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
+                    onclick: () => {
+                        isBestAnswer = !isBestAnswer;
 
-                    saveDiscussion(discussion, isBestAnswer, post);
+                        saveDiscussion(discussion, isBestAnswer, post);
+                    },
                 },
-            }, actionLabel(isBestAnswer))
+                actionLabel(isBestAnswer)
+            )
         );
     });
 
-    extend(CommentPost.prototype, 'actionItems', function (items) {
+    extend(CommentPost.prototype, 'actionItems', function(items) {
         if (!app.forum.attribute('useAlternativeBestAnswerUi')) return;
 
         const post = this.attrs.post;
@@ -82,15 +85,18 @@ export default () => {
 
         items.add(
             'bestAnswer',
-            Button.component({
-                className: !hasBestAnswer ? 'Button Button--primary' : (isBestAnswer ? 'Button Button--primary' : 'Button Button--link'),
-                onclick: function onclick() {
-                    hasBestAnswer = !hasBestAnswer;
-                    isBestAnswer = !isBestAnswer;
+            Button.component(
+                {
+                    className: !hasBestAnswer ? 'Button Button--primary' : isBestAnswer ? 'Button Button--primary' : 'Button Button--link',
+                    onclick: function onclick() {
+                        hasBestAnswer = !hasBestAnswer;
+                        isBestAnswer = !isBestAnswer;
 
-                    saveDiscussion(discussion, isBestAnswer, post);
+                        saveDiscussion(discussion, isBestAnswer, post);
+                    },
                 },
-            }, actionLabel(isBestAnswer))
+                actionLabel(isBestAnswer)
+            )
         );
     });
 };
