@@ -6,14 +6,14 @@ export default class BestAnswerInDiscussionNotification extends Notification {
     }
 
     href() {
-        const notification = this.props.notification;
+        const notification = this.attrs.notification;
         const discussion = notification.subject();
 
         return app.route.discussion(discussion);
     }
 
     content() {
-        const user = this.props.notification.fromUser();
+        const user = this.attrs.notification.fromUser();
         return app.translator.trans('fof-best-answer.forum.notification.best_answer_in_discussion', {
             user: user,
         });

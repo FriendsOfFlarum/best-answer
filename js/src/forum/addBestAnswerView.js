@@ -4,12 +4,13 @@ import PostComponent from 'flarum/components/Post';
 import PostMeta from 'flarum/components/PostMeta';
 import username from 'flarum/helpers/username';
 import userOnline from 'flarum/helpers/userOnline';
+import Link from 'flarum/components/Link';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
 export default () => {
     extend(CommentPost.prototype, 'headerItems', function(items) {
-        const post = this.props.post;
+        const post = this.attrs.post;
 
         if (
             post.discussion().bestAnswerPost() &&
@@ -30,7 +31,7 @@ export default () => {
     });
 
     extend(CommentPost.prototype, 'footerItems', function(items) {
-        const thisPost = this.props.post;
+        const thisPost = this.attrs.post;
         const discussion = thisPost.discussion();
         const post = discussion.bestAnswerPost();
 
@@ -39,7 +40,7 @@ export default () => {
 
             items.add(
                 'bestAnswerPost',
-                <div className="CommentPost">
+                <div className="CommentPost" onclick={() => app.current.get('stream').goToNumber(post.number())}>
                     <div className="Post-header">
                         <ul>
                             <li className="item-user">
@@ -47,9 +48,9 @@ export default () => {
                                     {user && userOnline(user)}
                                     <h3>
                                         {user ? (
-                                            <a href={app.route.user(user)} config={m.route}>
+                                            <Link href={app.route.user(user)}>
                                                 {username(user)}
-                                            </a>
+                                            </Link>
                                         ) : (
                                             username(user)
                                         )}
@@ -71,7 +72,7 @@ export default () => {
     });
 
     extend(PostComponent.prototype, 'attrs', function(attrs) {
-        const post = this.props.post;
+        const post = this.attrs.post;
 
         if (
             post.discussion().bestAnswerPost() &&
