@@ -12,6 +12,7 @@
 namespace FoF\BestAnswer\Provider;
 
 use Flarum\Foundation\AbstractServiceProvider;
+use Flarum\Foundation\Application;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\Console\Providers\ConsoleProvider as Console;
@@ -26,8 +27,7 @@ class ConsoleProvider extends AbstractServiceProvider
         }
 
         // Force registering the Schedule as singleton.
-
-        $this->app->register(Console::class);
+        $this->app->make(Application::class)->register(Console::class);
 
         $this->app->resolving(Schedule::class, function (Schedule $schedule) {
             $settings = $this->app->make(SettingsRepositoryInterface::class);

@@ -1,10 +1,11 @@
 import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import humanTime from 'flarum/helpers/humanTime';
+import Link from 'flarum/components/Link';
 
 export default class SelectBestAnswerItem extends Component {
     view() {
-        const { post, discussion } = this.props;
+        const { post, discussion } = this.attrs;
 
         return (
             <div className="Post--BestAnswer">
@@ -14,17 +15,17 @@ export default class SelectBestAnswerItem extends Component {
                         {app.translator.trans('fof-best-answer.forum.best_answer_button')}
                     </span>
                 ) : (
-                    <a href={app.route.post(post)} config={m.route} data-number={post.number()}>
+                    <Link href={app.route.post(post)} data-number={post.number()}>
                         {icon('fas fa-check')}
                         {app.translator.trans('fof-best-answer.forum.best_answer_button')}
-                    </a>
+                    </Link>
                 )}
 
                 <span className="BestAnswer--User">
                     {app.translator.trans('fof-best-answer.forum.best_answer_label', {
                         user: discussion.bestAnswerUser(),
                         time_set: this.getSetTime(discussion),
-                        a: <a onclick={() => m.route(app.route.user(discussion.bestAnswerUser()))} />,
+                        a: <a onclick={() => m.route.set(app.route.user(discussion.bestAnswerUser()))} />,
                     })}
                 </span>
             </div>
