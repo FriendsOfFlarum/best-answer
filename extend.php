@@ -25,7 +25,6 @@ use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\View\Factory;
 
 return [
     new AddFofComponents(),
@@ -48,8 +47,8 @@ return [
     (new Extend\Console())
         ->command(NotifyCommand::class),
 
-    (new Extend\View)
-        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
+    (new Extend\View())
+        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
 
     function (Dispatcher $events) {
         $events->subscribe(Listeners\AddApiAttributes::class);
