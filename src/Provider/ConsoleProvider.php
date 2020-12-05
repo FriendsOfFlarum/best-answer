@@ -13,6 +13,7 @@ namespace FoF\BestAnswer\Provider;
 
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Foundation\Application;
+use Flarum\Foundation\Paths;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\Console\Providers\ConsoleProvider as Console;
@@ -46,7 +47,8 @@ class ConsoleProvider extends AbstractServiceProvider
             }
 
             if ((bool) $settings->get('fof-best-answer.store_log_output')) {
-                $build->appendOutputTo(storage_path('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
+                $paths = $this->app->make(Paths::class);
+                $build->appendOutputTo($paths->storage.('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
             }
         });
     }
