@@ -11,11 +11,15 @@
 
 namespace FoF\BestAnswer;
 
+use Carbon\Carbon;
+use DateTime;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
+use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Extend;
@@ -26,7 +30,6 @@ use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Console\Extend\EnableConsole;
-use Illuminate\Contracts\Events\Dispatcher;
 
 return [
     (new Extend\Frontend('forum'))
@@ -62,14 +65,37 @@ return [
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->hasOne('bestAnswerPost', BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', BasicUserSerializer::class),
+        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
+        ->attribute('hasBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+            return $discussion->bestAnswerPost()->exists();
+        })
+        ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+            return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
+        })
+        ->attribute('startUserId', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+            return $discussion->user_id;
+        })
+        ->attribute('firstPostId', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+            return $discussion->first_post_id;
+        })
+        ->attribute('bestAnswerSetAt', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+            if ($discussion->best_answer_set_at) {
+                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
+            }
+
+            return null;
+        }),
+
+    (new Extend\ApiSerializer(ForumSerializer::class))
+        ->attribute('canSelectBestAnswerOwnPost', function (ForumSerializer $serializer) {
+            return (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
+        })
+        ->attribute('useAlternativeBestAnswerUi', function (ForumSerializer $serializer) {
+            return (bool) app('flarum.settings')->get('fof-best-answer.use_alternative_ui', false);
+        }),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
-
-    function (Dispatcher $events) {
-        $events->subscribe(Listeners\AddApiAttributes::class);
-    },
 
     function (Application $app) {
         $app->register(ConsoleProvider::class);
