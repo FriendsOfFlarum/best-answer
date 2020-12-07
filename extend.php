@@ -23,22 +23,21 @@ use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Extend;
-use Flarum\Foundation\Application;
 use Flarum\Post\Post;
 use Flarum\User\User;
 use FoF\BestAnswer\Console\NotifyCommand;
+use FoF\BestAnswer\Console\NotifySchedule;
 use FoF\BestAnswer\Events\BestAnswerSet;
-use FoF\BestAnswer\Provider\ConsoleProvider;
 use FoF\Console\Extend\EnableConsole;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
-    new Extend\Locales(__DIR__.'/resources/locale'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     new EnableConsole(),
 
@@ -52,7 +51,7 @@ return [
         ->command(NotifyCommand::class),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
@@ -97,7 +96,5 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
 
-    function (Application $app) {
-        $app->register(ConsoleProvider::class);
-    },
+    new \FoF\Console\Extend\ScheduleCommand(new NotifySchedule()),
 ];
