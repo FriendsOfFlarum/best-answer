@@ -54,5 +54,4 @@ class AddApiAttributes
             $event->attributes['useAlternativeBestAnswerUi'] = (bool) app('flarum.settings')->get('fof-best-answer.use_alternative_ui', false);
         }
     }
-
 }
