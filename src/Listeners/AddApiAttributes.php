@@ -13,14 +13,9 @@ namespace FoF\BestAnswer\Listeners;
 
 use Carbon\Carbon;
 use DateTime;
-use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Event\Serializing;
-use Flarum\Api\Event\WillGetData;
-use Flarum\Api\Serializer\BasicPostSerializer;
-use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Event\GetApiRelationship;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Helpers;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -39,19 +34,7 @@ class AddApiAttributes
 
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(GetApiRelationship::class, [$this, 'getApiAttributes']);
         $events->listen(Serializing::class, [$this, 'prepareApiAttributes']);
-        $events->listen(WillGetData::class, [$this, 'includeBestAnswerPost']);
-    }
-
-    public function getApiAttributes(GetApiRelationship $event)
-    {
-        if ($event->isRelationship(DiscussionSerializer::class, 'bestAnswerPost')) {
-            return $event->serializer->hasOne($event->model, BasicPostSerializer::class, 'bestAnswerPost');
-        }
-        if ($event->isRelationship(DiscussionSerializer::class, 'bestAnswerUser')) {
-            return $event->serializer->hasOne($event->model, BasicUserSerializer::class, 'bestAnswerUser');
-        }
     }
 
     public function prepareApiAttributes(Serializing $event)
@@ -72,13 +55,4 @@ class AddApiAttributes
         }
     }
 
-    public function includeBestAnswerPost(WillGetData $event)
-    {
-        if ($event->isController(ShowDiscussionController::class)) {
-            $event->addInclude('bestAnswerPost');
-            $event->addInclude('bestAnswerPost.discussion');
-            $event->addInclude('bestAnswerPost.user');
-            $event->addInclude('bestAnswerUser');
-        }
-    }
 }

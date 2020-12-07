@@ -38,7 +38,7 @@ class DefaultSettings implements LifecycleInterface
                 $this->settings->set('fof-best-answer.stop_overnight', false);
             }
             if (($this->settings->get('fof-best-answer.store_log_output')) === null) {
-                $this->settings->set('fof-best-answer.store_log_output', true);
+                $this->settings->set('fof-best-answer.store_log_output', false);
             }
         }
     }

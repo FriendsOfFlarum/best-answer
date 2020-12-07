@@ -11,10 +11,13 @@
 
 namespace FoF\BestAnswer;
 
+use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
+use Flarum\Api\Serializer\BasicPostSerializer;
+use Flarum\Api\Serializer\BasicUserSerializer;
+use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
-use Flarum\Event\ConfigureNotificationTypes;
 use Flarum\Extend;
 use Flarum\Foundation\Application;
 use Flarum\Post\Post;
@@ -22,12 +25,10 @@ use Flarum\User\User;
 use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Provider\ConsoleProvider;
-use FoF\Components\Extend\AddFofComponents;
 use FoF\Console\Extend\EnableConsole;
 use Illuminate\Contracts\Events\Dispatcher;
 
 return [
-    new AddFofComponents(),
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less'),
@@ -50,17 +51,24 @@ return [
     (new Extend\View())
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),
 
+    (new Extend\Event())
+        ->listen(Saving::class, Listeners\SelectBestAnswer::class)
+        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class),
+
+    (new Extend\Notification())
+        ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
+        ->type(Notification\AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert'])
+        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []),
+
+    (new Extend\ApiSerializer(DiscussionSerializer::class))
+        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
+        ->hasOne('bestAnswerUser', BasicUserSerializer::class),
+
+    (new Extend\ApiController(ShowDiscussionController::class))
+        ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
+
     function (Dispatcher $events) {
         $events->subscribe(Listeners\AddApiAttributes::class);
-
-        $events->listen(ConfigureNotificationTypes::class, function (ConfigureNotificationTypes $event) {
-            $event->add(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email']);
-            $event->add(Notification\AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert']);
-            $event->add(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []);
-        });
-
-        $events->listen(Saving::class, Listeners\SelectBestAnswer::class);
-        $events->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class);
     },
 
     function (Application $app) {

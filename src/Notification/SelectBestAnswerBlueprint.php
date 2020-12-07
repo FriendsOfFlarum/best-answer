@@ -14,6 +14,7 @@ namespace FoF\BestAnswer\Notification;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
 {
@@ -82,7 +83,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      *
      * @return string
      */
-    public function getEmailSubject()
+    public function getEmailSubject(TranslatorInterface $translator)
     {
         return app('translator')->trans('fof-best-answer.email.subject.select', [
             '{discussion_title}' => $this->discussion->title,

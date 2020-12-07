@@ -21,6 +21,38 @@ fof-best-answer:
       mismatch: "Selected post does not exist in this discussion"
 
     notification:
+      email:
+        awarded:
+          subject: Your post was set as the best answer by {user}
+          body: |
+            Hey {recipient_display_name},
+
+            Great job, {actor_display_name} just set your post as the best answer in the discussion '{title}'. Thanks for helping out.
+
+            View it here: {url}
+
+        ba-set:
+          subject: A best answer was set by {user}
+          body: |
+            Hey {recipient_display_name},
+
+            {actor_display_name} just set a best answer in the discussion '{title}', which you participated in.
+
+            Check it out: {url}
+
+        select:
+          subject: Did you manage get your question answered?
+          body: |
+            Hey {recipient_display_name},
+
+            Just checking in; by now you should have plenty of replies to your question - '{title}'. Hopefully one of them has helped you solve your problem.
+
+            If so, it would be really helpful for future members if you could set a best answer to your question. It'll help people with the same problem find the answer they need, and it's also a big thank you to the members who helped you out. They give their time voluntarily, so it's nice to let them know that they're doing well.
+
+            Visit the discussion here: {url}, and select the most appropriate post as the best answer.
+
+            Thanks!
+
       best_answer_in_discussion: "{username} set a best answer in this discussion"
       content: Please select a Best Answer if your question has been answered
       awarded: Your post was set as the best answer by {username}
