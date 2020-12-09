@@ -91,5 +91,5 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
 
-    new \FoF\Console\Extend\ScheduleCommand(NotifySchedule::class),
+    new \FoF\Console\Extend\ScheduleCommand(new NotifySchedule()),
 ];
