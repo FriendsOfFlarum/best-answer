@@ -17,12 +17,12 @@ use Illuminate\Console\Scheduling\Schedule;
 
 class NotifySchedule
 {
-    public function __invoke()
+    public function __invoke(): Schedule
     {
         $schedule = app()->make(Schedule::class);
         $settings = app()->make(SettingsRepositoryInterface::class);
         $build = $schedule->command(NotifyCommand::class)
-            ->everyMinute()
+            ->hourly()
             ->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
@@ -38,5 +38,7 @@ class NotifySchedule
             $paths = app()->make(Paths::class);
             $build->appendOutputTo($paths->storage.('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
         }
+
+        return $schedule;
     }
 }
