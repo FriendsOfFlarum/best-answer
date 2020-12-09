@@ -18,7 +18,6 @@ use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
@@ -85,13 +84,9 @@ return [
             return null;
         }),
 
-    (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attribute('canSelectBestAnswerOwnPost', function (ForumSerializer $serializer) {
-            return (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
-        })
-        ->attribute('useAlternativeBestAnswerUi', function (ForumSerializer $serializer) {
-            return (bool) app('flarum.settings')->get('fof-best-answer.use_alternative_ui', false);
-        }),
+    (new Extend\Settings())
+        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post')
+        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui'),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
