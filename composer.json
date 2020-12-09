@@ -8,8 +8,16 @@
   "license": "MIT",
   "support": {
     "issues": "https://github.com/FriendsOfFlarum/best-answer/issues",
-    "source": "https://github.com/FriendsOfFlarum/best-answer"
-},
+    "source": "https://github.com/FriendsOfFlarum/best-answer",
+    "forum": "https://discuss.flarum.org/d/21894"
+  },
+  "homepage": "https://friendsofflarum.org",
+  "funding": [
+    {
+      "type": "website",
+      "url": "https://opencollective.com/fof/donate"
+    }
+  ],
   "require": {
     "flarum/core": ">=0.1.0-beta.15 <0.1.0-beta.16",
     "fof/console": ">=0.6.0"
@@ -19,11 +27,6 @@
   },
   "authors": [
     {
-      "name": "Wiwat Srisattha",
-      "email": "wiwat@srisattha.com",
-      "role": "Developer (Original)"
-    },
-    {
       "name": "David Sevilla Martin",
       "email": "me+fof@datitisev.me",
       "role": "Developer"
@@ -32,6 +35,11 @@
       "name": "IanM",
       "email": "ian@flarumite.com",
       "role": "Developer"
+    },
+    {
+      "name": "Wiwat Srisattha",
+      "email": "wiwat@srisattha.com",
+      "role": "Developer (Original)"
     }
   ],
   "autoload": {
@@ -42,12 +50,7 @@
   "extra": {
     "flarum-extension": {
       "title": "FoF Best Answer",
-      "category": "feature",
-      "info": {
-          "donate": "https://opencollective.com/fof/donate",
-          "website": "https://friendsofflarum.org/",
-          "support": "https://discuss.flarum.org/d/21894"
-      },
+      "category": "discussion",
       "icon": {
         "name": "far fa-comment-dots",
         "backgroundColor": "#e74c3c",
