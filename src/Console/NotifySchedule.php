@@ -31,14 +31,14 @@ class NotifySchedule
      * @var Schedule
      */
     public $schedule;
-    
+
     public function __construct(SettingsRepositoryInterface $settings, Paths $paths, Schedule $schedule)
     {
         $this->settings = $settings;
         $this->paths = $paths;
         $this->schedule = $schedule;
     }
-    
+
     public function __invoke()
     {
         $build = $this->schedule->command(NotifyCommand::class)
