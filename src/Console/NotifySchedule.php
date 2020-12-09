@@ -22,7 +22,7 @@ class NotifySchedule
         $schedule = app()->make(Schedule::class);
         $settings = app()->make(SettingsRepositoryInterface::class);
         $build = $schedule->command(NotifyCommand::class)
-            ->hourly()
+            ->everyMinute()
             ->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
@@ -36,7 +36,7 @@ class NotifySchedule
 
         if ((bool) $settings->get('fof-best-answer.store_log_output')) {
             $paths = app()->make(Paths::class);
-            $build->appendOutputTo($paths->storage.('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
+            $build->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
         }
 
         return $schedule;
