@@ -48,7 +48,7 @@ class ConsoleProvider extends AbstractServiceProvider
 
             if ((bool) $settings->get('fof-best-answer.store_log_output')) {
                 $paths = $this->app->make(Paths::class);
-                $build->appendOutputTo($paths->storage.('logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
+                $build->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
             }
         });
     }

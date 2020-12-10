@@ -15,6 +15,7 @@ use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
 use Flarum\User\User;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterface
 {
@@ -92,9 +93,9 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
      *
      * @return string
      */
-    public function getEmailSubject()
+    public function getEmailSubject(TranslatorInterface $translator)
     {
-        return app('translator')->trans('fof-best-answer.email.subject.awarded', [
+        return $translator->trans('fof-best-answer.email.subject.awarded', [
             '{display_name}'     => $this->actor->display_name,
             '{discussion_title}' => $this->discussion->title,
         ]);
