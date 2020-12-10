@@ -1,5 +1,6 @@
-Hey {{ $user->username }},
-
-Great job, {{ $blueprint->actor->username }} just set your post as the best answer in the discussion '{{ $blueprint->discussion->title }}'. Thanks for helping out.
-
-View it here: {{ $url->to('forum')->route('discussion', ['id' => $blueprint->discussion->id]) }}
+{!! $translator->trans('fof-best-answer.email.body.awarded', [
+    '{recipient_display_name}' => $user->display_name,
+    '{actor_display_name}' => $blueprint->actor->display_name,
+    '{discussion_title}' => $blueprint->discussion->title,
+    '{discussion_url}' => $url->to('forum')->route('discussion', ['id' => $blueprint->discussion->id]),
+]) !!}

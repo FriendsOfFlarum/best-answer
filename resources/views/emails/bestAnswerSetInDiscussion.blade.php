@@ -1,5 +1,6 @@
-Hey {{ $user->username }},
-
-{{ $blueprint->actor->username }} just set a best answer in the discussion '{{ $blueprint->discussion->title }}', which you participated in.
-
-Check it out: {{ $url->to('forum')->route('discussion', ['id' => $blueprint->discussion->id]) }}
+{!! $translator->trans('fof-best-answer.email.body.ba-set', [
+    '{recipient_display_name}' => $user->display_name,
+    '{actor_display_name}' => $blueprint->actor->display_name,
+    '{discussion_title}' => $blueprint->discussion->title,
+    '{discussion_url}' => $url->to('forum')->route('discussion', ['id' => $blueprint->discussion->id]),
+]) !!}
