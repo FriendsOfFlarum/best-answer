@@ -95,7 +95,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
     public function getEmailSubject()
     {
         return app('translator')->trans('fof-best-answer.email.subject.awarded', [
-            '{display_name}'  => $this->actor->display_name,
+            '{display_name}'     => $this->actor->display_name,
             '{discussion_title}' => $this->discussion->title,
         ]);
     }
