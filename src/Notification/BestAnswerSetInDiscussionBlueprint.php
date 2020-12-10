@@ -95,7 +95,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
     public function getEmailSubject()
     {
         return app('translator')->trans('fof-best-answer.email.subject.ba-set', [
-            '{display_name}'  => $this->actor->display_name,
+            '{display_name}'     => $this->actor->display_name,
             '{discussion_title}' => $this->discussion->title,
         ]);
     }
