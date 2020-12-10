@@ -84,8 +84,8 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      */
     public function getEmailSubject()
     {
-        return app('translator')->trans('fof-best-answer.forum.notification.select_email_title', [
-            'title' => $this->discussion->title,
+        return app('translator')->trans('fof-best-answer.email.subject.select', [
+            '{discussion_title}' => $this->discussion->title,
         ]);
     }
 }

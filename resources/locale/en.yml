@@ -4,7 +4,6 @@ fof-best-answer:
       best_answer: Select Best Answer (own Discussion)
       best_answer_not_own_discussion: Select Best Answer (not own Discussion)
     settings:
-      title: FriendsOfFlarum Best Answer
       allow_select_own_post: Allow users to select their own posts
       select_best_answer_reminder_days: Remind users to select a best answer after X days
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
@@ -23,11 +22,37 @@ fof-best-answer:
 
     notification:
       best_answer_in_discussion: "{username} set a best answer in this discussion"
-      best_answer_set_in_discussion_email: A best answer was set
       content: Please select a Best Answer if your question has been answered
       awarded: Your post was set as the best answer by {username}
-      awarded_email: Your post was set as the best answer by user
-      select_email_title: Did you manage to sort your problem?
+
       preferences:
         awarded_best_answer: When someone sets my post as a best answer
         best_answer_in_discussion: When a best answer is set in a discussion I participated in
+  email:
+    subject:
+      awarded: Your post was set as the best answer by {display_name}
+      ba-set: A best answer was set by {display_name}
+      select: Did you manage get your question answered?
+    body:
+      awarded: |
+        Hey {recipient_display_name},
+
+        Great job, {actor_display_name} just set your post as the best answer in the discussion '{discussion_title}'. Thanks for helping out.
+
+        View it here: {discussion_url}
+      ba-set: |
+        Hey {recipient_display_name},
+
+        {actor_display_name} just set a best answer in the discussion '{discussion_title}', which you participated in.
+
+        Check it out: {discussion_url}
+      select: |
+        Hey {recipient_display_name},
+
+        Just checking in; by now you should have plenty of replies to your question - '{discussion_title}'. Hopefully one of them has helped you solve your problem.
+
+        If so, it would be really helpful for future members if you could set a best answer to your question. It'll help people with the same problem find the answer they need, and it's also a big thank you to the members who helped you out. They give their time voluntarily, so it's nice to let them know that they're doing well.
+
+        Visit the discussion here: {discussion_url}, and select the most appropriate post as the best answer.
+
+        Thanks!
