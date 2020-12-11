@@ -35,11 +35,6 @@
         "name": "IanM",
         "homepage": "https://discuss.flarum.org/u/ianm",
         "role": "Developer"
-      },
-      {
-        "name": "Wiwat Srisattha",
-        "email": "wiwat@srisattha.com",
-        "role": "Developer (Original)"
       }
     ],
     "autoload": {
