@@ -57,6 +57,8 @@ class SelectBestAnswer
             return;
         }
 
+        $actor = $event->actor;
+
         $discussion = $event->discussion;
         $id = (int) Arr::get($event->data, $this->key);
 
@@ -75,13 +77,13 @@ class SelectBestAnswer
             );
         }
 
-        if ($post && (!Helpers::canSelectPostAsBestAnswer($event->actor, $post) || !$post->isVisibleTo($event->actor))) {
+        if ($post && (!Helpers::canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
             throw new PermissionDeniedException();
         }
 
         if ($id > 0) {
             $discussion->best_answer_post_id = $id;
-            $discussion->best_answer_user_id = $event->actor->id;
+            $discussion->best_answer_user_id = $actor->id;
             $discussion->best_answer_set_at = Carbon::now();
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
@@ -90,7 +92,10 @@ class SelectBestAnswer
             $discussion->best_answer_post_id = null;
             $discussion->best_answer_user_id = null;
             $discussion->best_answer_set_at = null;
-            $this->bus->dispatch(new BestAnswerUnset($discussion, $event->actor));
+
+            $event->discussion->afterSave(function ($discussion) use ($actor) {
+                $this->bus->dispatch(new BestAnswerUnset($discussion, $actor));
+            });
         }
 
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
