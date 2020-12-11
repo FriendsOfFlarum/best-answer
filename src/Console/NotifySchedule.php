@@ -23,7 +23,7 @@ class NotifySchedule
         $settings = app(SettingsRepositoryInterface::class);
 
         $build = $schedule->command(NotifyCommand::class)
-            ->everyMinute()
+            ->hourly()
             ->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
