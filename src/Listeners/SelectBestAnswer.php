@@ -18,10 +18,12 @@ use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\User\Exception\PermissionDeniedException;
 use FoF\BestAnswer\Events\BestAnswerSet;
+use FoF\BestAnswer\Events\BestAnswerUnset;
 use FoF\BestAnswer\Helpers;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SelectBestAnswer
 {
@@ -32,12 +34,21 @@ class SelectBestAnswer
      */
     private $notifications;
 
+    /**
+     * @var Dispatcher
+     */
     private $bus;
 
-    public function __construct(NotificationSyncer $notifications, Dispatcher $bus)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator)
     {
         $this->notifications = $notifications;
         $this->bus = $bus;
+        $this->translator = $translator;
     }
 
     public function handle(Saving $event)
@@ -59,7 +70,7 @@ class SelectBestAnswer
         if ($id > 0 && !Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
             throw new ValidationException(
                 [
-                    'error' => app('translator')->trans('fof-best-answer.forum.errors.mismatch'),
+                    'error' => $this->translator->trans('fof-best-answer.forum.errors.mismatch'),
                 ]
             );
         }
@@ -79,6 +90,7 @@ class SelectBestAnswer
             $discussion->best_answer_post_id = null;
             $discussion->best_answer_user_id = null;
             $discussion->best_answer_set_at = null;
+            $this->bus->dispatch(new BestAnswerUnset($discussion, $event->actor));
         }
 
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
