@@ -28,15 +28,16 @@ use FoF\BestAnswer\Console\NotifyCommand;
 use FoF\BestAnswer\Console\NotifySchedule;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\Console\Extend\EnableConsole;
+use FoF\Console\Extend\ScheduleCommand;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
-    new Extend\Locales(__DIR__.'/resources/locale'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     new EnableConsole(),
 
@@ -50,7 +51,7 @@ return [
         ->command(NotifyCommand::class),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
@@ -91,5 +92,5 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
 
-    //new \FoF\Console\Extend\ScheduleCommand(new NotifySchedule()),
+    new ScheduleCommand(new NotifySchedule()),
 ];
