@@ -86,8 +86,12 @@ return [
         }),
 
     (new Extend\Settings())
-        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post')
-        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui'),
+        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', function ($value) {
+            return (bool) $value;
+        })
+        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', function ($value) {
+            return (bool) $value;
+        }),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),

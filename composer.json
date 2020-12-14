@@ -20,7 +20,7 @@
     ],
     "require": {
       "flarum/core": ">=0.1.0-beta.15 <0.1.0-beta.16",
-      "fof/console": "*"
+      "fof/console": "^0.6.1"
     },
     "replace": {
       "wiwatsrt/flarum-ext-best-answer": "*"
