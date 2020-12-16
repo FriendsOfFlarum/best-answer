@@ -71,18 +71,10 @@ export default () => {
         }
     });
 
-    extend(PostComponent.prototype, 'attrs', function(attrs) {
+    extend(PostComponent.prototype, 'elementAttrs', function (elementAttrs) {
         const post = this.attrs.post;
-
-        if (
-            post.discussion().bestAnswerPost() &&
-            post
-                .discussion()
-                .bestAnswerPost()
-                .id() === post.id() &&
-            !post.isHidden()
-        ) {
-            attrs.className += ' Post--bestAnswer';
+        if (post.discussion().bestAnswerPost() && post.discussion().bestAnswerPost().id() === post.id() && !post.isHidden()) {
+            elementAttrs.className ? (elementAttrs.className += ' Post--bestAnswer') : (elementAttrs.className = 'Post--bestAnswer');
         }
     });
 };
