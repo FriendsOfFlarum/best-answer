@@ -9,17 +9,10 @@ import Link from 'flarum/components/Link';
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
 export default () => {
-    extend(CommentPost.prototype, 'headerItems', function(items) {
+    extend(CommentPost.prototype, 'headerItems', function (items) {
         const post = this.attrs.post;
 
-        if (
-            post.discussion().bestAnswerPost() &&
-            post
-                .discussion()
-                .bestAnswerPost()
-                .id() === post.id() &&
-            !post.isHidden()
-        ) {
+        if (post.discussion().bestAnswerPost() && post.discussion().bestAnswerPost().id() === post.id() && !post.isHidden()) {
             items.add(
                 'isBestAnswer',
                 SelectBestAnswerItem.component({
@@ -30,7 +23,7 @@ export default () => {
         }
     });
 
-    extend(CommentPost.prototype, 'footerItems', function(items) {
+    extend(CommentPost.prototype, 'footerItems', function (items) {
         const thisPost = this.attrs.post;
         const discussion = thisPost.discussion();
         const post = discussion.bestAnswerPost();
@@ -46,15 +39,7 @@ export default () => {
                             <li className="item-user">
                                 <div className="PostUser">
                                     {user && userOnline(user)}
-                                    <h3>
-                                        {user ? (
-                                            <Link href={app.route.user(user)}>
-                                                {username(user)}
-                                            </Link>
-                                        ) : (
-                                            username(user)
-                                        )}
-                                    </h3>
+                                    <h3>{user ? <Link href={app.route.user(user)}>{username(user)}</Link> : username(user)}</h3>
                                 </div>
                             </li>
                             {post.discussion() && <li className="item-meta">{PostMeta.component({ post })}</li>}

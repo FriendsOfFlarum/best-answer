@@ -3,8 +3,8 @@ import { extend } from 'flarum/extend';
 import Badge from 'flarum/components/Badge';
 import Discussion from 'flarum/models/Discussion';
 
-export default function() {
-    extend(Discussion.prototype, 'badges', function(items) {
+export default function () {
+    extend(Discussion.prototype, 'badges', function (items) {
         if (this.hasBestAnswer() && !items.has('hidden')) {
             items.add(
                 'bestAnswer',
