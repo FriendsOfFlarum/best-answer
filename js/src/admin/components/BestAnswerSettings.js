@@ -17,7 +17,7 @@ export default class BestAnswerSettings extends ExtensionPage {
             <div className="container">
                 <div className="BestAnswerSettingsPage">
                     <div className="GeneralPreferences">
-                        <label>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</label>
+                        <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.allow_select_own_post" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post')}
@@ -31,7 +31,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                     </div>
                     <hr />
                     <div className="Reminders">
-                        <label>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</label>
+                        <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
                         <div className="Form-group">
                             <NumberItem name="fof-best-answer.select_best_answer_reminder_days" placeholder="0" min="0" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
@@ -46,7 +46,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                     </div>
                     <hr />
                     <div className="AdvancedPreferences">
-                        <label>{app.translator.trans('fof-best-answer.admin.settings.label.advanced')}</label>
+                        <h3>{app.translator.trans('fof-best-answer.admin.settings.label.advanced')}</h3>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.schedule_on_one_server" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server')}
