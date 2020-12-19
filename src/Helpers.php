@@ -19,6 +19,11 @@ class Helpers
 {
     public static function canSelectBestAnswer(User $user, Discussion $discussion)
     {
+        // Prevent best answers being set in a private discussion (ie byobu, etc)
+        if ($discussion->is_private) {
+            return false;
+        }
+        
         return $user->id == $discussion->user_id
             ? $user->can('selectBestAnswerOwnDiscussion', $discussion)
             : $user->can('selectBestAnswerNotOwnDiscussion', $discussion);
@@ -26,6 +31,11 @@ class Helpers
 
     public static function canSelectPostAsBestAnswer(User $user, Post $post)
     {
+        // Prevent best answers being set in a private discussion (ie byobu, etc)
+        if ($post->discussion->is_private) {
+            return false;
+        }
+        
         $canSelectOwnPost = (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
         $can = self::canSelectBestAnswer($user, $post->discussion);
 
