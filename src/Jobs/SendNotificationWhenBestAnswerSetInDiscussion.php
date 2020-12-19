@@ -19,7 +19,6 @@ use FoF\BestAnswer\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Arr;
 
 class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
 {
@@ -67,7 +66,7 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
         if ($bestAnswerAuthor) {
             array_push($exclude, $bestAnswerAuthor->id);
         }
-            
+
         $recipients = $recipientsBuilder
             ->whereNotIn('id', $exclude)
             ->get();
