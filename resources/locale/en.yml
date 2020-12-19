@@ -4,6 +4,11 @@ fof-best-answer:
       best_answer: Select Best Answer (own Discussion)
       best_answer_not_own_discussion: Select Best Answer (not own Discussion)
     settings:
+      label:
+        general: General
+        reminders: Reminders
+        advanced: Advanced
+        reminders_notice: For reminders to function correctly, you must have set up the Flarum scheduler correctly.
       allow_select_own_post: Allow users to select their own posts
       select_best_answer_reminder_days: Remind users to select a best answer after X days
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
