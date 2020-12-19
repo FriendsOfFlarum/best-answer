@@ -23,7 +23,7 @@ class Helpers
         if ($discussion->is_private) {
             return false;
         }
-        
+
         return $user->id == $discussion->user_id
             ? $user->can('selectBestAnswerOwnDiscussion', $discussion)
             : $user->can('selectBestAnswerNotOwnDiscussion', $discussion);
@@ -35,7 +35,7 @@ class Helpers
         if ($post->discussion->is_private) {
             return false;
         }
-        
+
         $canSelectOwnPost = (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
         $can = self::canSelectBestAnswer($user, $post->discussion);
 
