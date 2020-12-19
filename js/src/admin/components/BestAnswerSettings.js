@@ -12,7 +12,18 @@ export default class BestAnswerSettings extends ExtensionPage {
         this.setting = this.setting.bind(this);
     }
 
+    // Not yet used. Planned for multi-select dropdown of tag selection
+    getTags() {
+        return app.store.all('tags').reduce((o, g) => {
+            o[g.id()] = g.name();
+
+            return o;
+        }, {});
+    }
+
     content() {
+        const tags = app.store.all('tags');
+
         return [
             <div className="container">
                 <div className="BestAnswerSettingsPage">
@@ -32,6 +43,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                     <hr />
                     <div className="Reminders">
                         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
+                        <p>{app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}</p>
                         <div className="Form-group">
                             <NumberItem name="fof-best-answer.select_best_answer_reminder_days" placeholder="0" min="0" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
@@ -41,8 +53,12 @@ export default class BestAnswerSettings extends ExtensionPage {
                             <StringItem name="fof-best-answer.remind_tag_ids" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.remind_tag_ids')}
                             </StringItem>
+                            <ul>
+                            {tags.map(function (tag) {
+                                return [<li>{tag.name()} <code>{tag.id()}</code></li>];
+                            })}
+                            </ul>
                         </div>
-                        <p>{app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}</p>
                     </div>
                     <hr />
                     <div className="AdvancedPreferences">
