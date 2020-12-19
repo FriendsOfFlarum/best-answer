@@ -43,7 +43,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                     <hr />
                     <div className="Reminders">
                         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
-                        <p>{app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}</p>
+                        <p>{app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')} <a href="https://discuss.flarum.org/d/24118" target="_blank">Flarum Scheduler Info</a></p>
                         <div className="Form-group">
                             <NumberItem name="fof-best-answer.select_best_answer_reminder_days" placeholder="0" min="0" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
