@@ -19,6 +19,7 @@ use FoF\BestAnswer\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
 
 class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
 {
@@ -54,19 +55,27 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
         $bestAnswerAuthor = $this->getUserFromPost($this->discussion->best_answer_post_id);
 
         // Send notification to the post author that has been awarded the best answer, except if the best answer was set by the author
-        if ($bestAnswerAuthor->id !== $this->actor->id) {
+        if ($bestAnswerAuthor && $bestAnswerAuthor->id !== $this->actor->id) {
             $notifications->sync(new Notification\AwardedBestAnswerBlueprint($this->discussion, $this->actor), [$bestAnswerAuthor]);
         }
 
         // Send notifications to other participants of the discussion
-        $recipients = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id))
-            ->whereNotIn('id', [$bestAnswerAuthor->id, $this->actor->id])
+        $recipientsBuilder = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id));
+
+        $exclude = [$this->actor->id];
+
+        if ($bestAnswerAuthor) {
+            array_push($exclude, $bestAnswerAuthor->id);
+        }
+            
+        $recipients = $recipientsBuilder
+            ->whereNotIn('id', $exclude)
             ->get();
 
         $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
     }
 
-    public function getUserFromPost(int $post_id): User
+    public function getUserFromPost(int $post_id): ?User
     {
         return Post::find($post_id)->user;
     }
