@@ -71,7 +71,7 @@ class SelectBestAnswer
         // Added temporarily for investigating an issue
         if (!$post->exists) {
             throw new ValidationException([
-                'error' => 'Debug: Post does not exist'
+                'error' => 'Debug: Post does not exist',
             ]);
         }
 
@@ -84,7 +84,7 @@ class SelectBestAnswer
                         'requestId'         => $id,
                         'postId'            => $post->id,
                         'postDiscussionId'  => $post->discussion->id,
-                        'discussionId'      => $discussion->id
+                        'discussionId'      => $discussion->id,
                     ]),
                 ]
             );
