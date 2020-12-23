@@ -68,11 +68,24 @@ class SelectBestAnswer
 
         $post = $event->discussion->posts()->find($id);
 
+        // Added temporarily for investigating an issue
+        if (!$post->exists) {
+            throw new ValidationException([
+                'error' => 'Debug: Post does not exist'
+            ]);
+        }
+
         // If 'id' = 0, then we are removing a best answer.
         if ($id > 0 && !Helpers::postBelongsToTargetDiscussion($post, $discussion)) {
             throw new ValidationException(
                 [
-                    'error' => $this->translator->trans('fof-best-answer.forum.errors.mismatch'),
+                    'error' => $this->translator->trans('fof-best-answer.forum.errors.mismatch', [
+                        // Added temporarily for investigating an issue
+                        'requestId'         => $id,
+                        'postId'            => $post->id,
+                        'postDiscussionId'  => $post->discussion->id,
+                        'discussionId'      => $discussion->id
+                    ]),
                 ]
             );
         }

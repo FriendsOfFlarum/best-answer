@@ -23,7 +23,7 @@ fof-best-answer:
     best_answer_button: Best Answer
     best_answer_label: set by <a>{username}</a> {time_set}
     errors:
-      mismatch: "Selected post does not exist in this discussion"
+      mismatch: "Selected post does not exist in this discussion. Debug: Request Post ID - {requestId}, Post ID - {postId}, Post Discussion ID - {postDiscussionId}, Discussion ID - {discussionId}"
 
     notification:
       best_answer_in_discussion: "{username} set a best answer in this discussion"
