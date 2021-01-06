@@ -17,9 +17,8 @@ use Illuminate\Console\Scheduling\Schedule;
 
 class NotifySchedule
 {
-    public function __invoke()
+    public function __invoke(Schedule $schedule)
     {
-        $schedule = app(Schedule::class);
         $settings = app(SettingsRepositoryInterface::class);
 
         $build = $schedule->command(NotifyCommand::class)
