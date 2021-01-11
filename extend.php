@@ -21,6 +21,7 @@ use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
+use Flarum\Event\ConfigureDiscussionGambits;
 use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\User\User;
@@ -60,7 +61,8 @@ return [
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
-        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class),
+        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
+        ->listen(ConfigureDiscussionGambits::class, Listeners\AddGambits::class),
 
     (new Extend\Notification())
         ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
