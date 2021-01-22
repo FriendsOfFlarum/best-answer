@@ -23,8 +23,8 @@ return [
     },
     'down' => function (Builder $schema) {
         $schema->table('discussions', function (Blueprint $table) {
+            $table->dropIndex(['best_answer_set_at']);
             $table->dropColumn('best_answer_set_at');
-            $table->dropIndex('best_answer_set_at');
         });
     },
 ];
