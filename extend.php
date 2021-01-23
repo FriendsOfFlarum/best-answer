@@ -13,6 +13,7 @@ namespace FoF\BestAnswer;
 
 use Carbon\Carbon;
 use DateTime;
+use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
@@ -73,16 +74,10 @@ return [
         ->hasOne('bestAnswerPost', BasicPostSerializer::class)
         ->hasOne('bestAnswerUser', BasicUserSerializer::class)
         ->attribute('hasBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            return $discussion->bestAnswerPost()->exists();
+            return (bool) $discussion->bestAnswerPost;
         })
         ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
             return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
-        })
-        ->attribute('startUserId', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            return $discussion->user_id;
-        })
-        ->attribute('firstPostId', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            return $discussion->first_post_id;
         })
         ->attribute('bestAnswerSetAt', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
             if ($discussion->best_answer_set_at) {
@@ -101,7 +96,10 @@ return [
         }),
 
     (new Extend\ApiController(ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerPost.discussion', 'bestAnswerPost.user', 'bestAnswerUser']),
+        ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
+
+    (new Extend\ApiController(ListDiscussionsController::class))
+        ->addInclude(['bestAnswerPost']),
 
     new ScheduleCommand(new NotifySchedule()),
 ];

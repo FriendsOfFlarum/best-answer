@@ -15,8 +15,6 @@ app.initializers.add('fof/best-answer', () => {
     Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
     Discussion.prototype.bestAnswerUser = Model.hasOne('bestAnswerUser');
     Discussion.prototype.hasBestAnswer = Model.attribute('hasBestAnswer');
-    Discussion.prototype.startUserId = Model.attribute('startUserId', Number);
-    Discussion.prototype.firstPostId = Model.attribute('firstPostId', Number);
     Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
     Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt', Model.transformDate);
 
