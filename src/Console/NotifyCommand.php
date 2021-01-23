@@ -78,12 +78,16 @@ class NotifyCommand extends Command
 
         $query = Discussion::query();
 
-        if ($this->extensions->isEnabled('flarum-tags')) {
-            $tags = explode(',', $this->settings->get('fof-best-answer.remind_tag_ids'));
-            if ($tags) {
+        if ($this->extensions->isEnabled('flarum-tags') && class_exists(\Flarum\Tags\Tag::class) && $settingIds = $this->settings->get('fof-best-answer.remind_tag_ids')) {
+            $this->info("Restricting to tags $settingIds");
+            $tags = explode(',', $settingIds);
+
+            if (!empty($tags)) {
                 $query->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id');
                 $query->whereIn('discussion_tag.tag_id', $tags);
             }
+        } else {
+            $this->info("No tag restrictions");
         }
 
         $query->whereNull('discussions.best_answer_post_id')
