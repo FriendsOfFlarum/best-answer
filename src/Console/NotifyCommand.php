@@ -87,7 +87,7 @@ class NotifyCommand extends Command
                 $query->whereIn('discussion_tag.tag_id', $tags);
             }
         } else {
-            $this->info("No tag restrictions");
+            $this->info('No tag restrictions');
         }
 
         $query->whereNull('discussions.best_answer_post_id')
