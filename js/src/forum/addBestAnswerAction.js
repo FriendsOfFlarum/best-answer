@@ -31,7 +31,7 @@ export default () => {
                     : delete discussion.data.relationships.bestAnswerPost,
             })
             .then(() => {
-                if (app.current instanceof DiscussionPage) {
+                if (app.current.matches(DiscussionPage)) {
                     app.current.stream.update();
                 }
 
@@ -54,6 +54,8 @@ export default () => {
         if (post.contentType() !== 'comment') return;
 
         if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
+
+        if (!app.current.matches(DiscussionPage)) return;
 
         items.add(
             'bestAnswer',
@@ -82,6 +84,8 @@ export default () => {
         post.pushAttributes({ isBestAnswer });
 
         if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
+
+        if (!app.current.matches(DiscussionPage)) return;
 
         items.add(
             'bestAnswer',
