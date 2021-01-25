@@ -53,9 +53,7 @@ export default () => {
 
         if (post.contentType() !== 'comment') return;
 
-        if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
-
-        if (!app.current.matches(DiscussionPage)) return;
+        if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
 
         items.add(
             'bestAnswer',
@@ -83,9 +81,7 @@ export default () => {
 
         post.pushAttributes({ isBestAnswer });
 
-        if (ineligible(discussion, post) || blockSelectOwnPost(post)) return;
-
-        if (!app.current.matches(DiscussionPage)) return;
+        if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
 
         items.add(
             'bestAnswer',
