@@ -8,7 +8,7 @@ export default class SelectBestAnswerItem extends Component {
         const { post, discussion } = this.attrs;
 
         return (
-            <div className="Post--BestAnswer">
+            <li className="Post--BestAnswer">
                 {post ? (
                     <span>
                         {icon('fas fa-check')}
@@ -28,7 +28,7 @@ export default class SelectBestAnswerItem extends Component {
                         a: <a onclick={() => m.route.set(app.route.user(discussion.bestAnswerUser()))} />,
                     })}
                 </span>
-            </div>
+            </li>
         );
     }
 
