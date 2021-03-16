@@ -46,7 +46,7 @@
     "extra": {
       "flarum-extension": {
         "title": "FoF Best Answer",
-        "category": "discussion",
+        "category": "feature",
         "icon": {
           "name": "far fa-comment-dots",
           "backgroundColor": "#e74c3c",

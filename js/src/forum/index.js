@@ -1,8 +1,8 @@
-import { extend } from 'flarum/extend';
-import app from 'flarum/app';
-import Discussion from 'flarum/models/Discussion';
-import Model from 'flarum/Model';
-import NotificationGrid from 'flarum/components/NotificationGrid';
+import { extend } from 'flarum/common/extend';
+import app from 'flarum/common/app';
+import Discussion from 'flarum/common/models/Discussion';
+import Model from 'flarum/common/Model';
+import NotificationGrid from 'flarum/common/components/NotificationGrid';
 
 import SelectBestAnswerNotification from './components/SelectBestAnswerNotification';
 import addBestAnswerAction from './addBestAnswerAction';
