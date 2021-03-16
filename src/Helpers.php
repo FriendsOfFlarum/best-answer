@@ -36,7 +36,7 @@ class Helpers
             return false;
         }
 
-        $canSelectOwnPost = (bool) app('flarum.settings')->get('fof-best-answer.allow_select_own_post');
+        $canSelectOwnPost = (bool) resolve('flarum.settings')->get('fof-best-answer.allow_select_own_post');
         $can = self::canSelectBestAnswer($user, $post->discussion);
 
         return $user->id == $post->user_id

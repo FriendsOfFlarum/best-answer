@@ -18,7 +18,7 @@ use Flarum\Notification\NotificationSyncer;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Console\Command;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 class NotifyCommand extends Command

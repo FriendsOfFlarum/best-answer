@@ -12,13 +12,16 @@
 namespace FoF\BestAnswer\Gambit;
 
 use Flarum\Search\AbstractRegexGambit;
-use Flarum\Search\AbstractSearch;
+use Flarum\Search\SearchState;
 
 class IsSolvedGambit extends AbstractRegexGambit
 {
-    protected $pattern = 'is:solved';
+    protected function getGambitPattern()
+    {
+        return 'is:solved';
+    }
 
-    protected function conditions(AbstractSearch $search, array $matches, $negate)
+    protected function conditions(SearchState $search, array $matches, $negate)
     {
         $search->getQuery()->where(function ($query) use ($negate) {
             if ($negate) {

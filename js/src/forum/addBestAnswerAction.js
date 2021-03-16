@@ -1,8 +1,8 @@
-import { extend } from 'flarum/extend';
-import Button from 'flarum/components/Button';
-import PostControls from 'flarum/utils/PostControls';
-import DiscussionPage from 'flarum/components/DiscussionPage';
-import CommentPost from 'flarum/components/CommentPost';
+import { extend } from 'flarum/common/extend';
+import Button from 'flarum/common/components/Button';
+import PostControls from 'flarum/common/utils/PostControls';
+import DiscussionPage from 'flarum/common/components/DiscussionPage';
+import CommentPost from 'flarum/common/components/CommentPost';
 
 export default () => {
     const ineligible = (discussion, post) => {
@@ -32,7 +32,7 @@ export default () => {
             })
             .then(() => {
                 if (app.current.matches(DiscussionPage)) {
-                    app.current.stream.update();
+                    app.current.get('stream').update();
                 }
 
                 m.redraw();

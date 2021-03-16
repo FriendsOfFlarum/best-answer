@@ -22,7 +22,7 @@ use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
-use Flarum\Event\ConfigureDiscussionGambits;
+use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\User\User;
@@ -62,8 +62,7 @@ return [
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
-        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
-        ->listen(ConfigureDiscussionGambits::class, Listeners\AddGambits::class),
+        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class),
 
     (new Extend\Notification())
         ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
@@ -88,12 +87,8 @@ return [
         }),
 
     (new Extend\Settings())
-        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', function ($value) {
-            return (bool) $value;
-        })
-        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', function ($value) {
-            return (bool) $value;
-        }),
+        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
+        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal'),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
@@ -102,4 +97,7 @@ return [
         ->addInclude(['bestAnswerPost']),
 
     new ScheduleCommand(new NotifySchedule()),
+
+    (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
+        ->addGambit(Gambit\IsSolvedGambit::class),
 ];

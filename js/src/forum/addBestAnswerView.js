@@ -1,10 +1,10 @@
-import { extend } from 'flarum/extend';
-import CommentPost from 'flarum/components/CommentPost';
-import PostComponent from 'flarum/components/Post';
-import PostMeta from 'flarum/components/PostMeta';
-import username from 'flarum/helpers/username';
-import userOnline from 'flarum/helpers/userOnline';
-import Link from 'flarum/components/Link';
+import { extend } from 'flarum/common/extend';
+import CommentPost from 'flarum/common/components/CommentPost';
+import PostComponent from 'flarum/common/components/Post';
+import PostMeta from 'flarum/common/components/PostMeta';
+import username from 'flarum/common/helpers/username';
+import userOnline from 'flarum/common/helpers/userOnline';
+import Link from 'flarum/common/components/Link';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
