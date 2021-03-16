@@ -25,7 +25,7 @@ class DefaultSettings implements LifecycleInterface
 
     public function __construct()
     {
-        $this->settings = app('flarum.settings');
+        $this->settings = resolve('flarum.settings');
     }
 
     public function onEnable(Container $container, Extension $extension)

@@ -14,7 +14,7 @@ namespace FoF\BestAnswer\Notification;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
 {

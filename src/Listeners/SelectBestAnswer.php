@@ -23,7 +23,7 @@ use FoF\BestAnswer\Helpers;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SelectBestAnswer
 {

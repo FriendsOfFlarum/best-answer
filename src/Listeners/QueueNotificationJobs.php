@@ -18,7 +18,7 @@ class QueueNotificationJobs
 {
     public function handle(BestAnswerSet $event)
     {
-        app('flarum.queue.connection')->push(
+        resolve('flarum.queue.connection')->push(
             new Jobs\SendNotificationWhenBestAnswerSetInDiscussion($event->discussion, $event->actor)
         );
     }

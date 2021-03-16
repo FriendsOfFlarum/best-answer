@@ -19,7 +19,7 @@ class NotifySchedule
 {
     public function __invoke(Schedule $schedule)
     {
-        $settings = app(SettingsRepositoryInterface::class);
+        $settings = resolve(SettingsRepositoryInterface::class);
 
         $build = $schedule->command(NotifyCommand::class)
             ->hourly()
@@ -35,7 +35,7 @@ class NotifySchedule
         }
 
         if ((bool) $settings->get('fof-best-answer.store_log_output')) {
-            $paths = app(Paths::class);
+            $paths = resolve(Paths::class);
             $build->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
         }
 

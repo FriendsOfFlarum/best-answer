@@ -19,8 +19,8 @@
       }
     ],
     "require": {
-      "flarum/core": ">=0.1.0-beta.15 <0.1.0-beta.16",
-      "fof/console": "^0.6.2",
+      "flarum/core": "^0.1.0-beta.16",
+      "fof/console": "*",
       "fof/components": "^0.2.0"
     },
     "replace": {
