@@ -21,11 +21,11 @@ class NotifySchedule
     {
         $settings = resolve(SettingsRepositoryInterface::class);
 
-        $event->everyMinute();
-        //->withoutOverlapping();
+        $event->everyMinute()
+            ->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
-            //$event->onOneServer();
+            $event->onOneServer();
         }
 
         if ((bool) $settings->get('fof-best-answer.stop_overnight')) {
