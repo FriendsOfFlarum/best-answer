@@ -31,7 +31,7 @@ class Helpers
 
     public static function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
-        if (! self::canSelectBestAnswer($user, $post->discussion)) {
+        if (!self::canSelectBestAnswer($user, $post->discussion)) {
             return false;
         }
 
