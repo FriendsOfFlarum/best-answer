@@ -26,27 +26,21 @@ use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\User\User;
-use FoF\BestAnswer\Console\NotifyCommand;
-use FoF\BestAnswer\Console\NotifySchedule;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\Components\Extend\AddFofComponents;
-use FoF\Console\Extend\EnableConsole;
-use FoF\Console\Extend\ScheduleCommand;
 
 return [
     (new AddFofComponents()),
 
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__.'/resources/locale'),
-
-    new EnableConsole(),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     new DefaultSettings(),
 
@@ -54,11 +48,8 @@ return [
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
-    (new Extend\Console())
-        ->command(NotifyCommand::class),
-
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
@@ -96,8 +87,10 @@ return [
     (new Extend\ApiController(ListDiscussionsController::class))
         ->addInclude(['bestAnswerPost']),
 
-    new ScheduleCommand(new NotifySchedule()),
-
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Gambit\IsSolvedGambit::class),
+
+    (new Extend\Console())
+        ->command(Console\NotifyCommand::class)
+        ->schedule(Console\NotifyCommand::class, new Console\NotifySchedule()),
 ];

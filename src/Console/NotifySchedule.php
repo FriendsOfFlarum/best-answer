@@ -13,32 +13,29 @@ namespace FoF\BestAnswer\Console;
 
 use Flarum\Foundation\Paths;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Console\Scheduling\Event;
 
 class NotifySchedule
 {
-    public function __invoke(Schedule $schedule)
+    public function __invoke(Event $event)
     {
         $settings = resolve(SettingsRepositoryInterface::class);
 
-        $build = $schedule->command(NotifyCommand::class)
-            ->hourly()
-            ->withoutOverlapping();
+        $event->everyMinute();
+        $event->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
-            $build->onOneServer();
+            //$event->onOneServer();
         }
 
         if ((bool) $settings->get('fof-best-answer.stop_overnight')) {
-            $build->between('8:00', '21:00');
+            $event->between('8:00', '21:00');
             //TODO expose times back to config options
         }
 
         if ((bool) $settings->get('fof-best-answer.store_log_output')) {
             $paths = resolve(Paths::class);
-            $build->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
+            $event->appendOutputTo($paths->storage . (DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'fof-best-answer.log'));
         }
-
-        return $schedule;
     }
 }

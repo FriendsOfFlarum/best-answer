@@ -1,4 +1,4 @@
-import ExtensionPage from 'flarum/common/components/ExtensionPage';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import { settings } from '@fof-components';
 
 const {
@@ -45,7 +45,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
                         <p>
                             {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
-                            <a href="https://discuss.flarum.org/d/24118" target="_blank">
+                            <a href="https://docs.flarum.org/console.html#default-commands" target="_blank">
                                 Flarum Scheduler Info
                             </a>
                         </p>
