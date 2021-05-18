@@ -1,4 +1,4 @@
-import Notification from 'flarum/common/components/Notification';
+import Notification from 'flarum/forum/components/Notification';
 
 export default class AwardedBestAnswerNotification extends Notification {
     icon() {

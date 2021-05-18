@@ -1,4 +1,4 @@
-import app from 'flarum/app';
+import app from 'flarum/common/app';
 import BestAnswerSettings from './components/BestAnswerSettings';
 
 app.initializers.add('fof-best-answer', () => {
