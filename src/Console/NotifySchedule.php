@@ -22,7 +22,7 @@ class NotifySchedule
         $settings = resolve(SettingsRepositoryInterface::class);
 
         $event->everyMinute();
-            //->withoutOverlapping();
+        //->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
             //$event->onOneServer();
@@ -35,7 +35,7 @@ class NotifySchedule
 
         if ((bool) $settings->get('fof-best-answer.store_log_output')) {
             $paths = resolve(Paths::class);
-            $event->appendOutputTo($paths->storage . (DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'fof-best-answer.log'));
+            $event->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
         }
     }
 }

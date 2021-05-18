@@ -33,14 +33,14 @@ return [
     (new AddFofComponents()),
 
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/resources/less/admin.less'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     new DefaultSettings(),
 
@@ -49,7 +49,7 @@ return [
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
+        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
