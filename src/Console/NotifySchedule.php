@@ -22,7 +22,7 @@ class NotifySchedule
         $settings = resolve(SettingsRepositoryInterface::class);
 
         $event->everyMinute();
-        $event->withoutOverlapping();
+            //->withoutOverlapping();
 
         if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
             //$event->onOneServer();
