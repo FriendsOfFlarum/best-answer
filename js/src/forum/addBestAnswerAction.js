@@ -1,8 +1,8 @@
 import { extend } from 'flarum/common/extend';
 import Button from 'flarum/common/components/Button';
-import PostControls from 'flarum/common/utils/PostControls';
-import DiscussionPage from 'flarum/common/components/DiscussionPage';
-import CommentPost from 'flarum/common/components/CommentPost';
+import PostControls from 'flarum/forum/utils/PostControls';
+import DiscussionPage from 'flarum/forum/components/DiscussionPage';
+import CommentPost from 'flarum/forum/components/CommentPost';
 
 export default () => {
     const ineligible = (discussion, post) => {

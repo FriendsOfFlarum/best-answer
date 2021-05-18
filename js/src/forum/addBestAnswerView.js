@@ -1,7 +1,7 @@
 import { extend } from 'flarum/common/extend';
-import CommentPost from 'flarum/common/components/CommentPost';
-import PostComponent from 'flarum/common/components/Post';
-import PostMeta from 'flarum/common/components/PostMeta';
+import CommentPost from 'flarum/forum/components/CommentPost';
+import PostComponent from 'flarum/forum/components/Post';
+import PostMeta from 'flarum/forum/components/PostMeta';
 import username from 'flarum/common/helpers/username';
 import userOnline from 'flarum/common/helpers/userOnline';
 import Link from 'flarum/common/components/Link';
