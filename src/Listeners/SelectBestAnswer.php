@@ -62,7 +62,7 @@ class SelectBestAnswer
 
         $discussion = $event->discussion;
         /** @var int|null $id */
-        $id = Arr::get($event->data, $this->key);
+        $id = (int) Arr::get($event->data, $this->key);
 
         if (!$discussion->exists || $discussion->best_answer_post_id === $id) {
             return;
