@@ -13,7 +13,7 @@ namespace FoF\BestAnswer;
 
 use Carbon\Carbon;
 use DateTime;
-use Flarum\Api\Controller\ListDiscussionsController;
+use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
@@ -33,14 +33,14 @@ return [
     (new AddFofComponents()),
 
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__.'/resources/locale'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     new DefaultSettings(),
 
@@ -49,7 +49,7 @@ return [
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
@@ -61,11 +61,6 @@ return [
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []),
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
-        ->attribute('hasBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            return (bool) $discussion->bestAnswerPost;
-        })
         ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
             return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
         })
@@ -77,6 +72,13 @@ return [
             return null;
         }),
 
+    (new Extend\ApiSerializer(BasicDiscussionSerializer::class))
+        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
+        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
+        ->attribute('hasBestAnswer', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
+            return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
+        }),
+
     (new Extend\Settings())
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal'),
@@ -84,8 +86,8 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
 
-    (new Extend\ApiController(ListDiscussionsController::class))
-        ->addInclude(['bestAnswerPost']),
+    (new Extend\ApiController(ListPostsController::class))
+        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser']),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Gambit\IsSolvedGambit::class),
