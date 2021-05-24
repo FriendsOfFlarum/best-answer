@@ -13,6 +13,7 @@ namespace FoF\BestAnswer;
 
 use Carbon\Carbon;
 use DateTime;
+use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
@@ -63,13 +64,6 @@ return [
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
             return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
-        })
-        ->attribute('bestAnswerSetAt', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            if ($discussion->best_answer_set_at) {
-                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
-            }
-
-            return null;
         }),
 
     (new Extend\ApiSerializer(BasicDiscussionSerializer::class))
@@ -77,6 +71,13 @@ return [
         ->hasOne('bestAnswerUser', BasicUserSerializer::class)
         ->attribute('hasBestAnswer', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
             return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
+        })
+        ->attribute('bestAnswerSetAt', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
+            if ($discussion->best_answer_set_at) {
+                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
+            }
+
+            return null;
         }),
 
     (new Extend\Settings())
@@ -87,7 +88,7 @@ return [
         ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
 
     (new Extend\ApiController(ListPostsController::class))
-        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser']),
+        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Gambit\IsSolvedGambit::class),
