@@ -84,7 +84,8 @@ return [
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal'),
 
     (new Extend\ApiController(ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
+        ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
+        ->load(['bestAnswerPost.user']),
 
     (new Extend\ApiController(ListPostsController::class))
         ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
