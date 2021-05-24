@@ -13,7 +13,7 @@ namespace FoF\BestAnswer;
 
 use Carbon\Carbon;
 use DateTime;
-use Flarum\Api\Controller\ListDiscussionsController;
+use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
@@ -61,15 +61,17 @@ return [
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []),
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
-        ->attribute('hasBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
-            return (bool) $discussion->bestAnswerPost;
-        })
         ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
             return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
+        }),
+
+    (new Extend\ApiSerializer(BasicDiscussionSerializer::class))
+        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
+        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
+        ->attribute('hasBestAnswer', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
+            return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
         })
-        ->attribute('bestAnswerSetAt', function (DiscussionSerializer $serializer, AbstractModel $discussion) {
+        ->attribute('bestAnswerSetAt', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
             if ($discussion->best_answer_set_at) {
                 return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
             }
@@ -84,8 +86,8 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser']),
 
-    (new Extend\ApiController(ListDiscussionsController::class))
-        ->addInclude(['bestAnswerPost']),
+    (new Extend\ApiController(ListPostsController::class))
+        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Gambit\IsSolvedGambit::class),
