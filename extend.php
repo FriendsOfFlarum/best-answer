@@ -13,7 +13,6 @@ namespace FoF\BestAnswer;
 
 use Carbon\Carbon;
 use DateTime;
-use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
