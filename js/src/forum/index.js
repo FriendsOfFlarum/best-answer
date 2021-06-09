@@ -11,6 +11,8 @@ import addAnsweredBadge from './addAnsweredBadge';
 import AwardedBestAnswerNotification from './components/AwardedBestAnswerNotification';
 import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscussionNotification';
 
+export * from './components';
+
 app.initializers.add('fof/best-answer', () => {
     Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
     Discussion.prototype.bestAnswerUser = Model.hasOne('bestAnswerUser');
