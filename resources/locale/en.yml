@@ -16,6 +16,8 @@ fof-best-answer:
       schedule_log_output: Append scheduler output to log storage
       remind_tag_ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
       use_alt_ui: Use alternative layout (best answer buttons in post footer)
+    edit_tag:
+      qna_label: Enable Best Answers to be set in this tag
   forum:
     answered_badge: Answered
     this_best_answer: Select Best Answer
@@ -33,6 +35,16 @@ fof-best-answer:
       preferences:
         awarded_best_answer: When someone sets my post as a best answer
         best_answer_in_discussion: When a best answer is set in a discussion I participated in
+
+    index:
+      ask_question: Ask a Question
+      cannot_ask_question: Cannot Ask a Question
+      solved_link: Solved discussions
+      unsolved_link: Unsolved discussions
+    filter:
+      all_label: All questions
+      solved_label: Solved questions
+      unsolved_label: Unsolved questions 
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}
