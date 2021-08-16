@@ -19,6 +19,7 @@ class TagCreating
     public function handle(Creating $event)
     {
         $event->tag->is_qna = Arr::get($event->data, 'attributes.isQnA');
+        $event->tag->qna_reminders = Arr::get($event->data, 'attributes.reminders');
 
         return $event;
     }

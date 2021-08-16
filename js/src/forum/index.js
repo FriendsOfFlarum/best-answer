@@ -8,6 +8,7 @@ import IndexPage from 'flarum/forum/components/IndexPage';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
 import DiscussionListState from 'flarum/forum/states/DiscussionListState';
+import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 
 import SelectBestAnswerNotification from './components/SelectBestAnswerNotification';
 import addBestAnswerAction from './addBestAnswerAction';
@@ -111,5 +112,29 @@ app.initializers.add('fof/best-answer', () => {
 
             params.filter[`${negate ? '-' : ''}solved-discussions`] = true;
         }
+    });
+
+    extend(DiscussionComposer.prototype, 'headerItems', function (items) {
+        const tags = this.composer.fields.tags;
+        if (tags === undefined) return;
+
+        const qna = tags.some(t => t.isQnA())
+
+        if (!qna) return;
+
+        this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
+
+        items.replace(
+            'discussionTitle',
+            <h3>
+              <input
+                className="FormControl"
+                bidi={this.title}
+                placeholder={this.attrs.titlePlaceholder}
+                disabled={!!this.attrs.disabled}
+                onkeydown={this.onkeydown.bind(this)}
+              />
+            </h3>
+          );
     });
 });

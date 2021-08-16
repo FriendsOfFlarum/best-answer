@@ -27,32 +27,38 @@ export default class BestAnswerSettings extends ExtensionPage {
         return [
             <div className="container">
                 <div className="BestAnswerSettingsPage">
+                    <div className="Introduction">
+                        <p>{app.translator.trans('fof-best-answer.admin.settings.introduction')}</p>
+                    </div>
                     <div className="GeneralPreferences">
                         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.allow_select_own_post" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post')}
                             </BooleanItem>
+                            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post_help')}</p>
                         </div>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.use_alternative_ui" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.use_alt_ui')}
                             </BooleanItem>
+                            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.use_alt_ui_help')}</p>
                         </div>
                     </div>
                     <hr />
                     <div className="Reminders">
                         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
-                        <p>
+                        <p className="helpText">
                             {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
                             <a href="https://docs.flarum.org/console.html#schedule-run" target="_blank">
-                                Flarum Scheduler Info
+                                {app.translator.trans('fof-best-answer.admin.settings.documentation')}
                             </a>
                         </p>
                         <div className="Form-group">
                             <NumberItem name="fof-best-answer.select_best_answer_reminder_days" placeholder="0" min="0" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days')}
                             </NumberItem>
+                            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days_help')}</p>
                         </div>
                         <div className="Form-group">
                             <StringItem name="fof-best-answer.remind_tag_ids" setting={this.setting}>
@@ -76,11 +82,13 @@ export default class BestAnswerSettings extends ExtensionPage {
                             <BooleanItem name="fof-best-answer.schedule_on_one_server" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server')}
                             </BooleanItem>
+                            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server_help')}</p>
                         </div>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.stop_overnight" setting={this.setting}>
                                 {app.translator.trans('fof-best-answer.admin.settings.schedule_stop_overnight')}
                             </BooleanItem>
+                            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.schedule_stop_overnight_help')}</p>
                         </div>
                         <div className="Form-group">
                             <BooleanItem name="fof-best-answer.store_log_output" setting={this.setting}>

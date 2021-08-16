@@ -8,16 +8,25 @@ fof-best-answer:
         general: General
         reminders: Reminders
         advanced: Advanced
-        reminders_notice: For reminders to function correctly, you must have set up the Flarum scheduler correctly.
-      allow_select_own_post: Allow users to select their own posts
-      select_best_answer_reminder_days: Remind users to select a best answer after X days
-      schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler (requires Redis/Memcache)
-      schedule_stop_overnight: Prevent the reminder scheduler from running during unsocial hours (9pm - 8am server time)
+        reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
+      allow_select_own_post: Select own post
+      allow_select_own_post_help: Allow the OP to select one of their own posts in the discussion as best answer
+      select_best_answer_reminder_days: Reminder frequency
+      select_best_answer_reminder_days_help: Send a reminder after the configurable amount of days to the OP to select a Best Answer, 0 = disable reminders.
+      schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler
+      schedule_on_one_server_help: Requires Redis/Memcache
+      schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours
+      schedule_stop_overnight_help: 9pm - 8am server time
       schedule_log_output: Append scheduler output to log storage
       remind_tag_ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
-      use_alt_ui: Use alternative layout (best answer buttons in post footer)
+      use_alt_ui: Alternative layout
+      use_alt_ui_help: Best answer controls in post footer
+      documentation: Documentation
+      introduction: |
+        Enable which tags are to support Best Answers in <code>flarum/tags</code>, and optionally which tag(s) should support reminders. When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
     edit_tag:
       qna_label: Enable Best Answers to be set in this tag
+      reminders: Send reminders to set a Best Answer for discussions in this tag
   forum:
     answered_badge: Answered
     this_best_answer: Select Best Answer
@@ -44,7 +53,9 @@ fof-best-answer:
     filter:
       all_label: All questions
       solved_label: Solved questions
-      unsolved_label: Unsolved questions 
+      unsolved_label: Unsolved questions
+    composer:
+      titlePlaceholder: Question title
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}

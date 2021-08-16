@@ -108,7 +108,10 @@ return [
         ->addFilter(Search\BestAnswerFilterGambit::class),
 
     (new Extend\ApiSerializer(TagSerializer::class))
-        ->attribute('isQnA', function (TagSerializer $serializer, Tag $tag) {
-            return (bool) $tag->is_qna;
+        ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
+            $attributes['isQnA'] = (bool) $tag->is_qna;
+            $attributes['reminders'] = (bool) $tag->qna_reminders;
+
+            return $attributes;
         }),
 ];

@@ -24,6 +24,10 @@ class TagEditing
             $event->tag->is_qna = $attributes['isQnA'];
         }
 
+        if (isset($attributes['reminders'])) {
+            $event->tag->qna_reminders = $attributes['reminders'];
+        }
+
         return $event;
     }
 }
