@@ -66,7 +66,7 @@ app.initializers.add('fof/best-answer', () => {
     extend(IndexPage.prototype, 'viewItems', function (items) {
         const tag = this.currentTag();
 
-        if (!tag || !tag.isQnA()) {
+        if (!tag?.isQnA?.()) {
             if (app.discussions.bestAnswer) {
                 delete app.discussions.bestAnswer;
                 app.discussions.refresh();
