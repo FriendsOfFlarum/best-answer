@@ -52,7 +52,7 @@ app.initializers.add('fof/best-answer', () => {
     extend(IndexPage.prototype, 'sidebarItems', function (items) {
         const tag = this.currentTag();
 
-        if (!tag || !tag.isQnA()) return;
+        if (!tag?.isQnA?.()) return;
 
         const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
         const cta = items.get('newDiscussion');
