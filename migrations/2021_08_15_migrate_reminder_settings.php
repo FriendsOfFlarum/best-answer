@@ -28,7 +28,7 @@ return [
             $tag->is_qna = true;
             $tag->qna_reminders = true;
             $tag->save();
-        };
+        }
 
         $settings->delete($remindersKey);
     },
