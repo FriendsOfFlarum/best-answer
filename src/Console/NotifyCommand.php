@@ -77,7 +77,6 @@ class NotifyCommand extends Command
 
         $this->info('Looking at discussions before '.$time->toDateTimeString());
 
-
         $tags = Tag::where('qna_reminders', true)->pluck('id');
         $query = Discussion::query()
             ->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id')
