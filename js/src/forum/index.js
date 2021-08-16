@@ -84,7 +84,7 @@ app.initializers.add('fof/best-answer', () => {
             Dropdown.component({
                 buttonClassName: 'Button',
                 label: app.translator.trans(`fof-best-answer.forum.filter.${(options[selected] || Object.keys(options).map((key) => options[key])[0])}_label`),
-                accessibleToggleLabel: 'assessible label',
+                accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
             },
             Object.keys(options).map((value) => {
                 const label = options[value];

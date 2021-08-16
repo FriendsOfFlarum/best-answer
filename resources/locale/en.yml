@@ -53,6 +53,7 @@ fof-best-answer:
       all_label: All questions
       solved_label: Solved questions
       unsolved_label: Unsolved questions
+      accessible_label: Solved/Unsolved selection
     composer:
       titlePlaceholder: Question title
   email:
