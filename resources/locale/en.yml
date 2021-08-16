@@ -18,7 +18,6 @@ fof-best-answer:
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours
       schedule_stop_overnight_help: 9pm - 8am server time
       schedule_log_output: Append scheduler output to log storage
-      remind_tag_ids: To restrict reminders to particular tags, enter the tag ID's here (comma seperated)
       use_alt_ui: Alternative layout
       use_alt_ui_help: Best answer controls in post footer
       documentation: Documentation
