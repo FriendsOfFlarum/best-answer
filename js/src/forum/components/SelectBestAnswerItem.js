@@ -15,9 +15,7 @@ export default class SelectBestAnswerItem extends Component {
     }
 
     view() {
-        return <li className="Post--BestAnswer">
-            {this.items().toArray()}
-        </li>;
+        return <li className="Post--BestAnswer">{this.items().toArray()}</li>;
     }
 
     getSetTime(discussion) {

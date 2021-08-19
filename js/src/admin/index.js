@@ -1,4 +1,5 @@
 import app from 'flarum/common/app';
+import addQnAToTagsModal from './addQnAToTagsModal';
 import BestAnswerSettings from './components/BestAnswerSettings';
 
 app.initializers.add('fof-best-answer', () => {
@@ -21,4 +22,6 @@ app.initializers.add('fof-best-answer', () => {
             },
             'reply'
         );
+
+    addQnAToTagsModal();
 });

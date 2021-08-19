@@ -20,6 +20,7 @@
     ],
     "require": {
       "flarum/core": "^1.0.0",
+      "flarum/tags": "^1.0.0",
       "fof/components": "^1.0.0"
     },
     "replace": {
@@ -50,7 +51,10 @@
           "name": "far fa-comment-dots",
           "backgroundColor": "#e74c3c",
           "color": "#fff"
-        }
+        },
+        "optional-dependencies": [
+          "fof/follow-tags"
+        ]
       },
       "flagrow": {
         "discuss": "https://discuss.flarum.org/d/21894"
