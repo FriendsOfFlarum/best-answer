@@ -25,7 +25,9 @@ return [
 
         foreach (explode(',', $reminderIds) as $reminderId) {
             $tag = Tag::where('id', Str::trim($reminderId))->first();
-            if (!$tag) { continue; }
+            if (!$tag) {
+                continue;
+            }
 
             $tag->is_qna = true;
             $tag->qna_reminders = true;
