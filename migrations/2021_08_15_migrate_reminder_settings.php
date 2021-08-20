@@ -12,6 +12,7 @@
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
 use Illuminate\Database\Schema\Builder;
+use Illuminate\Support\Str;
 
 $remindersKey = 'fof-best-answer.remind_tag_ids';
 
@@ -23,7 +24,8 @@ return [
         $reminderIds = $settings->get($remindersKey, []);
 
         foreach (explode(',', $reminderIds) as $reminderId) {
-            $tag = Tag::where('id', $reminderId)->first();
+            $tag = Tag::where('id', Str::trim($reminderId))->first();
+            if (!$tag) { continue; }
 
             $tag->is_qna = true;
             $tag->qna_reminders = true;
