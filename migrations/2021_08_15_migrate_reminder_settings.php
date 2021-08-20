@@ -12,7 +12,6 @@
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
 use Illuminate\Database\Schema\Builder;
-use Illuminate\Support\Str;
 
 $remindersKey = 'fof-best-answer.remind_tag_ids';
 
@@ -24,7 +23,7 @@ return [
         $reminderIds = $settings->get($remindersKey, []);
 
         foreach (explode(',', $reminderIds) as $reminderId) {
-            $tag = Tag::where('id', Str::trim($reminderId))->first();
+            $tag = Tag::where('id', trim($reminderId))->first();
             if (!$tag) {
                 continue;
             }
