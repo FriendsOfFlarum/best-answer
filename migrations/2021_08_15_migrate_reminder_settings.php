@@ -20,7 +20,7 @@ return [
         /** @var SettingsRepositoryInterface $settings */
         $settings = resolve(SettingsRepositoryInterface::class);
 
-        $reminderIds = $settings->get($remindersKey, []);
+        $reminderIds = $settings->get($remindersKey, '');
 
         foreach (explode(',', $reminderIds) as $reminderId) {
             $tag = Tag::where('id', trim($reminderId))->first();
