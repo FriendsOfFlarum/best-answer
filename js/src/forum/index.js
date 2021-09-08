@@ -71,7 +71,7 @@ app.initializers.add('fof/best-answer', () => {
                 delete app.discussions.bestAnswer;
                 app.discussions.refresh();
             }
-            
+
             return;
         }
 
@@ -81,28 +81,34 @@ app.initializers.add('fof/best-answer', () => {
 
         items.add(
             'solved-filter',
-            Dropdown.component({
-                buttonClassName: 'Button',
-                label: app.translator.trans(`fof-best-answer.forum.filter.${(options[selected] || Object.keys(options).map((key) => options[key])[0])}_label`),
-                accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
-            },
-            Object.keys(options).map((value) => {
-                const label = options[value];
-                const active = (selected || Object.keys(options)[0]) === value;
+            Dropdown.component(
+                {
+                    buttonClassName: 'Button',
+                    label: app.translator.trans(
+                        `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[key])[0]}_label`
+                    ),
+                    accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
+                },
+                Object.keys(options).map((value) => {
+                    const label = options[value];
+                    const active = (selected || Object.keys(options)[0]) === value;
 
-                return Button.component(
-                    {
-                        icon: active? 'fas fa-check' : true,
-                        active: active,
-                        onclick: () => {
-                            app.discussions.bestAnswer = value;
-                            if (value === '0') { delete app.discussions.bestAnswer; }
-                            app.discussions.refresh();
+                    return Button.component(
+                        {
+                            icon: active ? 'fas fa-check' : true,
+                            active: active,
+                            onclick: () => {
+                                app.discussions.bestAnswer = value;
+                                if (value === '0') {
+                                    delete app.discussions.bestAnswer;
+                                }
+                                app.discussions.refresh();
+                            },
                         },
-                    },
-                    app.translator.trans(`fof-best-answer.forum.filter.${label}_label`)
-                );
-            }))
+                        app.translator.trans(`fof-best-answer.forum.filter.${label}_label`)
+                    );
+                })
+            )
         );
     });
 
@@ -118,7 +124,7 @@ app.initializers.add('fof/best-answer', () => {
         const tags = this.composer.fields.tags;
         if (tags === undefined) return;
 
-        const qna = tags.some(t => t.isQnA())
+        const qna = tags.some((t) => t.isQnA());
 
         if (!qna) return;
 
@@ -127,14 +133,14 @@ app.initializers.add('fof/best-answer', () => {
         items.replace(
             'discussionTitle',
             <h3>
-              <input
-                className="FormControl"
-                bidi={this.title}
-                placeholder={this.attrs.titlePlaceholder}
-                disabled={!!this.attrs.disabled}
-                onkeydown={this.onkeydown.bind(this)}
-              />
+                <input
+                    className="FormControl"
+                    bidi={this.title}
+                    placeholder={this.attrs.titlePlaceholder}
+                    disabled={!!this.attrs.disabled}
+                    onkeydown={this.onkeydown.bind(this)}
+                />
             </h3>
-          );
+        );
     });
 });

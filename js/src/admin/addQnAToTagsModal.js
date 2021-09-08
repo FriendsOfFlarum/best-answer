@@ -39,7 +39,7 @@ export default function () {
                         </label>
                     </div>
                 </div>
-            )
+            );
         });
 
         extend(EditTagModal.prototype, 'submitData', function (data) {
