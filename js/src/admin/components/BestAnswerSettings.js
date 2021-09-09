@@ -1,9 +1,33 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import Button from 'flarum/common/components/Button';
+import Link from 'flarum/common/components/Link';
 
 export default class BestAnswerSettings extends ExtensionPage {
     oninit(vnode) {
         super.oninit(vnode);
+
+        this.loading = false;
+    }
+
+    enableAllTags() {
+        this.enable('enableAllTags');
+    }
+
+    enableAllReminders() {
+        this.enable('enableAllReminders');
+    }
+
+    enable(feature) {
+        this.loading = true;
+
+        app.request({
+            method: 'POST',
+            url: app.forum.attribute('apiUrl') + '/fof/best-answer/enable',
+            body: {
+                feature,
+            },
+        }).then((this.loading = false));
     }
 
     content() {
@@ -12,22 +36,26 @@ export default class BestAnswerSettings extends ExtensionPage {
                 <div className="BestAnswerSettingsPage">
                     <div className="Form">
                         <div className="Introduction">
-                            <p>{app.translator.trans('fof-best-answer.admin.settings.introduction')}</p>
-                            <div className="Form-group">
-                                {this.buildSettingComponent({
-                                    type: 'boolean',
-                                    setting: 'fof-best-answer.enable_all_tags',
-                                    label: app.translator.trans('fof-best-answer.admin.settings.enable_all_tags'),
-                                    help: app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_help'),
+                            <p>
+                                {app.translator.trans('fof-best-answer.admin.settings.introduction', {
+                                    a: <Link href={app.route('extension', { id: 'flarum-tags' })} />,
                                 })}
-                                {this.buildSettingComponent({
-                                    type: 'boolean',
-                                    setting: 'fof-best-answer.enable_all_tags_reminders',
-                                    label: app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_reminders'),
-                                    help: app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_reminders_help'),
-                                })}
+                            </p>
+                            <div className="ButtonGroup">
+                                <Button className="Button" onclick={this.enableAllTags.bind(this)} loading={this.loading} icon="fas fa-check">
+                                    {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_button')}
+                                </Button>
+                                <Button
+                                    className="Button"
+                                    onclick={this.enableAllReminders.bind(this)}
+                                    loading={this.loading}
+                                    icon="fas fa-stopwatch"
+                                >
+                                    {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_reminder_button')}
+                                </Button>
                             </div>
                         </div>
+                        <hr />
                         <div className="GeneralPreferences">
                             <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
                             {this.buildSettingComponent({

@@ -32,11 +32,8 @@ use Flarum\Tags\Event\Saving as TagSaving;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
-use FoF\Components\Extend\AddFofComponents;
 
 return [
-    (new AddFofComponents()),
-
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less'),
@@ -46,6 +43,9 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
+
+    (new Extend\Routes('api'))
+        ->post('/fof/best-answer/enable', 'fof-best-answer.enable-tags-features', Api\Controller\FeatureEnableController::class),
 
     new DefaultSettings(),
 
