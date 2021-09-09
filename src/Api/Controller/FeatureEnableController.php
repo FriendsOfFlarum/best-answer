@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Api\Controller;
 
 use Flarum\Extension\ExtensionManager;
 use Flarum\Http\RequestUtil;
 use Flarum\Tags\Tag;
-use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FeatureEnableController implements RequestHandlerInterface
 {
-    const functions = array('enableAllTags', 'enableAllReminders');
+    const functions = ['enableAllTags', 'enableAllReminders'];
 
     private $extensions;
 
@@ -21,7 +29,7 @@ class FeatureEnableController implements RequestHandlerInterface
     {
         $this->extensions = $extensions;
     }
-    
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         RequestUtil::getActor($request)->assertAdmin();
@@ -42,7 +50,9 @@ class FeatureEnableController implements RequestHandlerInterface
 
     private function enableAllTags(): void
     {
-        if (!$this->tagsInstalledAndEnabled()) { return; }
+        if (!$this->tagsInstalledAndEnabled()) {
+            return;
+        }
 
         Tag::chunk(10, function ($tags) {
             foreach ($tags as $tag) {
@@ -55,7 +65,9 @@ class FeatureEnableController implements RequestHandlerInterface
 
     private function enableAllReminders(): void
     {
-        if (!$this->tagsInstalledAndEnabled()) { return; }
+        if (!$this->tagsInstalledAndEnabled()) {
+            return;
+        }
 
         Tag::chunk(10, function ($tags) {
             foreach ($tags as $tag) {
