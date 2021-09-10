@@ -20,6 +20,8 @@ fof-best-answer:
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours
       schedule_stop_overnight_help: 9pm - 8am server time
       schedule_log_output: Append scheduler output to log storage
+      show_filter_label: Display Best Answer filter dropdown
+      show_filter_help: For tags which have Best Answers enabled, choose to display solved/unsolved filter option in the discussion list
       use_alt_ui: Alternative layout
       use_alt_ui_help: Best answer controls in post footer
       documentation: Documentation

@@ -70,6 +70,12 @@ export default class BestAnswerSettings extends ExtensionPage {
                                 label: app.translator.trans('fof-best-answer.admin.settings.use_alt_ui'),
                                 help: app.translator.trans('fof-best-answer.admin.settings.use_alt_ui_help'),
                             })}
+                            {this.buildSettingComponent({
+                                type: 'boolean',
+                                setting: 'fof-best-answer.show_filter_dropdown',
+                                label: app.translator.trans('fof-best-answer.admin.settings.show_filter_label'),
+                                help: app.translator.trans('fof-best-answer.admin.settings.show_filter_help'),
+                            })}
                         </div>
                         <hr />
                         <div className="Reminders">

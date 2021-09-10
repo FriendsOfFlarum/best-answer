@@ -26,7 +26,9 @@ app.initializers.add('fof/best-answer', () => {
     Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
     Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt', Model.transformDate);
 
-    Tag.prototype.isQnA = Model.attribute('isQnA');
+    if (app.initializers.has('flarum-tags')) {
+        Tag.prototype.isQnA = Model.attribute('isQnA');
+    }
 
     app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
     app.notificationComponents.awardedBestAnswer = AwardedBestAnswerNotification;
@@ -64,6 +66,8 @@ app.initializers.add('fof/best-answer', () => {
     });
 
     extend(IndexPage.prototype, 'viewItems', function (items) {
+        if (!app.forum.attribute('showBestAnswerFilterUi')) { return; }
+        
         const tag = this.currentTag();
 
         if (!tag?.isQnA?.()) {
