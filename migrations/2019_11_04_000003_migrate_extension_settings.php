@@ -20,7 +20,7 @@ return [
         /**
          * @var \Flarum\Settings\SettingsRepositoryInterface
          */
-        $settings = app('flarum.settings');
+        $settings = resolve('flarum.settings');
 
         foreach (['allow_select_own_post', 'select_best_answer_reminder_days'] as $setting) {
             if ($value = $settings->get($key = "flarum-best-answer.$setting")) {
