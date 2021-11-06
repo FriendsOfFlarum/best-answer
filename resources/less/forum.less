@@ -5,8 +5,8 @@
   background-color: @best-answer-badge-color;
 }
 
-.Post-header{
-  & > ul > li.item-isBestAnswer{
+.Post-header {
+  & > ul > li.item-isBestAnswer {
     display: inline-block;
     margin-top: 3px;
   }
@@ -25,7 +25,8 @@
       word-break: break-word;
     }
 
-    .PostUser-badges, .PostUser-avatar {
+    .PostUser-badges,
+    .PostUser-avatar {
       display: none;
     }
 
@@ -49,7 +50,8 @@
   border-radius: 5px;
   padding: 2px 5px;
 
-  &, a {
+  &,
+  a {
     color: white;
   }
 
@@ -62,28 +64,22 @@
   }
 }
 
-@media @desktop-up{
-  .CommentPost {
-    .Post-header > ul {
-      position: relative;
-    }
-  }
-
-  .Post-header{
-    & > ul > li.item-isBestAnswer{
+@media @desktop-up {
+  .Post-header {
+    & > ul > li.item-isBestAnswer {
       margin-top: 0;
     }
   }
 
-  .Post--BestAnswer {
-    position: absolute;
-    top: 0;
-    right: 0;
+  .item-isBestAnswer {
+    float: right;
+  }
 
+  .Post--BestAnswer {
     .BestAnswer--User {
       display: initial;
       margin-left: 7.5px;
-      font-size: .9em;
+      font-size: 0.9em;
     }
   }
 }
