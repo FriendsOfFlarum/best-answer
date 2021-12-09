@@ -20,120 +20,122 @@ import extendNotifications from './extend/extendNotifications';
 export * from './components';
 
 app.initializers.add('fof/best-answer', () => {
-    Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
-    Discussion.prototype.bestAnswerUser = Model.hasOne('bestAnswerUser');
-    Discussion.prototype.hasBestAnswer = Model.attribute('hasBestAnswer');
-    Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
-    Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt', Model.transformDate);
+  Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
+  Discussion.prototype.bestAnswerUser = Model.hasOne('bestAnswerUser');
+  Discussion.prototype.hasBestAnswer = Model.attribute('hasBestAnswer');
+  Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
+  Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt', Model.transformDate);
 
-    if (app.initializers.has('flarum-tags')) {
-        Tag.prototype.isQnA = Model.attribute('isQnA');
+  if (app.initializers.has('flarum-tags')) {
+    Tag.prototype.isQnA = Model.attribute('isQnA');
+  }
+
+  app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
+  app.notificationComponents.awardedBestAnswer = AwardedBestAnswerNotification;
+  app.notificationComponents.bestAnswerInDiscussion = BestAnswerInDiscussionNotification;
+
+  addAnsweredBadge();
+  addBestAnswerAction();
+  addBestAnswerView();
+
+  extendNotifications();
+
+  extend(IndexPage.prototype, 'sidebarItems', function (items) {
+    const tag = this.currentTag();
+
+    if (!tag?.isQnA?.()) return;
+
+    const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
+    const cta = items.get('newDiscussion');
+    cta.children = app.translator.trans(
+      canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.index.cannot_ask_question'
+    );
+
+    items.replace('startDiscussion', cta);
+  });
+
+  extend(IndexPage.prototype, 'viewItems', function (items) {
+    if (!app.forum.attribute('showBestAnswerFilterUi')) {
+      return;
     }
 
-    app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
-    app.notificationComponents.awardedBestAnswer = AwardedBestAnswerNotification;
-    app.notificationComponents.bestAnswerInDiscussion = BestAnswerInDiscussionNotification;
+    const tag = this.currentTag();
 
-    addAnsweredBadge();
-    addBestAnswerAction();
-    addBestAnswerView();
+    if (!tag?.isQnA?.()) {
+      if (app.discussions.bestAnswer) {
+        delete app.discussions.bestAnswer;
+        app.discussions.refresh();
+      }
 
-    extendNotifications();
+      return;
+    }
 
-    extend(IndexPage.prototype, 'sidebarItems', function (items) {
-        const tag = this.currentTag();
+    const options = ['all', 'solved', 'unsolved'];
 
-        if (!tag?.isQnA?.()) return;
+    const selected = app.discussions.bestAnswer;
 
-        const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
-        const cta = items.get('newDiscussion');
-        cta.children = app.translator.trans(
-            canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.index.cannot_ask_question'
-        );
+    items.add(
+      'solved-filter',
+      Dropdown.component(
+        {
+          buttonClassName: 'Button',
+          label: app.translator.trans(
+            `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[key])[0]}_label`
+          ),
+          accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
+        },
+        Object.keys(options).map((value) => {
+          const label = options[value];
+          const active = (selected || Object.keys(options)[0]) === value;
 
-        items.replace('startDiscussion', cta);
-    });
-
-    extend(IndexPage.prototype, 'viewItems', function (items) {
-        if (!app.forum.attribute('showBestAnswerFilterUi')) { return; }
-        
-        const tag = this.currentTag();
-
-        if (!tag?.isQnA?.()) {
-            if (app.discussions.bestAnswer) {
-                delete app.discussions.bestAnswer;
+          return Button.component(
+            {
+              icon: active ? 'fas fa-check' : true,
+              active: active,
+              onclick: () => {
+                app.discussions.bestAnswer = value;
+                if (value === '0') {
+                  delete app.discussions.bestAnswer;
+                }
                 app.discussions.refresh();
-            }
+              },
+            },
+            app.translator.trans(`fof-best-answer.forum.filter.${label}_label`)
+          );
+        })
+      )
+    );
+  });
 
-            return;
-        }
+  extend(DiscussionListState.prototype, 'requestParams', function (params) {
+    if (app.discussions.bestAnswer) {
+      const negate = app.discussions.bestAnswer === '2';
 
-        const options = ['all', 'solved', 'unsolved'];
+      params.filter[`${negate ? '-' : ''}solved-discussions`] = true;
+    }
+  });
 
-        const selected = app.discussions.bestAnswer;
+  extend(DiscussionComposer.prototype, 'headerItems', function (items) {
+    const tags = this.composer.fields.tags;
+    if (tags === undefined) return;
 
-        items.add(
-            'solved-filter',
-            Dropdown.component(
-                {
-                    buttonClassName: 'Button',
-                    label: app.translator.trans(
-                        `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[key])[0]}_label`
-                    ),
-                    accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
-                },
-                Object.keys(options).map((value) => {
-                    const label = options[value];
-                    const active = (selected || Object.keys(options)[0]) === value;
+    const qna = tags.some((t) => t.isQnA());
 
-                    return Button.component(
-                        {
-                            icon: active ? 'fas fa-check' : true,
-                            active: active,
-                            onclick: () => {
-                                app.discussions.bestAnswer = value;
-                                if (value === '0') {
-                                    delete app.discussions.bestAnswer;
-                                }
-                                app.discussions.refresh();
-                            },
-                        },
-                        app.translator.trans(`fof-best-answer.forum.filter.${label}_label`)
-                    );
-                })
-            )
-        );
-    });
+    if (!qna) return;
 
-    extend(DiscussionListState.prototype, 'requestParams', function (params) {
-        if (app.discussions.bestAnswer) {
-            const negate = app.discussions.bestAnswer === '2';
+    this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
 
-            params.filter[`${negate ? '-' : ''}solved-discussions`] = true;
-        }
-    });
-
-    extend(DiscussionComposer.prototype, 'headerItems', function (items) {
-        const tags = this.composer.fields.tags;
-        if (tags === undefined) return;
-
-        const qna = tags.some((t) => t.isQnA());
-
-        if (!qna) return;
-
-        this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
-
-        items.replace(
-            'discussionTitle',
-            <h3>
-                <input
-                    className="FormControl"
-                    bidi={this.title}
-                    placeholder={this.attrs.titlePlaceholder}
-                    disabled={!!this.attrs.disabled}
-                    onkeydown={this.onkeydown.bind(this)}
-                />
-            </h3>
-        );
-    });
+    items.replace(
+      'discussionTitle',
+      <h3>
+        <input
+          className="FormControl"
+          bidi={this.title}
+          placeholder={this.attrs.titlePlaceholder}
+          disabled={!!this.attrs.disabled}
+          onkeydown={this.onkeydown.bind(this)}
+        />
+      </h3>
+    );
+  });
 });
