@@ -78,7 +78,7 @@ class NotifyCommand extends Command
             return;
         }
 
-        $this->info('Looking at discussions before '.$time->toDateTimeString() . ' but not older than ' . $timeLimit->toDateTimeString());
+        $this->info('Looking at discussions before '.$time->toDateTimeString().' but not older than '.$timeLimit->toDateTimeString());
 
         $tags = Tag::where('qna_reminders', true)->pluck('id');
         $query = Discussion::query()
