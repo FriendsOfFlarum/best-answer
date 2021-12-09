@@ -3,7 +3,6 @@ import { extend } from 'flarum/common/extend';
 import Discussion from 'flarum/common/models/Discussion';
 import Tag from 'flarum/tags/models/Tag';
 import Model from 'flarum/common/Model';
-import NotificationGrid from 'flarum/forum/components/NotificationGrid';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
@@ -16,6 +15,7 @@ import addBestAnswerView from './addBestAnswerView';
 import addAnsweredBadge from './addAnsweredBadge';
 import AwardedBestAnswerNotification from './components/AwardedBestAnswerNotification';
 import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscussionNotification';
+import extendNotifications from './extend/extendNotifications';
 
 export * from './components';
 
@@ -38,18 +38,7 @@ app.initializers.add('fof/best-answer', () => {
     addBestAnswerAction();
     addBestAnswerView();
 
-    extend(NotificationGrid.prototype, 'notificationTypes', function (items) {
-        items.add('awardedBestAnswer', {
-            name: 'awardedBestAnswer',
-            icon: 'fas fa-check',
-            label: app.translator.trans('fof-best-answer.forum.notification.preferences.awarded_best_answer'),
-        });
-        items.add('bestAnswerInDiscussion', {
-            name: 'bestAnswerInDiscussion',
-            icon: 'fas fa-check',
-            label: app.translator.trans('fof-best-answer.forum.notification.preferences.best_answer_in_discussion'),
-        });
-    });
+    extendNotifications();
 
     extend(IndexPage.prototype, 'sidebarItems', function (items) {
         const tag = this.currentTag();

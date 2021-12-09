@@ -1,3 +1,4 @@
+import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/helpers/humanTime';

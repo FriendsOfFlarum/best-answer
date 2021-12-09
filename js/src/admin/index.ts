@@ -1,4 +1,4 @@
-import app from 'flarum/common/app';
+import app from 'flarum/admin/app';
 import addQnAToTagsModal from './addQnAToTagsModal';
 import BestAnswerSettings from './components/BestAnswerSettings';
 
