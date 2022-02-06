@@ -48,7 +48,7 @@ app.initializers.add('fof/best-answer', () => {
     const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
     const cta = items.get('newDiscussion');
     cta.children = app.translator.trans(
-      canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.index.cannot_ask_question'
+      canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.forum.index.cannot_ask_question'
     );
 
     items.replace('startDiscussion', cta);
