@@ -15,5 +15,10 @@ export default function () {
       icon: 'fas fa-check',
       label: app.translator.trans('fof-best-answer.forum.notification.preferences.best_answer_in_discussion'),
     });
+    items.add('selectBestAnswer', {
+      name: 'selectBestAnswer',
+      icon: 'fas fa-stopwatch',
+      label: app.translator.trans('fof-best-answer.forum.notification.preferences.select_best_answer'),
+    });
   });
 }

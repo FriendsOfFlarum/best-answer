@@ -45,8 +45,9 @@ fof-best-answer:
       awarded: Your post was set as the best answer by {username}
 
       preferences:
-        awarded_best_answer: When someone sets my post as a best answer
-        best_answer_in_discussion: When a best answer is set in a discussion I participated in
+        awarded_best_answer: Someone sets my post as a best answer
+        best_answer_in_discussion: A best answer is set in a discussion I participated in
+        select_best_answer: An automated reminder to select a best answer in a discussion I started
 
     index:
       ask_question: Ask a Question
