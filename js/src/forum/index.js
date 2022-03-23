@@ -110,8 +110,13 @@ app.initializers.add('fof/best-answer', () => {
   extend(DiscussionListState.prototype, 'requestParams', function (params) {
     if (app.discussions.bestAnswer) {
       const negate = app.discussions.bestAnswer === '2';
+      const prepend = negate ? '-' : '';
 
-      params.filter[`${negate ? '-' : ''}solved-discussions`] = true;
+      params.filter[`${prepend}solved-discussions`] = true;
+
+      if (params.filter.q) {
+        params.filter.q += ` ${prepend}is:solved`;
+      }
     }
   });
 
