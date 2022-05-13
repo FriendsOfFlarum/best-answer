@@ -19,4 +19,8 @@ export default class AwardedBestAnswerNotification extends Notification {
       user: user,
     });
   }
+
+  excerpt() {
+    return null;
+  }
 }
