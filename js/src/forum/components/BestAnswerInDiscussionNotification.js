@@ -19,4 +19,8 @@ export default class BestAnswerInDiscussionNotification extends Notification {
       user: user,
     });
   }
+
+  excerpt() {
+    return null;
+  }
 }

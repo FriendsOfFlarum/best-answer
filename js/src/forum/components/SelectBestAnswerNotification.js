@@ -16,4 +16,8 @@ export default class SelectBestAnswerNotification extends Notification {
   content() {
     return app.translator.trans('fof-best-answer.forum.notification.content');
   }
+
+  excerpt() {
+    return null;
+  }
 }
