@@ -96,8 +96,8 @@ class SelectBestAnswer
             $discussion->best_answer_user_id = null;
             $discussion->best_answer_set_at = null;
 
-            $event->discussion->afterSave(function ($discussion) use ($actor) {
-                $this->bus->dispatch(new BestAnswerUnset($discussion, $actor));
+            $event->discussion->afterSave(function ($discussion) use ($actor, $post) {
+                $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
             });
         }
 
@@ -109,7 +109,8 @@ class SelectBestAnswer
         $actor = $event->actor;
 
         $event->discussion->afterSave(function ($discussion) use ($actor) {
-            $this->bus->dispatch(new BestAnswerSet($discussion, $actor));
+            $post = $discussion->bestAnswerPost;
+            $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
         });
     }
 }

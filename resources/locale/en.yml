@@ -61,6 +61,8 @@ fof-best-answer:
       accessible_label: Solved/Unsolved selection
     composer:
       titlePlaceholder: Question title
+    user:
+      best-answer-count: "{count} best answers"
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}

@@ -19,6 +19,7 @@ use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
+use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
@@ -58,7 +59,8 @@ return [
         ->listen(Saving::class, Listeners\SelectBestAnswer::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->listen(TagCreating::class, Listeners\TagCreating::class)
-        ->listen(TagSaving::class, Listeners\TagEditing::class),
+        ->listen(TagSaving::class, Listeners\TagEditing::class)
+        ->subscribe(Listeners\RecalculateBestAnswerCounts::class),
 
     (new Extend\Notification())
         ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
@@ -83,6 +85,9 @@ return [
 
             return null;
         }),
+
+    (new Extend\ApiSerializer(UserSerializer::class))
+        ->attributes(UserBestAnswerCount::class),
 
     (new Extend\Settings())
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
