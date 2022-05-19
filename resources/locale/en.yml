@@ -62,7 +62,7 @@ fof-best-answer:
     composer:
       titlePlaceholder: Question title
     user:
-      best-answer-count: "{count} best answers"
+      best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}
