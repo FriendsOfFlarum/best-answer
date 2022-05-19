@@ -1,23 +1,25 @@
 <?php
 
-/*
- * This file is part of fof/best-answer.
- *
- * Copyright (c) FriendsOfFlarum.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace FoF\BestAnswer;
 
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
 
-class Helpers
+class BestAnswerRepository
 {
-    public static function canSelectBestAnswer(User $user, Discussion $discussion): bool
+    /**
+     * @var SettingsRepositoryInterface
+     */
+    protected $settings;
+
+    public function __construct(SettingsRepositoryInterface $settings)
+    {
+        $this->settings = $settings;
+    }
+    
+    public function canSelectBestAnswer(User $user, Discussion $discussion): bool
     {
         // Prevent best answers being set in a private discussion (ie byobu, etc)
         if ($discussion->is_private) {
@@ -29,20 +31,20 @@ class Helpers
             : $user->can('selectBestAnswerNotOwnDiscussion', $discussion));
     }
 
-    public static function canSelectPostAsBestAnswer(User $user, Post $post): bool
+    public function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
         if (!self::canSelectBestAnswer($user, $post->discussion)) {
             return false;
         }
 
         if ($user->id === $post->user_id) {
-            return (bool) resolve('flarum.settings')->get('fof-best-answer.allow_select_own_post');
+            return (bool) $this->settings->get('fof-best-answer.allow_select_own_post');
         }
 
         return true;
     }
 
-    private static function tagEnabledForBestAnswer(Discussion $discussion): bool
+    public function tagEnabledForBestAnswer(Discussion $discussion): bool
     {
         $enabled = false;
 

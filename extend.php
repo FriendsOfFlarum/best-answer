@@ -56,7 +56,7 @@ return [
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),
 
     (new Extend\Event())
-        ->listen(Saving::class, Listeners\SelectBestAnswer::class)
+        ->listen(Saving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->listen(TagCreating::class, Listeners\TagCreating::class)
         ->listen(TagSaving::class, Listeners\TagEditing::class)
@@ -69,7 +69,7 @@ return [
 
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, Discussion $discussion) {
-            return Helpers::canSelectBestAnswer($serializer->getActor(), $discussion);
+            return resolve(BestAnswerRepository::class)->canSelectBestAnswer($serializer->getActor(), $discussion);
         }),
 
     (new Extend\ApiSerializer(BasicDiscussionSerializer::class))

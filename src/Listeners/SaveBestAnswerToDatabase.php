@@ -20,15 +20,15 @@ use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
 use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
+use FoF\BestAnswer\BestAnswerRepository;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
-use FoF\BestAnswer\Helpers;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SelectBestAnswer
+class SaveBestAnswerToDatabase
 {
     private $key = 'attributes.bestAnswerPostId';
 
@@ -47,11 +47,17 @@ class SelectBestAnswer
      */
     private $translator;
 
-    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator)
+    /**
+     * @var BestAnswerRepository
+     */
+    protected $bestAnswer;
+
+    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator, BestAnswerRepository $bestAnswer)
     {
         $this->notifications = $notifications;
         $this->bus = $bus;
         $this->translator = $translator;
+        $this->bestAnswer = $bestAnswer;
     }
 
     public function handle(Saving $event)
@@ -103,7 +109,7 @@ class SelectBestAnswer
             );
         }
 
-        if ($post && (!Helpers::canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
+        if ($post && (!$this->bestAnswer->canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
             throw new PermissionDeniedException();
         }
 
