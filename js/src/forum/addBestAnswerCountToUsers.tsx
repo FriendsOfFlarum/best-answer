@@ -9,7 +9,6 @@ import Tooltip from 'flarum/common/components/Tooltip';
 
 import type Mithril from 'mithril';
 
-
 export default function addBestAnswerCountToUsers() {
   User.prototype.bestAnswerCount = Model.attribute<number>('bestAnswerCount');
 
