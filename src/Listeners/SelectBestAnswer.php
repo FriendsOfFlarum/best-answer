@@ -71,11 +71,8 @@ class SelectBestAnswer
         }
 
         // If 'id' = 0, then we are removing a best answer.
-        if ($id == 0) {
-            $this->removeBestAnswer($discussion, $actor);
-        } else {
-            $this->setBestAnswer($discussion, $actor, $id);
-        }
+        $function = $id === 0 ? 'removeBestAnswer' : 'setBestAnswer';
+        $this->$function($discussion, $actor, $id);
 
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
     }
