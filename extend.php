@@ -47,8 +47,6 @@ return [
     (new Extend\Routes('api'))
         ->post('/fof/best-answer/enable', 'fof-best-answer.enable-tags-features', Api\Controller\FeatureEnableController::class),
 
-    new DefaultSettings(),
-
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
@@ -89,7 +87,10 @@ return [
     (new Extend\Settings())
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
-        ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal'),
+        ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
+        ->default('fof-best-answer.schedule_on_one_server', false)
+        ->default('fof-best-answer.stop_overnight', false)
+        ->default('fof-best-answer.store_log_output', false),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
