@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer;
 
 use Flarum\Api\Serializer\UserSerializer;
@@ -22,7 +31,8 @@ class UserBestAnswerCount
      * and the user has not yet been serialized.
      *
      * @param User $user
-     * @return integer
+     *
+     * @return int
      */
     private function calculateBestAnswersForUser(User $user): int
     {

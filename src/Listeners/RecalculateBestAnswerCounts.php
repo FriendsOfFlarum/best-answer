@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Listeners;
 
 use FoF\BestAnswer\Events\BestAnswerSet;
@@ -19,7 +28,7 @@ class RecalculateBestAnswerCounts
         $author = $event->post->user;
 
         if ($author) {
-            $author->best_answer_count ++;
+            $author->best_answer_count++;
             $author->save();
         }
     }
@@ -29,7 +38,7 @@ class RecalculateBestAnswerCounts
         $author = $event->post->user;
 
         if ($author) {
-            $author->best_answer_count --;
+            $author->best_answer_count--;
             $author->save();
         }
     }
