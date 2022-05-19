@@ -12,12 +12,14 @@
 namespace FoF\BestAnswer\Listeners;
 
 use Carbon\Carbon;
+use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
 use Flarum\User\Exception\PermissionDeniedException;
+use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
 use FoF\BestAnswer\Helpers;
@@ -68,10 +70,34 @@ class SelectBestAnswer
             return;
         }
 
-        /** @var Post $post */
-        $post = $event->discussion->posts()->find($id);
-
         // If 'id' = 0, then we are removing a best answer.
+        if ($id == 0) {
+            $this->removeBestAnswer($discussion, $actor);
+        } else {
+            $this->setBestAnswer($discussion, $actor, $id);
+        }
+
+        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
+    }
+
+    private function removeBestAnswer(Discussion $discussion, User $actor): void
+    {
+        $post = $discussion->bestAnswerPost;
+
+        $discussion->best_answer_post_id = null;
+        $discussion->best_answer_user_id = null;
+        $discussion->best_answer_set_at = null;
+
+        $discussion->afterSave(function ($discussion) use ($actor, $post) {
+            $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
+        });
+    }
+
+    private function setBestAnswer(Discussion $discussion, User $actor, int $id): void
+    {
+        /** @var Post $post */
+        $post = $discussion->posts()->find($id);
+
         if ($id && !$post) {
             throw new ValidationException(
                 [
@@ -90,27 +116,10 @@ class SelectBestAnswer
             $discussion->best_answer_set_at = Carbon::now();
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-            $this->notifyUsersOfBestAnswerSet($event);
-        } else {
-            $discussion->best_answer_post_id = null;
-            $discussion->best_answer_user_id = null;
-            $discussion->best_answer_set_at = null;
-
-            $event->discussion->afterSave(function ($discussion) use ($actor, $post) {
-                $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
+            $discussion->afterSave(function (Discussion $discussion) use ($actor) {
+                $post = $discussion->bestAnswerPost;
+                $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
             });
         }
-
-        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
-    }
-
-    public function notifyUsersOfBestAnswerSet(Saving $event)
-    {
-        $actor = $event->actor;
-
-        $event->discussion->afterSave(function ($discussion) use ($actor) {
-            $post = $discussion->bestAnswerPost;
-            $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
-        });
     }
 }
