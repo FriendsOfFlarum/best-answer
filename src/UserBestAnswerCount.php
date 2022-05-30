@@ -41,8 +41,10 @@ class UserBestAnswerCount
             ->where('posts.user_id', $user->id)
             ->count();
 
-        $user->best_answer_count = $count;
-        $user->save();
+        // Use a standalone query and not attribute update+save because otherwise data added by extensions
+        // with Extend\ApiController::prepareDataForSerialization() ends up being added to the SQL UPDATE clause,
+        // and breaks Flarum since those are often not real columns
+        $user->newQuery()->update(['best_answer_count' => $count]);
 
         return $count;
     }
