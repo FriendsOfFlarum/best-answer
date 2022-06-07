@@ -21,7 +21,8 @@ export default function addBestAnswerCountToUsers() {
         {app.translator.trans('fof-best-answer.forum.user.best-answer-count', {
           count: user.bestAnswerCount(),
         })}
-      </span>
+      </span>,
+      55
     );
   });
 }
