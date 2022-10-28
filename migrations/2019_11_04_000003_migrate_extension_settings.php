@@ -20,12 +20,9 @@ return [
         $db = $schema->getConnection();
 
         foreach (['allow_select_own_post', 'select_best_answer_reminder_days'] as $setting) {
-            $query = $db->table('settings')
-                ->where('key', "flarum-best-answer.$setting");
-
-            if ($query->exists()) {
-                $query->update(['key' => "fof-best-answer.$setting"]);
-            }
+            $db->table('settings')
+                ->where('key', "flarum-best-answer.$setting")
+                ->update(['key' => "fof-best-answer.$setting"]);
         }
 
         $permission = $db->table('group_permission')
