@@ -17,19 +17,14 @@ $permissionKey = 'discussion.selectBestAnswerOwnDiscussion';
 
 return [
     'up' => function (Builder $schema) use ($permissionKey) {
-        /**
-         * @var \Flarum\Settings\SettingsRepositoryInterface
-         */
-        $settings = resolve('flarum.settings');
+        $db = $schema->getConnection();
 
         foreach (['allow_select_own_post', 'select_best_answer_reminder_days'] as $setting) {
-            if ($value = $settings->get($key = "flarum-best-answer.$setting")) {
-                $settings->set("fof-best-answer.$setting", $value);
-                $settings->delete($key);
-            }
+            $db->table('settings')
+                ->where('key', "flarum-best-answer.$setting")
+                ->update(['key' => "fof-best-answer.$setting"]);
         }
 
-        $db = $schema->getConnection();
         $permission = $db->table('group_permission')
             ->where('permission', 'discussion.selectBestAnswer');
 
