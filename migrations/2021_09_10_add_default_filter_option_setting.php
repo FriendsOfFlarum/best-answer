@@ -17,7 +17,7 @@ return [
 
         $db->table('settings')
             ->insert([
-                'key' => 'fof-best-answer.show_filter_dropdown',
+                'key'   => 'fof-best-answer.show_filter_dropdown',
                 'value' => true,
             ]);
     },
