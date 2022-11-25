@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Access;
 
 use Flarum\Discussion\Discussion;
@@ -47,7 +56,7 @@ class PostPolicy extends AbstractPolicy
         if (!$this->tagEnabledForBestAnswer($post->discussion)) {
             return $this->deny();
         }
-        
+
         // We don't have the first post in a discussion as the best answer
         if ($post->number === 1) {
             return $this->deny();

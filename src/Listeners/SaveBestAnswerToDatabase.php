@@ -46,7 +46,7 @@ class SaveBestAnswerToDatabase
         if (!Arr::has($event->data, $this->key)) {
             return;
         }
-        
+
         $actor = $event->actor;
         $discussion = $event->discussion;
 
@@ -63,7 +63,7 @@ class SaveBestAnswerToDatabase
 
         $currentlyBestAnswer = $discussion->bestAnswers()->where('solution_id', $post->id)->exists();
 
-        if (! $currentlyBestAnswer) {
+        if (!$currentlyBestAnswer) {
             $post->solution_set_by_user_id = $actor->id;
             $post->solution_set_at = Carbon::now();
             $post->save();

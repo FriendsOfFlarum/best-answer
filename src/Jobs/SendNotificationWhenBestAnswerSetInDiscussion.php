@@ -55,7 +55,7 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
         $this->discussion->loadMissing('bestAnswers');
 
         $this->discussion->bestAnswers->each(function (CommentPost $post) use ($notifications) {
-            $bestAnswerAuthor = $post->user;;
+            $bestAnswerAuthor = $post->user;
 
             // Send notification to the post author that has been awarded the best answer, except if the best answer was set by the author
             if ($bestAnswerAuthor && $bestAnswerAuthor->id !== $this->actor->id) {
