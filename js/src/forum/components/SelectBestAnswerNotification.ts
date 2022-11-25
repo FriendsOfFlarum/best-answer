@@ -1,7 +1,12 @@
 import app from 'flarum/forum/app';
 import Notification from 'flarum/forum/components/Notification';
+import type NotificationModel from 'flarum/common/models/Notification';
 
-export default class SelectBestAnswerNotification extends Notification {
+interface INotificationAttrs {
+  notification: NotificationModel;
+}
+
+export default class SelectBestAnswerNotification extends Notification<INotificationAttrs> {
   icon() {
     return 'fas fa-comment-dots';
   }

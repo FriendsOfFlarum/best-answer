@@ -81,10 +81,15 @@ class NotifyCommand extends Command
         $this->info('Looking at discussions before '.$time->toDateTimeString().' but not older than '.$timeLimit->toDateTimeString());
 
         $tags = Tag::where('qna_reminders', true)->pluck('id');
+        
         $query = Discussion::query()
             ->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id')
             ->whereIn('discussion_tag.tag_id', $tags)
-            ->whereNull('discussions.best_answer_post_id')
+            ->whereNotIn('discussions.id', function ($query) {
+                $query->select('discussion_id')
+                    ->from('discussion_solutions')
+                    ->groupBy('discussion_id');
+            })
             ->whereNull('discussions.hidden_at')
             ->where('discussions.best_answer_notified', false)
             ->where('discussions.comment_count', '>', 1)

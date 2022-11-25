@@ -11,16 +11,9 @@
 
 namespace FoF\BestAnswer;
 
-use Carbon\Carbon;
-use DateTime;
-use Flarum\Api\Controller\ListPostsController;
-use Flarum\Api\Controller\ShowDiscussionController;
-use Flarum\Api\Serializer\BasicDiscussionSerializer;
-use Flarum\Api\Serializer\BasicPostSerializer;
-use Flarum\Api\Serializer\BasicUserSerializer;
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Api\Serializer\UserSerializer;
-use Flarum\Database\AbstractModel;
+use Flarum\Api\Controller;
+use Flarum\Api\Serializer;
+use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -28,9 +21,6 @@ use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use Flarum\Tags\Event\Creating as TagCreating;
-use Flarum\Tags\Event\Saving as TagSaving;
-use Flarum\Tags\Tag;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 
@@ -48,9 +38,14 @@ return [
     (new Extend\Routes('api'))
         ->post('/fof/best-answer/enable', 'fof-best-answer.enable-tags-features', Api\Controller\FeatureEnableController::class),
 
+    (new Extend\Policy())
+        ->modelPolicy(Post::class, Access\PostPolicy::class),
+
     (new Extend\Model(Discussion::class))
-        ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
-        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
+        ->belongsToMany('bestAnswers', Post::class, 'discussion_solutions', 'discussion_id', 'solution_id'),
+
+    (new Extend\Model(Post::class))
+        ->belongsTo('solutionSetBy', User::class, 'solution_set_by_user_id'),
 
     (new Extend\View())
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),
@@ -58,51 +53,66 @@ return [
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
-        ->listen(TagCreating::class, Listeners\TagCreating::class)
-        ->listen(TagSaving::class, Listeners\TagEditing::class)
-        ->subscribe(Listeners\RecalculateBestAnswerCounts::class),
+        ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
+        ->subscribe(Listeners\UpdateTagParams::class),
 
     (new Extend\Notification())
-        ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
-        ->type(Notification\AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert'])
-        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []),
+        ->type(Notification\SelectBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert', 'email'])
+        ->type(Notification\AwardedBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert'])
+        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
-    (new Extend\ApiSerializer(DiscussionSerializer::class))
-        ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, Discussion $discussion) {
-            return resolve(BestAnswerRepository::class)->canSelectBestAnswer($serializer->getActor(), $discussion);
+    (new Extend\ApiSerializer(PostSerializer::class))
+        ->attribute('canSelectAsBestAnswer', function (Serializer\PostSerializer $serializer, Post $post) {
+            return $serializer->getActor()->can('selectPostAsBestAnswer', $post);
         }),
 
-    (new Extend\ApiSerializer(BasicDiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
-        ->attribute('hasBestAnswer', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
-            return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
-        })
-        ->attribute('bestAnswerSetAt', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
-            if ($discussion->best_answer_set_at) {
-                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
-            }
+    (new Extend\ApiSerializer(Serializer\BasicPostSerializer::class))
+        ->hasOne('solutionSetBy', Serializer\BasicUserSerializer::class)
+        ->attributes(AddPostAttributes::class),
 
-            return null;
+    (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
+        ->hasMany('bestAnswers', Serializer\BasicPostSerializer::class)
+        ->attribute('hasBestAnswer', function (Serializer\BasicDiscussionSerializer $serializer, Discussion $discussion) {
+            return $discussion->bestAnswers()->exists();
         }),
 
-    (new Extend\ApiSerializer(UserSerializer::class))
+    (new Extend\ApiSerializer(Serializer\UserSerializer::class))
         ->attributes(UserBestAnswerCount::class),
 
     (new Extend\Settings())
-        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
         ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
         ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
-        ->default('fof-best-answer.store_log_output', false),
+        ->default('fof-best-answer.store_log_output', false)
+        ->default('fof-best-answer.show_filter_dropdown', true)
+        ->default('fof-best-answer.allow_select_own_post', false),
 
-    (new Extend\ApiController(ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
-        ->load(['bestAnswerPost.user']),
+    (new Extend\ApiController(Controller\ShowDiscussionController::class))
+        ->addInclude(['bestAnswers', 'posts.solutionSetBy'])
+        ->load(['bestAnswers']),
 
-    (new Extend\ApiController(ListPostsController::class))
-        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
+    (new Extend\ApiController(Controller\ListDiscussionsController::class))
+        ->addInclude(['bestAnswers', 'posts.solutionSetBy'])
+        ->load(['bestAnswers']),
+
+    (new Extend\ApiController(Controller\UpdateDiscussionController::class))
+        ->addInclude(['bestAnswers', 'posts.solutionSetBy'])
+        ->load(['bestAnswers']),
+
+    (new Extend\ApiController(Controller\ListPostsController::class))
+        ->addInclude(['discussion.bestAnswers', 'solutionSetBy'])
+        ->load(['solutionSetBy']),
+
+    (new Extend\ApiController(Controller\ShowPostController::class))
+        ->addInclude('solutionSetBy')
+        ->load('solutionSetBy'),
+
+    (new Extend\ApiController(Controller\CreatePostController::class))
+        ->addInclude('solutionSetBy'),
+
+    (new Extend\ApiController(Controller\UpdatePostController::class))
+        ->addInclude('solutionSetBy'),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Search\BestAnswerFilterGambit::class),
@@ -115,10 +125,5 @@ return [
         ->addFilter(Search\BestAnswerFilterGambit::class),
 
     (new Extend\ApiSerializer(TagSerializer::class))
-        ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
-            $attributes['isQnA'] = (bool) $tag->is_qna;
-            $attributes['reminders'] = (bool) $tag->qna_reminders;
-
-            return $attributes;
-        }),
+        ->attributes(AddTagAttributes::class),
 ];

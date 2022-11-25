@@ -13,6 +13,7 @@ namespace FoF\BestAnswer\Jobs;
 
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\NotificationSyncer;
+use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 use Flarum\User\User;
 use FoF\BestAnswer\Notification;
@@ -47,35 +48,34 @@ class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
 
     public function handle(NotificationSyncer $notifications)
     {
-        if ($this->discussion === null || $this->discussion->best_answer_post_id === null) {
+        if ($this->discussion === null) {
             return;
         }
 
-        $bestAnswerAuthor = $this->getUserFromPost($this->discussion->best_answer_post_id);
+        $this->discussion->loadMissing('bestAnswers');
 
-        // Send notification to the post author that has been awarded the best answer, except if the best answer was set by the author
-        if ($bestAnswerAuthor && $bestAnswerAuthor->id !== $this->actor->id) {
-            $notifications->sync(new Notification\AwardedBestAnswerBlueprint($this->discussion, $this->actor), [$bestAnswerAuthor]);
-        }
+        $this->discussion->bestAnswers->each(function (CommentPost $post) use ($notifications) {
+            $bestAnswerAuthor = $post->user;;
 
-        // Send notifications to other participants of the discussion
-        $recipientsBuilder = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id));
+            // Send notification to the post author that has been awarded the best answer, except if the best answer was set by the author
+            if ($bestAnswerAuthor && $bestAnswerAuthor->id !== $this->actor->id) {
+                $notifications->sync(new Notification\AwardedBestAnswerBlueprint($this->discussion, $this->actor), [$bestAnswerAuthor]);
+            }
 
-        $exclude = [$this->actor->id];
+            // Send notifications to other participants of the discussion
+            $recipientsBuilder = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id));
 
-        if ($bestAnswerAuthor) {
-            array_push($exclude, $bestAnswerAuthor->id);
-        }
+            $exclude = [$this->actor->id];
 
-        $recipients = $recipientsBuilder
-            ->whereNotIn('id', $exclude)
-            ->get();
+            if ($bestAnswerAuthor) {
+                array_push($exclude, $bestAnswerAuthor->id);
+            }
 
-        $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
-    }
+            $recipients = $recipientsBuilder
+                ->whereNotIn('id', $exclude)
+                ->get();
 
-    public function getUserFromPost(int $post_id): ?User
-    {
-        return Post::find($post_id)->user;
+            $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
+        });
     }
 }

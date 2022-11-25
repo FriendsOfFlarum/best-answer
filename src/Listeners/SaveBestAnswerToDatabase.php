@@ -12,21 +12,14 @@
 namespace FoF\BestAnswer\Listeners;
 
 use Carbon\Carbon;
-use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
-use Flarum\Foundation\ValidationException;
-use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
-use Flarum\User\Exception\PermissionDeniedException;
-use Flarum\User\User;
-use FoF\BestAnswer\BestAnswerRepository;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Arr;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SaveBestAnswerToDatabase
 {
@@ -35,29 +28,17 @@ class SaveBestAnswerToDatabase
     /**
      * @var NotificationSyncer
      */
-    private $notifications;
+    protected $notifications;
 
     /**
      * @var Dispatcher
      */
-    private $bus;
+    protected $events;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var BestAnswerRepository
-     */
-    protected $bestAnswer;
-
-    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator, BestAnswerRepository $bestAnswer)
+    public function __construct(NotificationSyncer $notifications, Dispatcher $events)
     {
         $this->notifications = $notifications;
-        $this->bus = $bus;
-        $this->translator = $translator;
-        $this->bestAnswer = $bestAnswer;
+        $this->events = $events;
     }
 
     public function handle(Saving $event)
@@ -65,64 +46,43 @@ class SaveBestAnswerToDatabase
         if (!Arr::has($event->data, $this->key)) {
             return;
         }
-
+        
         $actor = $event->actor;
-
         $discussion = $event->discussion;
-        /** @var int|null $id */
-        $id = (int) Arr::get($event->data, $this->key);
 
-        if (!$discussion->exists || $discussion->best_answer_post_id === $id) {
+        /** @var int|null $id */
+        $id = Arr::get($event->data, $this->key);
+
+        if (!$discussion->exists) {
             return;
         }
 
-        // If 'id' = 0, then we are removing a best answer.
-        $function = $id === 0 ? 'removeBestAnswer' : 'setBestAnswer';
-        $this->$function($discussion, $actor, $id);
+        $post = Post::findOrFail($id);
 
-        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
-    }
+        $actor->assertCan('selectPostAsBestAnswer', $post);
 
-    private function removeBestAnswer(Discussion $discussion, User $actor): void
-    {
-        $post = $discussion->bestAnswerPost;
+        $currentlyBestAnswer = $discussion->bestAnswers()->where('solution_id', $post->id)->exists();
 
-        $discussion->best_answer_post_id = null;
-        $discussion->best_answer_user_id = null;
-        $discussion->best_answer_set_at = null;
+        if (! $currentlyBestAnswer) {
+            $post->solution_set_by_user_id = $actor->id;
+            $post->solution_set_at = Carbon::now();
+            $post->save();
 
-        $discussion->afterSave(function ($discussion) use ($actor, $post) {
-            $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
-        });
-    }
+            $discussion->bestAnswers()->attach($post->id);
 
-    private function setBestAnswer(Discussion $discussion, User $actor, int $id): void
-    {
-        /** @var Post $post */
-        $post = $discussion->posts()->find($id);
+            $this->events->dispatch(new BestAnswerSet($discussion, $post, $actor));
 
-        if ($id && !$post) {
-            throw new ValidationException(
-                [
-                    'error' => $this->translator->trans('fof-best-answer.forum.errors.mismatch'),
-                ]
-            );
-        }
+            $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
+        } elseif ($currentlyBestAnswer) {
+            $discussion->bestAnswers()->detach($post->id);
 
-        if ($post && (!$this->bestAnswer->canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
-            throw new PermissionDeniedException();
-        }
+            $post->solution_set_by_user_id = null;
+            $post->solution_set_at = null;
+            $post->save();
 
-        if ($id) {
-            $discussion->best_answer_post_id = $post->id;
-            $discussion->best_answer_user_id = $actor->id;
-            $discussion->best_answer_set_at = Carbon::now();
+            $this->events->dispatch(new BestAnswerUnset($discussion, $post, $actor));
 
-            Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-            $discussion->afterSave(function (Discussion $discussion) use ($actor) {
-                $post = $discussion->bestAnswerPost;
-                $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
-            });
+            $this->notifications->restore(new SelectBestAnswerBlueprint($discussion));
         }
     }
 }

@@ -15,6 +15,7 @@ fof-best-answer:
       enable_all_tags_reminder_button: Enable all tags for Best Answer reminders
       select_best_answer_reminder_days: Reminder frequency
       select_best_answer_reminder_days_help: Send a reminder after the configurable amount of days to the OP to select a Best Answer, 0 = disable reminders.
+      select_tags_button: Select tags for Best Answers
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler
       schedule_on_one_server_help: Requires Redis/Memcache
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours

@@ -39,9 +39,11 @@ class BestAnswerFilterGambit extends AbstractRegexGambit implements FilterInterf
 
     protected function constrain(Builder $query, User $actor, bool $negate)
     {
-        $method = $negate ? 'whereNull' : 'whereNotNull';
+        $method = $negate ? 'whereNotIn' : 'whereIn';
 
-        $query->$method('best_answer_post_id');
+        $query->$method('id', function ($query) {
+            $query->select('discussion_id')->from('discussion_solutions');
+        });
     }
 
     protected function conditions(SearchState $search, array $matches, $negate)

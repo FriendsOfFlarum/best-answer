@@ -1,6 +1,7 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Button from 'flarum/common/components/Button';
+import LinkButton from 'flarum/common/components/LinkButton';
 import Link from 'flarum/common/components/Link';
 
 export default class BestAnswerSettings extends ExtensionPage {
@@ -47,13 +48,10 @@ export default class BestAnswerSettings extends ExtensionPage {
                 })}
               </p>
               <div className="ButtonGroup">
-                <Button
-                  className="Button"
-                  onclick={this.enableAllTags.bind(this)}
-                  loading={this.loading}
-                  disabled={this.loading}
-                  icon="fas fa-check"
-                >
+                <LinkButton className="Button" icon="fas fa-tags" href={app.route('extension', { id: 'flarum-tags' })}>
+                  {app.translator.trans('fof-best-answer.admin.settings.select_tags_button')}
+                </LinkButton>
+                <Button className="Button" onclick={this.enableAllTags.bind(this)} loading={this.loading} disabled={this.loading} icon="fas fa-check">
                   {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_button')}
                 </Button>
                 <Button

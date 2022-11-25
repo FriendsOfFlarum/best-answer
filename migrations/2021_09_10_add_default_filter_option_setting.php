@@ -13,13 +13,7 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        $db = $schema->getConnection();
-
-        $db->table('settings')
-            ->insert([
-                'key'   => 'fof-best-answer.show_filter_dropdown',
-                'value' => true,
-            ]);
+        // no longer required.
     },
     'down' => function (Builder $schema) {
         /**

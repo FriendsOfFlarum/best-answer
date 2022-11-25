@@ -12,7 +12,7 @@
 namespace FoF\BestAnswer;
 
 use Flarum\Api\Serializer\UserSerializer;
-use Flarum\Discussion\Discussion;
+use Flarum\Post\Post;
 use Flarum\User\User;
 
 class UserBestAnswerCount
@@ -36,10 +36,10 @@ class UserBestAnswerCount
      */
     private function calculateBestAnswersForUser(User $user): int
     {
-        $count = Discussion::whereNotNull('best_answer_post_id')
-            ->leftJoin('posts', 'posts.id', '=', 'discussions.best_answer_post_id')
-            ->where('posts.user_id', $user->id)
-            ->count();
+        $count = Post::where('user_id', $user->id)->whereIn('id', function ($query) {
+            $query->select('solution_id')
+                ->from('discussion_solutions');
+        })->count();
 
         // Use a standalone query and not attribute update+save because otherwise data added by extensions
         // with Extend\ApiController::prepareDataForSerialization() ends up being added to the SQL UPDATE clause,
