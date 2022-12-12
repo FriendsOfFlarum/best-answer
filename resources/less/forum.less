@@ -7,9 +7,11 @@
 
 .Post-header {
   & > ul > li.item-isBestAnswer {
-    display: inline-block;
     margin-top: 3px;
-    margin-right: 60px;
+    
+    & when(is-extension-enabled('ianm-level-ranks') = true) {
+      margin-right: 60px;
+    }
   }
 }
 
@@ -73,16 +75,18 @@
 
 @media @desktop-up {
   .Post-header {
-    & > ul > li.item-isBestAnswer {
-      margin-top: 0;
+    & > ul {
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 
   .item-isBestAnswer {
-    float: right;
+    margin-left: auto;
   }
 
   .Post--BestAnswer {
+    margin-left: auto;
     .BestAnswer--User {
       display: initial;
       margin-left: 7.5px;
