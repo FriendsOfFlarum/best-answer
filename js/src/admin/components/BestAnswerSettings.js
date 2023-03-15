@@ -47,13 +47,7 @@ export default class BestAnswerSettings extends ExtensionPage {
                 })}
               </p>
               <div className="ButtonGroup">
-                <Button
-                  className="Button"
-                  onclick={this.enableAllTags.bind(this)}
-                  loading={this.loading}
-                  disabled={this.loading}
-                  icon="fas fa-check"
-                >
+                <Button className="Button" onclick={this.enableAllTags.bind(this)} loading={this.loading} disabled={this.loading} icon="fas fa-check">
                   {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_button')}
                 </Button>
                 <Button
