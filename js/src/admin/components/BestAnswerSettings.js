@@ -88,6 +88,15 @@ export default class BestAnswerSettings extends ExtensionPage {
                 label: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_label'),
                 help: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_help'),
               })}
+              {this.buildSettingComponent({
+                type: 'flarum-tags.select-tags',
+                setting: 'fof-best-answer.select_best_answer_tags',
+                label: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_tags_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_tags_help'),
+                options: {
+                  requireParentTag: true,
+                },
+              })}
             </div>
             <hr />
             <div className="Reminders">
