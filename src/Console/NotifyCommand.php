@@ -19,7 +19,6 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 

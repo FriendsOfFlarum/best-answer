@@ -135,7 +135,8 @@ class SaveBestAnswerToDatabase
         }
     }
 
-    protected function changeTags(Discussion $discussion, string $method) {
+    protected function changeTags(Discussion $discussion, string $method)
+    {
         $tagsToChange = json_decode(resolve('flarum.settings')->get('fof-best-answer.select_best_answer_tags'));
 
         $discussion->tags()->$method($tagsToChange);
