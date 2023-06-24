@@ -6,6 +6,7 @@ import PostMeta from 'flarum/forum/components/PostMeta';
 import username from 'flarum/common/helpers/username';
 import userOnline from 'flarum/common/helpers/userOnline';
 import Link from 'flarum/common/components/Link';
+import classList from 'flarum/common/utils/classList';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 
@@ -29,6 +30,8 @@ export default () => {
     const discussion = thisPost.discussion();
     const post = discussion.bestAnswerPost();
 
+    const maxLines = app.forum.attribute('fof-best-answer.show_max_lines');
+
     if (post && !post.isHidden() && thisPost.number() === 1 && !thisPost.isHidden()) {
       const user = post.user();
 
@@ -50,7 +53,9 @@ export default () => {
               })}
             </ul>
           </div>
-          <div className="Post-body">{m.trust(post.contentHtml())}</div>
+          <div className={classList('Post-body', maxLines > 0 && 'Post-body--truncate')} style={{ '--max-lines': maxLines }}>
+            {m.trust(post.contentHtml())}
+          </div>
         </div>,
         -10
       );

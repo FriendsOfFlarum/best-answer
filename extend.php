@@ -93,6 +93,7 @@ return [
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
         ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
+        ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
         ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
         ->default('fof-best-answer.store_log_output', false),

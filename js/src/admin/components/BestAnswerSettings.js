@@ -82,6 +82,12 @@ export default class BestAnswerSettings extends ExtensionPage {
                 label: app.translator.trans('fof-best-answer.admin.settings.show_filter_label'),
                 help: app.translator.trans('fof-best-answer.admin.settings.show_filter_help'),
               })}
+              {this.buildSettingComponent({
+                type: 'number',
+                setting: 'fof-best-answer.show_max_lines',
+                label: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_help'),
+              })}
             </div>
             <hr />
             <div className="Reminders">
