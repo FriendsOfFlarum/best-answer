@@ -95,6 +95,11 @@ export default class BestAnswerSettings extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_tags_help'),
                 options: {
                   requireParentTag: true,
+                  limits: {
+                    max: {
+                      primary: 0,
+                    },
+                  },
                 },
               })}
             </div>

@@ -18,7 +18,7 @@ fof-best-answer:
       select_best_answer_reminder_days: Reminder frequency
       select_best_answer_reminder_days_help: Send a reminder after the configurable amount of days to the OP to select a Best Answer, 0 = disable reminders.
       select_best_answer_tags_label: Tags for discussions with Best Answers
-      select_best_answer_tags_help: "Select which tags, if any, to add to discussions when a Best Answer is set. Note: these tags will be removed if the Best Answer is removed. Recommend using tag(s) specifically for this purpose, e.g. 'Solved'."
+      select_best_answer_tags_help: Select which tags, if any, to add to discussions when a Best Answer is set. Only secondary tags are allowed. These tags will be removed if the Best Answer is removed.
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler
       schedule_on_one_server_help: Requires Redis/Memcache
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours
