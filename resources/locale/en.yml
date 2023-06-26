@@ -13,8 +13,12 @@ fof-best-answer:
       allow_select_own_post_help: Allow the OP to select one of their own posts in the discussion as best answer
       enable_all_tags_button: Enable all tags for Best Answers
       enable_all_tags_reminder_button: Enable all tags for Best Answer reminders
+      show_max_lines_label: Max lines to show in post preview
+      show_max_lines_help: Set to 0 to disable. If a post is longer than the configured amount of lines, it will be truncated in the post preview with a fade out effect.
       select_best_answer_reminder_days: Reminder frequency
       select_best_answer_reminder_days_help: Send a reminder after the configurable amount of days to the OP to select a Best Answer, 0 = disable reminders.
+      select_best_answer_tags_label: Tags for discussions with Best Answers
+      select_best_answer_tags_help: Select which tags, if any, to add to discussions when a Best Answer is set. Only secondary tags are allowed. These tags will be removed if the Best Answer is removed.
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler
       schedule_on_one_server_help: Requires Redis/Memcache
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours

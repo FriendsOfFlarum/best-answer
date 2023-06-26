@@ -82,13 +82,33 @@ export default class BestAnswerSettings extends ExtensionPage {
                 label: app.translator.trans('fof-best-answer.admin.settings.show_filter_label'),
                 help: app.translator.trans('fof-best-answer.admin.settings.show_filter_help'),
               })}
+              {this.buildSettingComponent({
+                type: 'number',
+                setting: 'fof-best-answer.show_max_lines',
+                label: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.show_max_lines_help'),
+              })}
+              {this.buildSettingComponent({
+                type: 'flarum-tags.select-tags',
+                setting: 'fof-best-answer.select_best_answer_tags',
+                label: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_tags_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_tags_help'),
+                options: {
+                  requireParentTag: true,
+                  limits: {
+                    max: {
+                      primary: 0,
+                    },
+                  },
+                },
+              })}
             </div>
             <hr />
             <div className="Reminders">
               <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
               <p className="helpText">
                 {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
-                <a href="https://docs.flarum.org/console.html#schedule-run" target="_blank">
+                <a href="https://docs.flarum.org/console/#schedulerun" target="_blank">
                   {app.translator.trans('fof-best-answer.admin.settings.documentation')}
                 </a>
               </p>

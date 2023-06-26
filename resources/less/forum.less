@@ -8,7 +8,7 @@
 .Post-header {
   & > ul > li.item-isBestAnswer {
     margin-top: 3px;
-    
+
     & when(is-extension-enabled('ianm-level-ranks') = true) {
       margin-right: 60px;
     }
@@ -22,10 +22,18 @@
     background-color: @best-answer-post-background;
     margin-top: 20px;
     border-radius: 5px;
+    user-select: none;
 
     .Post-body {
       color: @text-color;
       word-break: break-word;
+
+      &.Post-body--truncate {
+        max-height: ~"calc(var(--post-body-lh, 1.7em) * var(--max-lines, 10))";
+        mask-image: linear-gradient(180deg, #000 60%, transparent);
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
     }
 
     .PostUser-badges,

@@ -67,6 +67,7 @@ class NotifyCommand extends Command
     public function handle()
     {
         $days = (int) $this->settings->get('fof-best-answer.select_best_answer_reminder_days');
+        $canSelectOwn = (bool) (int) $this->settings->get('fof-best-answer.allow_select_own_post');
         $time = Carbon::now()->subDays($days);
 
         // set a max time period to go back, so we don't spam really old discussions too.
@@ -102,7 +103,17 @@ class NotifyCommand extends Command
 
         $errors = [];
 
-        $query->chunkById(20, function ($discussions) use (&$errors) {
+        $query->chunkById(20, function ($discussions) use ($canSelectOwn, &$errors) {
+            // Filter out discussions where the user can't select a post as best answer.
+            // - The user must have permission to select a best answer on their own discussion
+            // - The user must be able to select a post, whether they can select any post (including their own) or not.
+            $discussions = $discussions->filter(function ($d) use ($canSelectOwn) {
+                $hasPermission = $d->user->can('selectBestAnswerOwnDiscussion', $d);
+                $canSelectPosts = $canSelectOwn || $d->posts()->where('user_id', '!=', $d->user_id)->count() != 0;
+
+                return $hasPermission && $canSelectPosts;
+            });
+
             /*
              * @var $discussions Discussion[]
              */

@@ -22,6 +22,12 @@ export default () => {
     return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
   };
 
+  const getBestAnswerTags = () => {
+    const tagIds = app.forum.attribute('fof-best-answer.tags') || [];
+
+    return app.store.all('tags').filter((t) => tagIds.includes(t.id()));
+  };
+
   const saveDiscussion = (discussion, isBestAnswer, post) => {
     discussion
       .save({
@@ -32,6 +38,18 @@ export default () => {
           : delete discussion.data.relationships.bestAnswerPost,
       })
       .then(() => {
+        const discussionTags = discussion.data.relationships.tags?.data || [];
+
+        if (isBestAnswer) {
+          discussionTags.push(...getBestAnswerTags().map((t) => ({ type: 'tags', id: t.id() })));
+        } else {
+          for (const tag of getBestAnswerTags()) {
+            const index = discussionTags.findIndex((t) => t.id === tag.id());
+
+            if (index > -1) discussionTags.splice(index, 1);
+          }
+        }
+
         if (app.current.matches(DiscussionPage)) {
           app.current.get('stream').update();
         }

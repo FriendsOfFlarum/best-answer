@@ -87,9 +87,15 @@ class SaveBestAnswerToDatabase
     {
         $post = $discussion->bestAnswerPost;
 
+        if (!$post) {
+            return;
+        }
+
         $discussion->best_answer_post_id = null;
         $discussion->best_answer_user_id = null;
         $discussion->best_answer_set_at = null;
+
+        $this->changeTags($discussion, 'detach');
 
         $discussion->afterSave(function ($discussion) use ($actor, $post) {
             $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
@@ -119,10 +125,20 @@ class SaveBestAnswerToDatabase
             $discussion->best_answer_set_at = Carbon::now();
 
             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
+
+            $this->changeTags($discussion, 'attach');
+
             $discussion->afterSave(function (Discussion $discussion) use ($actor) {
                 $post = $discussion->bestAnswerPost;
                 $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
             });
         }
+    }
+
+    protected function changeTags(Discussion $discussion, string $method)
+    {
+        $tagsToChange = json_decode(resolve('flarum.settings')->get('fof-best-answer.select_best_answer_tags'));
+
+        $discussion->tags()->$method($tagsToChange);
     }
 }
