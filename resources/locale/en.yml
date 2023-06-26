@@ -95,3 +95,9 @@ fof-best-answer:
         Visit the discussion here: {discussion_url}, and select the most appropriate post as the best answer.
 
         Thanks!
+
+fof-user-directory:
+  lib:
+    sort:
+      most_best_answers: Most best answers
+      least_best_answers: Least best answers

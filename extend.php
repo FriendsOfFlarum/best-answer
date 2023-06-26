@@ -14,6 +14,7 @@ namespace FoF\BestAnswer;
 use Carbon\Carbon;
 use DateTime;
 use Flarum\Api\Controller\ListPostsController;
+use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
@@ -88,6 +89,9 @@ return [
 
     (new Extend\ApiSerializer(UserSerializer::class))
         ->attributes(UserBestAnswerCount::class),
+
+    (new Extend\ApiController(ListUsersController::class))
+        ->addSortField('bestAnswerCount'),
 
     (new Extend\Settings())
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')

@@ -53,6 +53,7 @@
         },
         "optional-dependencies": [
           "fof/follow-tags",
+          "fof/user-directory",
           "ianm/level-ranks"
         ]
       },

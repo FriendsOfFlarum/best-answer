@@ -16,8 +16,8 @@ import addAnsweredBadge from './addAnsweredBadge';
 import AwardedBestAnswerNotification from './components/AwardedBestAnswerNotification';
 import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscussionNotification';
 import extendNotifications from './extend/extendNotifications';
-import User from 'flarum/common/models/User';
 import addBestAnswerCountToUsers from './addBestAnswerCountToUsers';
+import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
 
 export * from './components';
 
@@ -40,6 +40,7 @@ app.initializers.add('fof/best-answer', () => {
   addBestAnswerAction();
   addBestAnswerView();
   addBestAnswerCountToUsers();
+  addBestAnswerCountSort();
 
   extendNotifications();
 
