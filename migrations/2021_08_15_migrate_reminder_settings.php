@@ -17,36 +17,32 @@ $remindersKey = 'fof-best-answer.remind_tag_ids';
 
 return [
     'up' => function (Builder $schema) use ($remindersKey) {
-        /** @var SettingsRepositoryInterface $settings */
-        $settings = resolve(SettingsRepositoryInterface::class);
+        $reminderIds = $schema->getConnection()
+            ->table('settings')
+            ->where('key', $remindersKey)
+            ->value('value');
 
-        $reminderIds = $settings->get($remindersKey, '');
+        $schema->getConnection()
+            ->table('tags')
+            ->whereIn('id', explode(',', str_replace(' ', '', $reminderIds)))
+            ->update(['is_qna' => true, 'qna_reminders' => true]);
 
-        foreach (explode(',', $reminderIds) as $reminderId) {
-            $tag = Tag::where('id', trim($reminderId))->first();
-            if (!$tag) {
-                continue;
-            }
-
-            $tag->is_qna = true;
-            $tag->qna_reminders = true;
-            $tag->save();
-        }
-
-        $settings->delete($remindersKey);
+        $schema->getConnection()
+            ->table('settings')
+            ->where('key', $remindersKey)
+            ->delete();
     },
     'down' => function (Builder $schema) use ($remindersKey) {
-        $tags = Tag::where('qna_reminders', true)->get();
+        $tagIds = $schema->getConnection()
+            ->table('tags')
+            ->where('qna_reminders', true)
+            ->pluck('id');
 
-        $ids = [];
-
-        foreach ($tags as $tag) {
-            $ids[] = $tag->id;
-        }
-
-        /** @var SettingsRepositoryInterface $settings */
-        $settings = resolve(SettingsRepositoryInterface::class);
-
-        $settings->set($remindersKey, json_encode($ids));
+        $schema->getConnection()
+            ->table('settings')
+            ->insertOrIgnore([
+                'key'   => $remindersKey,
+                'value' => $tagIds->implode(','),
+            ]);
     },
 ];
