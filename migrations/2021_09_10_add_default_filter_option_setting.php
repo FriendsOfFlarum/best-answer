@@ -13,20 +13,17 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        $db = $schema->getConnection();
-
-        $db->table('settings')
+        $schema->getConnection()
+            ->table('settings')
             ->insert([
                 'key'   => 'fof-best-answer.show_filter_dropdown',
                 'value' => true,
             ]);
     },
     'down' => function (Builder $schema) {
-        /**
-         * @var \Flarum\Settings\SettingsRepositoryInterface $settings
-         */
-        $settings = resolve('flarum.settings');
-
-        $settings->delete('fof-best-answer.show_filter_dropdown');
+        $schema->getConnection()
+            ->table('settings')
+            ->where('key', 'fof-best-answer.show_filter_dropdown')
+            ->delete();
     },
 ];
