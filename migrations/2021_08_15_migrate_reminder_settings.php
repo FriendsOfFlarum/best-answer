@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Tags\Tag;
 use Illuminate\Database\Schema\Builder;
 
 $remindersKey = 'fof-best-answer.remind_tag_ids';
