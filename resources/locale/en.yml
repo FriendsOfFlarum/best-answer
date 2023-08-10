@@ -10,7 +10,7 @@ fof-best-answer:
         advanced: Advanced
         reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
       allow_select_own_post: Select own post
-      allow_select_own_post_help: Allow the OP to select one of their own posts in the discussion as best answer
+      allow_select_own_post_help: Allow a user to select their own post as a best answer to a discussion
       enable_all_tags_button: Enable all tags for Best Answers
       enable_all_tags_reminder_button: Enable all tags for Best Answer reminders
       show_max_lines_label: Max lines to show in post preview
