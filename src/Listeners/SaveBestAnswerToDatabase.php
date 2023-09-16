@@ -18,6 +18,7 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
+use Flarum\Tags\Tag;
 use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
 use FoF\BestAnswer\BestAnswerRepository;
@@ -94,6 +95,7 @@ class SaveBestAnswerToDatabase
         $discussion->best_answer_post_id = null;
         $discussion->best_answer_user_id = null;
         $discussion->best_answer_set_at = null;
+        $discussion->unsetRelation('bestAnswerPost');
 
         $this->changeTags($discussion, 'detach');
 
@@ -137,8 +139,26 @@ class SaveBestAnswerToDatabase
 
     protected function changeTags(Discussion $discussion, string $method)
     {
-        $tagsToChange = json_decode(resolve('flarum.settings')->get('fof-best-answer.select_best_answer_tags'));
+        $tagsToChange = @json_decode(resolve('flarum.settings')->get('fof-best-answer.select_best_answer_tags'));
 
-        $discussion->tags()->$method($tagsToChange);
+        if (empty($tagsToChange)) {
+            return;
+        }
+
+        $validTags = Tag::query()->whereIn('id', $tagsToChange);
+
+        // Query errors if we try to attach tags that are already attached due to the unique constraint
+        if ($method === 'attach') {
+            $existingTags = $discussion->tags()->pluck('id');
+            $validTags = $validTags->whereNotIn('id', $existingTags);
+        }
+
+        $validTagsIds = $validTags->pluck('id');
+
+        if ($validTagsIds->isEmpty()) {
+            return;
+        }
+
+        $discussion->tags()->$method($validTagsIds);
     }
 }

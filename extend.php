@@ -98,7 +98,9 @@ return [
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
         ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
-        ->serializeToForum('fof-best-answer.tags', 'fof-best-answer.select_best_answer_tags', 'json_decode')
+        ->serializeToForum('fof-best-answer.tags', 'fof-best-answer.select_best_answer_tags', function ($val) {
+            return @json_decode($val, false) ?? [];
+        })
         ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
         ->default('fof-best-answer.store_log_output', false),
