@@ -13,8 +13,9 @@ import SelectBestAnswerItem from './components/SelectBestAnswerItem';
 export default () => {
   extend(CommentPost.prototype, 'headerItems', function (items) {
     const post = this.attrs.post;
+    const discussion = post.discussion();
 
-    if (post.discussion().bestAnswerPost() && post.discussion().bestAnswerPost().id() === post.id() && !post.isHidden()) {
+    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
       items.add(
         'isBestAnswer',
         SelectBestAnswerItem.component({
@@ -28,7 +29,7 @@ export default () => {
   extend(CommentPost.prototype, 'footerItems', function (items) {
     const thisPost = this.attrs.post;
     const discussion = thisPost.discussion();
-    const post = discussion.bestAnswerPost();
+    const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
 
     const maxLines = app.forum.attribute('fof-best-answer.show_max_lines');
 
@@ -64,7 +65,9 @@ export default () => {
 
   extend(PostComponent.prototype, 'elementAttrs', function (elementAttrs) {
     const post = this.attrs.post;
-    if (post.discussion().bestAnswerPost() && post.discussion().bestAnswerPost().id() === post.id() && !post.isHidden()) {
+    const discussion = post.discussion();
+
+    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
       elementAttrs.className ? (elementAttrs.className += ' Post--bestAnswer') : (elementAttrs.className = 'Post--bestAnswer');
     }
   });

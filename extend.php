@@ -16,6 +16,7 @@ use DateTime;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
+use Flarum\Api\Controller\UpdateDiscussionController;
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
@@ -98,9 +99,6 @@ return [
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
         ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
-        ->serializeToForum('fof-best-answer.tags', 'fof-best-answer.select_best_answer_tags', function ($val) {
-            return @json_decode($val, false) ?? [];
-        })
         ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
         ->default('fof-best-answer.store_log_output', false),
@@ -108,6 +106,9 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
         ->load(['bestAnswerPost.user']),
+
+    (new Extend\ApiController(UpdateDiscussionController::class))
+        ->addOptionalInclude('tags'),
 
     (new Extend\ApiController(ListPostsController::class))
         ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),

@@ -15,39 +15,31 @@ export default () => {
   };
 
   const isThisBestAnswer = (discussion, post) => {
-    return discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+    return discussion.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
   };
 
   const actionLabel = (isBestAnswer) => {
     return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
   };
 
-  const getBestAnswerTags = () => {
-    const tagIds = app.forum.attribute('fof-best-answer.tags') || [];
-
-    return app.store.all('tags').filter((t) => tagIds.includes(t.id()));
-  };
-
-  const saveDiscussion = (discussion, isBestAnswer, post) => {
+  const saveDiscussion = (discussion, isBestAnswer, post) =>
     discussion
-      .save({
-        bestAnswerPostId: isBestAnswer ? post.id() : 0,
-        bestAnswerUserId: app.session.user.id(),
-        relationships: isBestAnswer
-          ? { bestAnswerPost: post, bestAnswerUser: app.session.user }
-          : delete discussion.data.relationships.bestAnswerPost,
-      })
+      .save(
+        {
+          bestAnswerPostId: isBestAnswer ? post.id() : 0,
+          bestAnswerUserId: app.session.user.id(),
+          relationships: isBestAnswer ? { bestAnswerPost: post, bestAnswerUser: app.session.user } : { bestAnswerPost: null },
+        },
+        {
+          params: {
+            include: 'tags',
+          },
+        }
+      )
       .then(() => {
-        const discussionTags = discussion.data.relationships.tags?.data || [];
-
-        if (isBestAnswer) {
-          discussionTags.push(...getBestAnswerTags().map((t) => ({ type: 'tags', id: t.id() })));
-        } else {
-          for (const tag of getBestAnswerTags()) {
-            const index = discussionTags.findIndex((t) => t.id === tag.id());
-
-            if (index > -1) discussionTags.splice(index, 1);
-          }
+        if (!isBestAnswer) {
+          delete discussion.data.relationships.bestAnswerPost;
+          delete discussion.data.relationships.bestAnswerUser;
         }
 
         if (app.current.matches(DiscussionPage)) {
@@ -60,7 +52,6 @@ export default () => {
           m.route.set(app.route.discussion(discussion));
         }
       });
-  };
 
   extend(PostControls, 'moderationControls', function (items, post) {
     if (app.forum.attribute('useAlternativeBestAnswerUi')) return;
@@ -82,7 +73,9 @@ export default () => {
           onclick: () => {
             isBestAnswer = !isBestAnswer;
 
-            saveDiscussion(discussion, isBestAnswer, post);
+            saveDiscussion(discussion, isBestAnswer, post).finally(() => {
+              isBestAnswer = isThisBestAnswer(discussion, post);
+            });
           },
         },
         actionLabel(isBestAnswer)
@@ -106,12 +99,15 @@ export default () => {
       'bestAnswer',
       Button.component(
         {
-          className: !hasBestAnswer ? 'Button Button--primary' : isBestAnswer ? 'Button Button--primary' : 'Button Button--link',
+          className: `Button Button--${!hasBestAnswer || isBestAnswer ? 'primary' : 'link'}`,
           onclick: function onclick() {
             hasBestAnswer = !hasBestAnswer;
             isBestAnswer = !isBestAnswer;
 
-            saveDiscussion(discussion, isBestAnswer, post);
+            saveDiscussion(discussion, isBestAnswer, post).finally(() => {
+              hasBestAnswer = discussion.hasBestAnswer() && discussion.bestAnswerPost() !== false;
+              isBestAnswer = isThisBestAnswer(discussion, post);
+            });
           },
         },
         actionLabel(isBestAnswer)
