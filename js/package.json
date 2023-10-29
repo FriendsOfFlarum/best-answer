@@ -11,7 +11,7 @@
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
-    "prettier": "^2.8.8"
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
