@@ -4,6 +4,7 @@ namespace FoF\BestAnswer\tests\integration\api;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
+use Flarum\Post\Post;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
@@ -164,6 +165,37 @@ class BestAnswerTest extends TestCase
     /**
      * @test
      */
+    public function deleting_the_best_answer_post_in_a_discussion_reduces_author_best_answer_count()
+    {
+        $response = $this->send(
+            $this->request(
+                'DELETE',
+                '/api/posts/6',
+                [
+                    'authenticatedAs' => '1',
+                    'json' => [],
+                ],
+            )
+        );
+
+        $this->assertEquals(204, $response->getStatusCode());
+
+        $discussion = Discussion::find(3);
+
+        $this->assertNull($discussion->best_answer_post_id);
+
+        $post = Post::find(6);
+
+        $this->assertNull($post);
+
+        $answerAuthor = User::find(3);
+
+        $this->assertEquals(0, $answerAuthor->best_answer_count);
+    }
+
+    /**
+     * @test
+     */
     public function deleting_a_discussion_with_a_best_answer_reduces_author_best_answer_count()
     {
         $response = $this->send(
@@ -178,6 +210,14 @@ class BestAnswerTest extends TestCase
         );
 
         $this->assertEquals(204, $response->getStatusCode());
+
+        $discussion = Discussion::find(3);
+
+        $this->assertNull($discussion);
+
+        $post = Post::find(6);
+
+        $this->assertNull($post);
 
         $answerAuthor = User::find(3);
 
