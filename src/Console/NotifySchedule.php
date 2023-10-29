@@ -17,23 +17,31 @@ use Illuminate\Console\Scheduling\Event;
 
 class NotifySchedule
 {
+    /**
+     * @var SettingsRepositoryInterface
+     */
+    public $settings;
+    
+    public function __construct(SettingsRepositoryInterface $settings)
+    {
+        $this->settings = $settings;
+    }
+    
     public function __invoke(Event $event)
     {
-        $settings = resolve(SettingsRepositoryInterface::class);
-
         $event->hourly()
             ->withoutOverlapping();
 
-        if ((bool) $settings->get('fof-best-answer.schedule_on_one_server')) {
+        if ((bool) $this->settings->get('fof-best-answer.schedule_on_one_server')) {
             $event->onOneServer();
         }
 
-        if ((bool) $settings->get('fof-best-answer.stop_overnight')) {
+        if ((bool) $this->settings->get('fof-best-answer.stop_overnight')) {
             $event->between('8:00', '21:00');
             //TODO expose times back to config options
         }
 
-        if ((bool) $settings->get('fof-best-answer.store_log_output')) {
+        if ((bool) $this->settings->get('fof-best-answer.store_log_output')) {
             $paths = resolve(Paths::class);
             $event->appendOutputTo($paths->storage.(DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'fof-best-answer.log'));
         }
