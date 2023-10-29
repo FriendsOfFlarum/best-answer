@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Console;
 
 use Flarum\User\User;
@@ -12,13 +21,13 @@ class UpdateBestAnswerCounts extends Command
      * @var BestAnswerRepository
      */
     public $bestAnswers;
-    
+
     public function __construct(BestAnswerRepository $bestAnswers)
     {
         parent::__construct();
         $this->bestAnswers = $bestAnswers;
     }
-    
+
     /**
      * @var string
      */
