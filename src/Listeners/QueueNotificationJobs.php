@@ -21,12 +21,12 @@ class QueueNotificationJobs
      * @var Queue
      */
     protected $queue;
-    
+
     public function __construct(Queue $queue)
     {
         $this->queue = $queue;
     }
-    
+
     public function handle(BestAnswerSet $event)
     {
         $this->queue->push(

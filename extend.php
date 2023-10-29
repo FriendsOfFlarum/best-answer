@@ -18,7 +18,6 @@ use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Controller\UpdateDiscussionController;
 use Flarum\Api\Serializer;
-use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -34,14 +33,14 @@ use FoF\BestAnswer\Events\BestAnswerSet;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/resources/less/admin.less'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Routes('api'))
         ->post('/fof/best-answer/enable', 'fof-best-answer.enable-tags-features', Api\Controller\FeatureEnableController::class),
@@ -51,7 +50,7 @@ return [
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
+        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
 
     (new Extend\Model(Tag::class))
         ->cast('is_qna', 'boolean')
@@ -126,8 +125,6 @@ return [
 
     (new Extend\Filter(DiscussionFilterer::class))
         ->addFilter(Search\BestAnswerFilterGambit::class),
-
-
 
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
