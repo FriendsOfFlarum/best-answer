@@ -33,9 +33,8 @@ class BestAnswerSet
     public $actor;
 
     /**
-     * BestAnswerSet constructor.
-     *
      * @param Discussion $discussion
+     * @param Post       $post
      * @param User       $actor
      */
     public function __construct(Discussion $discussion, Post $post, User $actor)

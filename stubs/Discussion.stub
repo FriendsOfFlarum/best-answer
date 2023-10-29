@@ -1,0 +1,11 @@
+<?php
+
+namespace Flarum\Discussion;
+
+/**
+ * @property int|null $best_answer_post_id
+ * @property int|null $best_answer_user_id
+ * @property bool $best_answer_notified
+ * @property DateTime|null $best_answer_set_at
+ */
+class Discussion {}

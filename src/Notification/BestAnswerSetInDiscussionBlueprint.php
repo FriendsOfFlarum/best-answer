@@ -81,7 +81,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
     /**
      * Get the name of the view to construct a notification email with.
      *
-     * @return string
+     * @return array{text?: string, html?: string}
      */
     public function getEmailView()
     {

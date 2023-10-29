@@ -1,0 +1,8 @@
+<?php
+
+namespace Flarum\User;
+
+/**
+ * @property int|null $best_answer_count
+ */
+class User {}
