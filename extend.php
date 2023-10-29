@@ -83,16 +83,7 @@ return [
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
         ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
-        ->attribute('hasBestAnswer', function (Serializer\BasicDiscussionSerializer $serializer, Discussion $discussion) {
-            return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
-        })
-        ->attribute('bestAnswerSetAt', function (Serializer\BasicDiscussionSerializer $serializer, Discussion $discussion) {
-            if ($discussion->best_answer_set_at) {
-                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
-            }
-
-            return null;
-        }),
+        ->attributes(BasicDiscussionAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\UserSerializer::class))
         ->attributes(UserBestAnswerCount::class),
