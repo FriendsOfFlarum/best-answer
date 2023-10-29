@@ -91,7 +91,7 @@ class SaveBestAnswerToDatabase
         $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
     }
 
-    private function removeBestAnswer(Discussion $discussion, User $actor): void
+    protected function removeBestAnswer(Discussion $discussion, User $actor): void
     {
         /** @var Post|null $post */
         $post = $discussion->bestAnswerPost;
@@ -112,7 +112,7 @@ class SaveBestAnswerToDatabase
         });
     }
 
-    private function setBestAnswer(Discussion $discussion, User $actor, int $id): void
+    protected function setBestAnswer(Discussion $discussion, User $actor, int $id): void
     {
         /** @var Post|null $post */
         $post = $discussion->posts()->find($id);
