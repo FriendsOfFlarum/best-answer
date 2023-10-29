@@ -18,6 +18,7 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
 use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
@@ -49,16 +50,22 @@ class SaveBestAnswerToDatabase
     private $translator;
 
     /**
+     * @var SettingsRepositoryInterface
+     */
+    private $settings;
+
+    /**
      * @var BestAnswerRepository
      */
     protected $bestAnswer;
 
-    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator, BestAnswerRepository $bestAnswer)
+    public function __construct(NotificationSyncer $notifications, Dispatcher $bus, TranslatorInterface $translator, BestAnswerRepository $bestAnswer, SettingsRepositoryInterface $settings)
     {
         $this->notifications = $notifications;
         $this->bus = $bus;
         $this->translator = $translator;
         $this->bestAnswer = $bestAnswer;
+        $this->settings = $settings;
     }
 
     public function handle(Saving $event)
@@ -86,6 +93,7 @@ class SaveBestAnswerToDatabase
 
     private function removeBestAnswer(Discussion $discussion, User $actor): void
     {
+        /** @var Post|null $post */
         $post = $discussion->bestAnswerPost;
 
         if (!$post) {
@@ -106,7 +114,7 @@ class SaveBestAnswerToDatabase
 
     private function setBestAnswer(Discussion $discussion, User $actor, int $id): void
     {
-        /** @var Post $post */
+        /** @var Post|null $post */
         $post = $discussion->posts()->find($id);
 
         if ($id && !$post) {
@@ -139,7 +147,7 @@ class SaveBestAnswerToDatabase
 
     protected function changeTags(Discussion $discussion, string $method)
     {
-        $tagsToChange = @json_decode(resolve('flarum.settings')->get('fof-best-answer.select_best_answer_tags'));
+        $tagsToChange = @json_decode($this->settings->get('fof-best-answer.select_best_answer_tags'));
 
         if (empty($tagsToChange)) {
             return;
@@ -149,6 +157,7 @@ class SaveBestAnswerToDatabase
 
         // Query errors if we try to attach tags that are already attached due to the unique constraint
         if ($method === 'attach') {
+            /** @phpstan-ignore-next-line */
             $existingTags = $discussion->tags()->pluck('id');
             $validTags = $validTags->whereNotIn('id', $existingTags);
         }
@@ -159,6 +168,7 @@ class SaveBestAnswerToDatabase
             return;
         }
 
+        /** @phpstan-ignore-next-line */
         $discussion->tags()->$method($validTagsIds);
     }
 }

@@ -57,6 +57,7 @@ class BestAnswerRepository
     {
         $enabled = false;
 
+        /** @phpstan-ignore-next-line */
         $discussionTags = $discussion->tags;
         foreach ($discussionTags as $discussionTag) {
             if ((bool) $discussionTag->is_qna) {

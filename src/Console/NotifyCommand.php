@@ -13,13 +13,11 @@ namespace FoF\BestAnswer\Console;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
-use Flarum\Extension\ExtensionManager;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Console\Command;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 class NotifyCommand extends Command
@@ -34,24 +32,12 @@ class NotifyCommand extends Command
      */
     private $notifications;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ExtensionManager
-     */
-    private $extensions;
-
-    public function __construct(SettingsRepositoryInterface $settings, NotificationSyncer $notifications, TranslatorInterface $translator, ExtensionManager $extensions)
+    public function __construct(SettingsRepositoryInterface $settings, NotificationSyncer $notifications)
     {
         parent::__construct();
 
         $this->settings = $settings;
         $this->notifications = $notifications;
-        $this->translator = $translator;
-        $this->extensions = $extensions;
     }
 
     /**
@@ -122,7 +108,7 @@ class NotifyCommand extends Command
             foreach ($discussions as $d) {
                 try {
                     $this->notifications->sync(
-                        new SelectBestAnswerBlueprint($d, $this->translator),
+                        new SelectBestAnswerBlueprint($d),
                         [$d->user]
                     );
 

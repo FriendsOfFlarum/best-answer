@@ -11,18 +11,11 @@
 
 namespace FoF\BestAnswer;
 
-use Carbon\Carbon;
-use DateTime;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Controller\UpdateDiscussionController;
-use Flarum\Api\Serializer\BasicDiscussionSerializer;
-use Flarum\Api\Serializer\BasicPostSerializer;
-use Flarum\Api\Serializer\BasicUserSerializer;
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Api\Serializer\UserSerializer;
-use Flarum\Database\AbstractModel;
+use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -52,10 +45,21 @@ return [
 
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
-        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
+        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id')
+        ->cast('best_answer_post_id', 'int')
+        ->cast('best_answer_user_id', 'int')
+        ->cast('best_answer_set_at', 'datetime')
+        ->cast('best_answer_notified', 'boolean'),
 
     (new Extend\View())
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+
+    (new Extend\Model(Tag::class))
+        ->cast('is_qna', 'boolean')
+        ->cast('qna_reminders', 'boolean'),
+
+    (new Extend\Model(User::class))
+        ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SaveBestAnswerToDatabase::class)
@@ -65,30 +69,21 @@ return [
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class),
 
     (new Extend\Notification())
-        ->type(Notification\SelectBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert', 'email'])
-        ->type(Notification\AwardedBestAnswerBlueprint::class, BasicDiscussionSerializer::class, ['alert'])
-        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, BasicDiscussionSerializer::class, []),
+        ->type(Notification\SelectBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert', 'email'])
+        ->type(Notification\AwardedBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert'])
+        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
-    (new Extend\ApiSerializer(DiscussionSerializer::class))
-        ->attribute('canSelectBestAnswer', function (DiscussionSerializer $serializer, Discussion $discussion) {
+    (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
+        ->attribute('canSelectBestAnswer', function (Serializer\DiscussionSerializer $serializer, Discussion $discussion) {
             return resolve(BestAnswerRepository::class)->canSelectBestAnswer($serializer->getActor(), $discussion);
         }),
 
-    (new Extend\ApiSerializer(BasicDiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', BasicUserSerializer::class)
-        ->attribute('hasBestAnswer', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
-            return $discussion->bestAnswerPost ? $discussion->bestAnswerPost->id : false;
-        })
-        ->attribute('bestAnswerSetAt', function (BasicDiscussionSerializer $serializer, AbstractModel $discussion) {
-            if ($discussion->best_answer_set_at) {
-                return Carbon::createFromTimeString($discussion->best_answer_set_at)->format(DateTime::RFC3339);
-            }
+    (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
+        ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
+        ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
+        ->attributes(BasicDiscussionAttributes::class),
 
-            return null;
-        }),
-
-    (new Extend\ApiSerializer(UserSerializer::class))
+    (new Extend\ApiSerializer(Serializer\UserSerializer::class))
         ->attributes(UserBestAnswerCount::class),
 
     (new Extend\ApiController(ListUsersController::class))
@@ -118,7 +113,7 @@ return [
 
     (new Extend\Console())
         ->command(Console\NotifyCommand::class)
-        ->schedule(Console\NotifyCommand::class, new Console\NotifySchedule()),
+        ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
     (new Extend\Filter(DiscussionFilterer::class))
         ->addFilter(Search\BestAnswerFilterGambit::class),
