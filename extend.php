@@ -113,6 +113,7 @@ return [
 
     (new Extend\Console())
         ->command(Console\NotifyCommand::class)
+        ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
     (new Extend\Filter(DiscussionFilterer::class))
