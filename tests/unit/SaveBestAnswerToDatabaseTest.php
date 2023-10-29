@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\tests\unit;
 
 use Flarum\Discussion\Discussion;
@@ -35,12 +44,12 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $event = m::mock(Saving::class);
         $event->data = [];
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class . '[removeBestAnswer,setBestAnswer]', [
+        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
             m::mock(NotificationSyncer::class),
             m::mock(Dispatcher::class),
             m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class)
+            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldNotReceive('removeBestAnswer');
@@ -59,12 +68,12 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $event->discussion->exists = false;
         $event->discussion->best_answer_post_id = 1;
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class . '[removeBestAnswer,setBestAnswer]', [
+        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
             m::mock(NotificationSyncer::class),
             m::mock(Dispatcher::class),
             m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class)
+            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldNotReceive('removeBestAnswer');
@@ -86,12 +95,12 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $notifications = m::mock(NotificationSyncer::class);
         $notifications->shouldReceive('delete')->with(m::type(SelectBestAnswerBlueprint::class))->once();
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class . '[removeBestAnswer]', [
+        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer]', [
             $notifications,
             m::mock(Dispatcher::class),
             m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class)
+            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldReceive('removeBestAnswer')->once();
@@ -112,12 +121,12 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $notifications = m::mock(NotificationSyncer::class);
         $notifications->shouldReceive('delete')->with(m::type(SelectBestAnswerBlueprint::class))->once();
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class . '[setBestAnswer]', [
+        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[setBestAnswer]', [
             $notifications,
             m::mock(Dispatcher::class),
             m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class)
+            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldReceive('setBestAnswer')->once();

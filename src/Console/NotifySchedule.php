@@ -21,12 +21,12 @@ class NotifySchedule
      * @var SettingsRepositoryInterface
      */
     public $settings;
-    
+
     public function __construct(SettingsRepositoryInterface $settings)
     {
         $this->settings = $settings;
     }
-    
+
     public function __invoke(Event $event)
     {
         $event->hourly()

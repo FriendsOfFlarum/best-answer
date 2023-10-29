@@ -14,7 +14,6 @@ namespace FoF\BestAnswer\Listeners;
 use Flarum\Discussion\Event\Deleting as DiscussionDeleting;
 use Flarum\Post\Event\Deleting as PostDeleting;
 use Flarum\Post\Post;
-use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
 use Illuminate\Contracts\Events\Dispatcher;

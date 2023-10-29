@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\tests\integration\api;
 
 use Carbon\Carbon;
@@ -12,7 +21,7 @@ use Flarum\User\User;
 class BestAnswerTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
-    
+
     public function setUp(): void
     {
         parent::setUp();
@@ -59,7 +68,7 @@ class BestAnswerTest extends TestCase
                 'GET',
                 '/api/users/2',
                 [
-                    'authenticatedAs' => '1'
+                    'authenticatedAs' => '1',
                 ],
             )
         );
@@ -81,7 +90,7 @@ class BestAnswerTest extends TestCase
                 'GET',
                 '/api/users/1',
                 [
-                    'authenticatedAs' => '2'
+                    'authenticatedAs' => '2',
                 ],
             )
         );
@@ -107,12 +116,12 @@ class BestAnswerTest extends TestCase
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => 2,
-                                'bestAnswerUserId' => 1
+                                'bestAnswerUserId' => 1,
                             ],
-                        ]
-                        
+                        ],
+
                     ],
-                    'authenticatedAs' => '1'
+                    'authenticatedAs' => '1',
                 ],
             )
         );
@@ -143,10 +152,10 @@ class BestAnswerTest extends TestCase
                             'attributes' => [
                                 'bestAnswerPostId' => 0,
                             ],
-                        ]
-                        
+                        ],
+
                     ],
-                    'authenticatedAs' => '1'
+                    'authenticatedAs' => '1',
                 ],
             )
         );
@@ -173,7 +182,7 @@ class BestAnswerTest extends TestCase
                 '/api/posts/6',
                 [
                     'authenticatedAs' => '1',
-                    'json' => [],
+                    'json'            => [],
                 ],
             )
         );
@@ -204,7 +213,7 @@ class BestAnswerTest extends TestCase
                 '/api/discussions/3',
                 [
                     'authenticatedAs' => '1',
-                    'json' => [],
+                    'json'            => [],
                 ],
             )
         );
