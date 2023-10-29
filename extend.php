@@ -47,7 +47,11 @@ return [
 
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
-        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id'),
+        ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id')
+        ->cast('best_answer_post_id', 'int')
+        ->cast('best_answer_user_id', 'int')
+        ->cast('best_answer_set_at', 'datetime')
+        ->cast('best_answer_notified', 'boolean'),
 
     (new Extend\View())
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),
@@ -56,9 +60,8 @@ return [
         ->cast('is_qna', 'boolean')
         ->cast('qna_reminders', 'boolean'),
 
-    (new Extend\Model(Discussion::class))
-        ->cast('best_answer_set_at', 'datetime')
-        ->cast('best_answer_notified', 'boolean'),
+    (new Extend\Model(User::class))
+        ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
         ->listen(Saving::class, Listeners\SaveBestAnswerToDatabase::class)
