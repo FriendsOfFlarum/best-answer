@@ -11,8 +11,6 @@
 
 namespace FoF\BestAnswer;
 
-use Carbon\Carbon;
-use DateTime;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
