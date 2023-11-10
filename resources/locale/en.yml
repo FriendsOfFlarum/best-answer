@@ -71,7 +71,7 @@ fof-best-answer:
     subject:
       awarded: Your post was set as the best answer by {display_name}
       ba-set: A best answer was set by {display_name}
-      select: Did you manage get your question answered?
+      select: Did you manage to get your question answered?
     body:
       awarded: |
         Hey {recipient_display_name},
