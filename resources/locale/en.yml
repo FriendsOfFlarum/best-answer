@@ -29,7 +29,9 @@ fof-best-answer:
       use_alt_ui_help: Best answer controls in post footer
       documentation: Documentation
       enabled_tags_label: Enabled Tags
+      enabled_tags_help: Select which tags, if any, to enable Best Answers for. These tags will become "Q&A" formatted tags, and will have the ability to set Best Answers.
       remind_tags_label: Reminder Tags
+      remind_tags_help: Select which tags, if any, to send reminders for. Reminders will only be sent for discussions with these tags.
       tags_info: |
         When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
     edit_tag:
