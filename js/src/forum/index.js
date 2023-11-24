@@ -1,8 +1,5 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import Discussion from 'flarum/common/models/Discussion';
-import Tag from 'flarum/tags/models/Tag';
-import Model from 'flarum/common/Model';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
@@ -15,23 +12,15 @@ import addBestAnswerView from './addBestAnswerView';
 import addAnsweredBadge from './addAnsweredBadge';
 import AwardedBestAnswerNotification from './components/AwardedBestAnswerNotification';
 import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscussionNotification';
-import extendNotifications from './extend/extendNotifications';
+import extendNotifications from './extenders/extendNotifications';
 import addBestAnswerCountToUsers from './addBestAnswerCountToUsers';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
 
 export * from './components';
 
+export { default as extend } from './extend';
+
 app.initializers.add('fof/best-answer', () => {
-  Discussion.prototype.bestAnswerPost = Model.hasOne('bestAnswerPost');
-  Discussion.prototype.bestAnswerUser = Model.hasOne('bestAnswerUser');
-  Discussion.prototype.hasBestAnswer = Model.attribute('hasBestAnswer');
-  Discussion.prototype.canSelectBestAnswer = Model.attribute('canSelectBestAnswer');
-  Discussion.prototype.bestAnswerSetAt = Model.attribute('bestAnswerSetAt', Model.transformDate);
-
-  if (app.initializers.has('flarum-tags')) {
-    Tag.prototype.isQnA = Model.attribute('isQnA');
-  }
-
   app.notificationComponents.selectBestAnswer = SelectBestAnswerNotification;
   app.notificationComponents.awardedBestAnswer = AwardedBestAnswerNotification;
   app.notificationComponents.bestAnswerInDiscussion = BestAnswerInDiscussionNotification;
@@ -55,7 +44,7 @@ app.initializers.add('fof/best-answer', () => {
       canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.forum.index.cannot_ask_question'
     );
 
-    items.replace('startDiscussion', cta);
+    items.setContent('startDiscussion', cta);
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
@@ -134,7 +123,7 @@ app.initializers.add('fof/best-answer', () => {
 
     this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
 
-    items.replace(
+    items.setContent(
       'discussionTitle',
       <h3>
         <input

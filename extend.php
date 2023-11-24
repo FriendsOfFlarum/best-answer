@@ -17,14 +17,13 @@ use Flarum\Api\Controller\ShowDiscussionController;
 use Flarum\Api\Controller\UpdateDiscussionController;
 use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
-use Flarum\Discussion\Event\Saving;
+use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
+use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use Flarum\Tags\Event\Creating as TagCreating;
-use Flarum\Tags\Event\Saving as TagSaving;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
@@ -39,9 +38,6 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
-
-    (new Extend\Routes('api'))
-        ->post('/fof/best-answer/enable', 'fof-best-answer.enable-tags-features', Api\Controller\FeatureEnableController::class),
 
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
@@ -62,11 +58,10 @@ return [
         ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
-        ->listen(Saving::class, Listeners\SaveBestAnswerToDatabase::class)
+        ->listen(DiscussionSaving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
-        ->listen(TagCreating::class, Listeners\TagCreating::class)
-        ->listen(TagSaving::class, Listeners\TagEditing::class)
-        ->subscribe(Listeners\RecalculateBestAnswerCounts::class),
+        ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
+        ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
     (new Extend\Notification())
         ->type(Notification\SelectBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert', 'email'])
@@ -96,7 +91,8 @@ return [
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
         ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
-        ->default('fof-best-answer.store_log_output', false),
+        ->default('fof-best-answer.store_log_output', false)
+        ->default('fof-best-answer.enabled-tags', '[]'),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])

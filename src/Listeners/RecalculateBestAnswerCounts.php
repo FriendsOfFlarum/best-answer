@@ -42,7 +42,7 @@ class RecalculateBestAnswerCounts
     {
         $author = $event->post->user;
 
-        if ($author) {
+        if ($author && $author->best_answer_count && $author->best_answer_count > 0) {
             $author->best_answer_count--;
             $author->save();
         }
