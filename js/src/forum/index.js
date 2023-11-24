@@ -44,7 +44,9 @@ app.initializers.add('fof/best-answer', () => {
       canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.forum.index.cannot_ask_question'
     );
 
-    items.setContent('startDiscussion', cta);
+    if (items.has('startDiscussion')) {
+      items.setContent('startDiscussion', cta);
+    }
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
@@ -123,17 +125,19 @@ app.initializers.add('fof/best-answer', () => {
 
     this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
 
-    items.setContent(
-      'discussionTitle',
-      <h3>
-        <input
-          className="FormControl"
-          bidi={this.title}
-          placeholder={this.attrs.titlePlaceholder}
-          disabled={!!this.attrs.disabled}
-          onkeydown={this.onkeydown.bind(this)}
-        />
-      </h3>
-    );
+    if (items.has('discussionTitle')) {
+      items.setContent(
+        'discussionTitle',
+        <h3>
+          <input
+            className="FormControl"
+            bidi={this.title}
+            placeholder={this.attrs.titlePlaceholder}
+            disabled={!!this.attrs.disabled}
+            onkeydown={this.onkeydown.bind(this)}
+          />
+        </h3>
+      );
+    }
   });
 });
