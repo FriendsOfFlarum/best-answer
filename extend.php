@@ -24,8 +24,6 @@ use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use Flarum\Tags\Event\Creating as TagCreating;
-use Flarum\Tags\Event\Saving as TagSaving;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
@@ -62,8 +60,6 @@ return [
     (new Extend\Event())
         ->listen(DiscussionSaving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
-        ->listen(TagCreating::class, Listeners\TagCreating::class)
-        ->listen(TagSaving::class, Listeners\TagEditing::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
