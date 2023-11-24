@@ -1,7 +1,8 @@
 import app from 'flarum/admin/app';
-import addQnAToTagsModal from './addQnAToTagsModal';
 import BestAnswerSettings from './components/BestAnswerSettings';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
+
+export { default as extend } from './extend';
 
 app.initializers.add(
   'fof-best-answer',
@@ -26,7 +27,6 @@ app.initializers.add(
         'reply'
       );
 
-    addQnAToTagsModal();
     addBestAnswerCountSort();
   },
   5

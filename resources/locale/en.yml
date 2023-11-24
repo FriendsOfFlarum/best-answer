@@ -5,14 +5,13 @@ fof-best-answer:
       best_answer_not_own_discussion: Select Best Answer (not own Discussion)
     settings:
       label:
+        tags: Best Answer Tags
         general: General
         reminders: Reminders
         advanced: Advanced
         reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
       allow_select_own_post: Select own post
       allow_select_own_post_help: Allow a user to select their own post as a best answer to a discussion
-      enable_all_tags_button: Enable all tags for Best Answers
-      enable_all_tags_reminder_button: Enable all tags for Best Answer reminders
       show_max_lines_label: Max lines to show in post preview
       show_max_lines_help: Set to 0 to disable. If a post is longer than the configured amount of lines, it will be truncated in the post preview with a fade out effect.
       select_best_answer_reminder_days: Reminder frequency
@@ -29,8 +28,10 @@ fof-best-answer:
       use_alt_ui: Alternative layout
       use_alt_ui_help: Best answer controls in post footer
       documentation: Documentation
-      introduction: |
-        Enable which tags are to support Best Answers in <code><a>flarum/tags</a></code>, and optionally which tag(s) should support reminders. When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
+      enabled_tags_label: Enabled Tags
+      remind_tags_label: Reminder Tags
+      tags_info: |
+        When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
     edit_tag:
       qna_label: Enable Best Answers to be set in this tag
       reminders: Send reminders to set a Best Answer for discussions in this tag

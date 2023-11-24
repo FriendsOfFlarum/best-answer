@@ -41,25 +41,36 @@ export default class BestAnswerSettings extends ExtensionPage {
         <div className="BestAnswerSettingsPage">
           <div className="Form">
             <div className="Introduction">
-              <p>
-                {app.translator.trans('fof-best-answer.admin.settings.introduction', {
-                  a: <Link href={app.route('extension', { id: 'flarum-tags' })} />,
-                })}
-              </p>
-              <div className="ButtonGroup">
-                <Button className="Button" onclick={this.enableAllTags.bind(this)} loading={this.loading} disabled={this.loading} icon="fas fa-check">
-                  {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_button')}
-                </Button>
-                <Button
-                  className="Button"
-                  onclick={this.enableAllReminders.bind(this)}
-                  loading={this.loading}
-                  disabled={this.loading}
-                  icon="fas fa-stopwatch"
-                >
-                  {app.translator.trans('fof-best-answer.admin.settings.enable_all_tags_reminder_button')}
-                </Button>
-              </div>
+              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.tags')}</h3>
+              <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.tags_info')}</p>
+              {this.buildSettingComponent({
+                type: 'flarum-tags.select-tags',
+                setting: 'fof-best-answer.enabled-tags',
+                label: app.translator.trans('fof-best-answer.admin.settings.enabled_tags_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.enabled_tags_help'),
+                options: {
+                  requireParentTag: false,
+                  limits: {
+                    max: {
+                      secondary: 0,
+                    },
+                  },
+                },
+              })}
+              {this.buildSettingComponent({
+                type: 'flarum-tags.select-tags',
+                setting: 'fof-best-answer.remind-tags',
+                label: app.translator.trans('fof-best-answer.admin.settings.remind_tags_label'),
+                help: app.translator.trans('fof-best-answer.admin.settings.remind_tags_help'),
+                options: {
+                  requireParentTag: false,
+                  limits: {
+                    max: {
+                      secondary: 0,
+                    },
+                  },
+                },
+              })}
             </div>
             <hr />
             <div className="GeneralPreferences">
