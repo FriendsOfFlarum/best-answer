@@ -1,6 +1,5 @@
 import app from 'flarum/admin/app';
-import ExtensionPage, { ExtensionPageAttrs } from 'flarum/admin/components/ExtensionPage';
-import type Mithril from 'mithril';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 
 export default class BestAnswerSettingsPage extends ExtensionPage {
   content() {
