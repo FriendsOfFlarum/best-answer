@@ -1,6 +1,6 @@
 import app from 'flarum/admin/app';
-import BestAnswerSettings from './components/BestAnswerSettings';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
+import BestAnswerSettingsPage from './components/BestAnswerSettingsPage';
 
 export { default as extend } from './extend';
 
@@ -9,7 +9,7 @@ app.initializers.add(
   () => {
     app.extensionData
       .for('fof-best-answer')
-      .registerPage(BestAnswerSettings)
+      .registerPage(BestAnswerSettingsPage)
       .registerPermission(
         {
           icon: 'far fa-comment',

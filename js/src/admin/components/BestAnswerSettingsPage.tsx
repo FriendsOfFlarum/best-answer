@@ -1,48 +1,15 @@
 import app from 'flarum/admin/app';
-import ExtensionPage, { ExtensionPageAttrs } from 'flarum/admin/components/ExtensionPage';
-import Button from 'flarum/common/components/Button';
-import Link from 'flarum/common/components/Link';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 
-export default class BestAnswerSettings extends ExtensionPage {
-  oninit(vnode) {
-    super.oninit(vnode);
-
-    this.loading = false;
-  }
-
-  enableAllTags() {
-    this.enable('enableAllTags');
-  }
-
-  enableAllReminders() {
-    this.enable('enableAllReminders');
-  }
-
-  enable(feature) {
-    this.loading = true;
-
-    app
-      .request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/fof/best-answer/enable',
-        body: {
-          feature,
-        },
-      })
-      .then(() => {
-        this.loading = false;
-        m.redraw();
-      });
-  }
-
+export default class BestAnswerSettingsPage extends ExtensionPage {
   content() {
-    return [
-      <div className="container">
-        <div className="BestAnswerSettingsPage">
-          <div className="Form">
-            <div className="Introduction">
-              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.tags')}</h3>
-              <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.tags_info')}</p>
+    return (
+      <div className="BestAnswerSettings">
+        <div className="container">
+          <div className="BestAnswerSettings--content">
+            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.tags')}</h3>
+            <p className="helpText">{app.translator.trans('fof-best-answer.admin.settings.tags_info')}</p>
+            <div className="Section">
               {this.buildSettingComponent({
                 type: 'flarum-tags.select-tags',
                 setting: 'fof-best-answer.enabled-tags',
@@ -72,9 +39,8 @@ export default class BestAnswerSettings extends ExtensionPage {
                 },
               })}
             </div>
-            <hr />
-            <div className="GeneralPreferences">
-              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
+            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
+            <div className="Section">
               {this.buildSettingComponent({
                 type: 'boolean',
                 setting: 'fof-best-answer.allow_select_own_post',
@@ -114,9 +80,8 @@ export default class BestAnswerSettings extends ExtensionPage {
                 },
               })}
             </div>
-            <hr />
-            <div className="Search">
-              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
+            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
+            <div className="Section">
               {this.buildSettingComponent({
                 type: 'boolean',
                 setting: 'fof-best-answer.search.solution_search',
@@ -124,15 +89,14 @@ export default class BestAnswerSettings extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.solution_search_help'),
               })}
             </div>
-            <hr />
-            <div className="Reminders">
-              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
-              <p className="helpText">
-                {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
-                <a href="https://docs.flarum.org/console/#schedulerun" target="_blank">
-                  {app.translator.trans('fof-best-answer.admin.settings.documentation')}
-                </a>
-              </p>
+            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
+            <p className="helpText">
+              {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
+              <a href="https://docs.flarum.org/console/#schedulerun" target="_blank">
+                {app.translator.trans('fof-best-answer.admin.settings.documentation')}
+              </a>
+            </p>
+            <div className="Section">
               {this.buildSettingComponent({
                 type: 'number',
                 setting: 'fof-best-answer.select_best_answer_reminder_days',
@@ -142,9 +106,8 @@ export default class BestAnswerSettings extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.select_best_answer_reminder_days_help'),
               })}
             </div>
-            <hr />
-            <div className="AdvancedPreferences">
-              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.advanced')}</h3>
+            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.advanced')}</h3>
+            <div className="Section">
               {this.buildSettingComponent({
                 type: 'boolean',
                 setting: 'fof-best-answer.schedule_on_one_server',
@@ -166,7 +129,7 @@ export default class BestAnswerSettings extends ExtensionPage {
             {this.submitButton()}
           </div>
         </div>
-      </div>,
-    ];
+      </div>
+    );
   }
 }
