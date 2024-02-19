@@ -1,7 +1,5 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import Model from 'flarum/common/Model';
-import User from 'flarum/common/models/User';
 import ItemList from 'flarum/common/utils/ItemList';
 import UserCard from 'flarum/forum/components/UserCard';
 import icon from 'flarum/common/helpers/icon';
@@ -9,8 +7,6 @@ import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
 
 export default function addBestAnswerCountToUsers() {
-  User.prototype.bestAnswerCount = Model.attribute<number>('bestAnswerCount');
-
   extend(UserCard.prototype, 'infoItems', function (items: ItemList<Mithril.Children>) {
     const user = this.attrs.user;
 
