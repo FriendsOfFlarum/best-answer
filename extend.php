@@ -11,6 +11,7 @@
 
 namespace FoF\BestAnswer;
 
+use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
@@ -97,6 +98,9 @@ return [
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
         ->load(['bestAnswerPost.user']),
+
+    (new Extend\ApiController(ListDiscussionsController::class))
+        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser']),
 
     (new Extend\ApiController(UpdateDiscussionController::class))
         ->addOptionalInclude('tags'),

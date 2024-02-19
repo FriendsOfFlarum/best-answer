@@ -70,6 +70,9 @@ fof-best-answer:
       titlePlaceholder: Question title
     user:
       best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
+    search:
+      discussions_solutions_heading: "Discussions with solutions"
+      all_discussions_solutions_button: "Search all discussions with solutions for \"{query}\""
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}

@@ -15,6 +15,7 @@ import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscuss
 import extendNotifications from './extenders/extendNotifications';
 import addBestAnswerCountToUsers from './addBestAnswerCountToUsers';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
+import extendSearch from './extenders/extendSearch';
 
 export * from './components';
 
@@ -32,6 +33,7 @@ app.initializers.add('fof/best-answer', () => {
   addBestAnswerCountSort();
 
   extendNotifications();
+  extendSearch();
 
   extend(IndexPage.prototype, 'sidebarItems', function (items) {
     const tag = this.currentTag();
