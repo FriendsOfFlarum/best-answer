@@ -19,7 +19,7 @@ export default class SolutionSearchSource implements SearchSource {
     const params = {
       filter: { q: query + ' is:solved' },
       page: { limit: 3 },
-      include: 'bestAnswerPost,tags',
+      include: 'mostRelevantPost,bestAnswerPost,tags',
     };
 
     return app.store.find<Discussion[]>('discussions', params).then((results) => {
@@ -33,6 +33,7 @@ export default class SolutionSearchSource implements SearchSource {
 
     const results = (this.results.get(query) || []).map((discussion) => {
       const bestAnswerPost = discussion.bestAnswerPost();
+      const mostRelevantPost = discussion.mostRelevantPost();
       const tags = discussion.tags();
 
       return (
@@ -40,7 +41,14 @@ export default class SolutionSearchSource implements SearchSource {
           <Link href={app.route.discussion(discussion, (bestAnswerPost && bestAnswerPost.number()) || 0)}>
             <div className="SolutionSearchResult-tags">{tagsLabel(tags)}</div>
             <div className="DiscussionSearchResult-title">{highlight(discussion.title(), query)}</div>
-            {!!bestAnswerPost && <div className="DiscussionSearchResult-excerpt">{highlight(bestAnswerPost.contentPlain() ?? '', query, 100)}</div>}
+            {!!mostRelevantPost && (
+              <div className="DiscussionSearchResult-excerpt">{highlight(mostRelevantPost.contentPlain() ?? '', query, 100)}</div>
+            )}
+            {!!bestAnswerPost && (
+              <div className="DiscussionSearchResult-excerpt SolutionSearchResult-bestAnswer">
+                {highlight(bestAnswerPost.contentPlain() ?? '', query, 100)}
+              </div>
+            )}
           </Link>
         </li>
       );
