@@ -1,5 +1,5 @@
 import app from 'flarum/admin/app';
-import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import ExtensionPage, { ExtensionPageAttrs } from 'flarum/admin/components/ExtensionPage';
 import Button from 'flarum/common/components/Button';
 import Link from 'flarum/common/components/Link';
 
@@ -112,6 +112,16 @@ export default class BestAnswerSettings extends ExtensionPage {
                     },
                   },
                 },
+              })}
+            </div>
+            <hr />
+            <div className="Search">
+              <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
+              {this.buildSettingComponent({
+                type: 'boolean',
+                setting: 'fof-best-answer.search.solution_search',
+                label: app.translator.trans('fof-best-answer.admin.settings.solution_search'),
+                help: app.translator.trans('fof-best-answer.admin.settings.solution_search_help'),
               })}
             </div>
             <hr />

@@ -8,6 +8,7 @@ fof-best-answer:
         tags: Best Answer Tags
         general: General
         reminders: Reminders
+        search: Search
         advanced: Advanced
         reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
       allow_select_own_post: Select own post
@@ -34,6 +35,8 @@ fof-best-answer:
       remind_tags_help: Select which tags, if any, to send reminders for. Reminders will only be sent for discussions with these tags.
       tags_info: |
         When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
+      solution_search: Solution search
+      solution_search_help: Enable the ability to search for discussions with Best Answers
     edit_tag:
       qna_label: Enable Best Answers to be set in this tag
       reminders: Send reminders to set a Best Answer for discussions in this tag
@@ -70,6 +73,9 @@ fof-best-answer:
       titlePlaceholder: Question title
     user:
       best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
+    search:
+      discussions_solutions_heading: "Discussions with solutions"
+      all_discussions_solutions_button: "Search all discussions with solutions for \"{query}\""
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}

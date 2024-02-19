@@ -11,6 +11,7 @@
 
 namespace FoF\BestAnswer;
 
+use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
@@ -85,18 +86,23 @@ return [
         ->addSortField('bestAnswerCount'),
 
     (new Extend\Settings())
+        ->default('fof-best-answer.schedule_on_one_server', false)
+        ->default('fof-best-answer.stop_overnight', false)
+        ->default('fof-best-answer.store_log_output', false)
+        ->default('fof-best-answer.enabled-tags', '[]')
+        ->default('fof-best-answer.search.solution_search', true)
         ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
         ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
         ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
-        ->default('fof-best-answer.schedule_on_one_server', false)
-        ->default('fof-best-answer.stop_overnight', false)
-        ->default('fof-best-answer.store_log_output', false)
-        ->default('fof-best-answer.enabled-tags', '[]'),
+        ->serializeToForum('solutionSearchEnabled', 'fof-best-answer.search.solution_search', 'boolVal'),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
         ->load(['bestAnswerPost.user']),
+
+    (new Extend\ApiController(ListDiscussionsController::class))
+        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser']),
 
     (new Extend\ApiController(UpdateDiscussionController::class))
         ->addOptionalInclude('tags'),

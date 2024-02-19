@@ -14,4 +14,7 @@ export default [
     .attribute<boolean>('hasBestAnswer')
     .attribute<boolean>('canSelectBestAnswer')
     .attribute('bestAnswerSetAt', Model.transformDate),
+
+  new Extend.Model(User) //
+    .attribute<number>('bestAnswerCount'),
 ];
