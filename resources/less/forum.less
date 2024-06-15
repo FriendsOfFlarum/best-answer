@@ -5,6 +5,15 @@
   background-color: @best-answer-badge-color;
 }
 
+.Button-jumpBestAnswer {
+  background-color: @best-answer-badge-color;
+  color: @text-on-dark;
+  &:hover {
+    background-color: @best-answer-post-background;
+    color: @text-on-light;
+  }
+}
+
 .Post-header {
   & > ul > li.item-isBestAnswer {
     margin-top: 3px;

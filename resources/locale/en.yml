@@ -76,6 +76,8 @@ fof-best-answer:
     search:
       discussions_solutions_heading: "Discussions with solutions"
       all_discussions_solutions_button: "Search all discussions with solutions for \"{query}\""
+    discussion:
+      jump_to_best_answer_button: View Best Answer
   email:
     subject:
       awarded: Your post was set as the best answer by {display_name}
