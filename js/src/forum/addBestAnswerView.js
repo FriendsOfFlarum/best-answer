@@ -75,6 +75,8 @@ export default () => {
   });
 
   extend(DiscussionPage.prototype, 'sidebarItems', function (items) {
+    if (!app.forum.attribute('bestAnswerDiscussionSidebarJumpButton')) return;
+
     const discussion = this.discussion;
     const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
 

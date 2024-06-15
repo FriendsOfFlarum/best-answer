@@ -69,6 +69,12 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
                   },
                 },
               })}
+              {this.buildSettingComponent({
+                setting: 'fof-best-answer.discussion_sidebar_jump_button',
+                type: 'boolean',
+                label: app.translator.trans('fof-best-answer.admin.settings.discussion_sidebar_jump_button'),
+                help: app.translator.trans('fof-best-answer.admin.settings.discussion_sidebar_jump_button_help'),
+              })}
             </div>
             <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
             <div className="Section">
