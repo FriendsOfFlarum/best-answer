@@ -17,11 +17,6 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.enabled_tags_help'),
                 options: {
                   requireParentTag: false,
-                  limits: {
-                    max: {
-                      secondary: 0,
-                    },
-                  },
                 },
               })}
               {this.buildSettingComponent({
@@ -31,11 +26,6 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.remind_tags_help'),
                 options: {
                   requireParentTag: false,
-                  limits: {
-                    max: {
-                      secondary: 0,
-                    },
-                  },
                 },
               })}
             </div>
