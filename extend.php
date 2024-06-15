@@ -70,9 +70,7 @@ return [
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
     (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attribute('canSelectBestAnswer', function (Serializer\DiscussionSerializer $serializer, Discussion $discussion) {
-            return resolve(BestAnswerRepository::class)->canSelectBestAnswer($serializer->getActor(), $discussion);
-        }),
+        ->attributes(DiscussionAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
