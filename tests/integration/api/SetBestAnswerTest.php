@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\tests\integration\api;
 
 use Carbon\Carbon;
@@ -28,22 +37,22 @@ class SetBestAnswerTest extends TestCase
                 ['id' => 2, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => 'Q&A description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
             ],
             'discussions' => [
-                ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2]
+                ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2],
             ],
             'posts' => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
-                ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()]
+                ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
             ],
             'discussion_tag' => [
-                ['discussion_id' => 1, 'tag_id' => 2]
+                ['discussion_id' => 1, 'tag_id' => 2],
             ],
             'group_permission' => [
-                ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()]
+                ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
             ],
             'group_user' => [
-                ['user_id' => 4, 'group_id' => 4]
-            ]
+                ['user_id' => 4, 'group_id' => 4],
+            ],
         ]);
     }
 
@@ -98,6 +107,7 @@ class SetBestAnswerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider allowedUsersProvider
      */
     public function user_with_permission_can_set_best_answer(int $userId)
@@ -126,6 +136,7 @@ class SetBestAnswerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider notAllowedUsersProvider
      */
     public function user_without_permission_cannot_set_best_answer(int $userId)
