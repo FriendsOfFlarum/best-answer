@@ -9,6 +9,8 @@ import Link from 'flarum/common/components/Link';
 import classList from 'flarum/common/utils/classList';
 
 import SelectBestAnswerItem from './components/SelectBestAnswerItem';
+import DiscussionPage from 'flarum/forum/components/DiscussionPage';
+import Button from 'flarum/common/components/Button';
 
 export default () => {
   extend(CommentPost.prototype, 'headerItems', function (items) {
@@ -69,6 +71,23 @@ export default () => {
 
     if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
       elementAttrs.className ? (elementAttrs.className += ' Post--bestAnswer') : (elementAttrs.className = 'Post--bestAnswer');
+    }
+  });
+
+  extend(DiscussionPage.prototype, 'sidebarItems', function (items) {
+    if (!app.forum.attribute('bestAnswerDiscussionSidebarJumpButton')) return;
+
+    const discussion = this.discussion;
+    const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
+
+    if (post && !post.isHidden() && post.number() !== 1 && !discussion.bestAnswerPost().isHidden()) {
+      items.add(
+        'jumpToBestAnswer',
+        <Button className="Button Button-jumpBestAnswer" icon="fas fa-check" onclick={() => app.current.get('stream').goToNumber(post.number())}>
+          {app.translator.trans('fof-best-answer.forum.discussion.jump_to_best_answer_button')}
+        </Button>,
+        90
+      );
     }
   });
 };
