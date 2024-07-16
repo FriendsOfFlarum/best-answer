@@ -166,6 +166,7 @@ class UnsetBestAnswerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider noPermissionUserProvider
      */
     public function user_without_permission_cannot_unset_a_best_answer(int $userId)
@@ -193,6 +194,7 @@ class UnsetBestAnswerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider withPermissionUserProvider
      */
     public function user_with_permission_can_unset_a_best_answer(int $userId)

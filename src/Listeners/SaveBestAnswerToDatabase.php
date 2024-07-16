@@ -96,7 +96,7 @@ class SaveBestAnswerToDatabase
         if (!$this->bestAnswer->canRemoveBestAnswer($actor, $discussion)) {
             throw new PermissionDeniedException();
         }
-        
+
         /** @var Post|null $post */
         $post = $discussion->bestAnswerPost;
 
