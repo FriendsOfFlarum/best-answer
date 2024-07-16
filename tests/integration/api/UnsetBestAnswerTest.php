@@ -31,6 +31,7 @@ class UnsetBestAnswerTest extends TestCase
             'users' => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
+                ['id' => 4, 'username' => 'moderator', 'email' => 'mod:machine.local', 'is_email_confirmed' => 1],
             ],
             'tags' => [
                 ['id' => 2, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => 'Q&A description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
@@ -45,6 +46,13 @@ class UnsetBestAnswerTest extends TestCase
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 2],
+            ],
+            'group_permission' => [
+                ['permission' => 'discussion.selectBestAnswerOwnDiscussion', 'group_id' => 3],
+                ['permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'group_id' => 4],
+            ],
+            'group_user' => [
+                ['user_id' => 4, 'group_id' => 4],
             ],
         ]);
     }
@@ -139,5 +147,74 @@ class UnsetBestAnswerTest extends TestCase
 
         $attributes = $data['data']['attributes'];
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
+    }
+
+    public function noPermissionUserProvider(): array
+    {
+        return [
+            [3],
+        ];
+    }
+
+    public function withPermissionUserProvider(): array
+    {
+        return [
+            [2],
+            [4],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider noPermissionUserProvider
+     */
+    public function user_without_permission_cannot_unset_a_best_answer(int $userId)
+    {
+        $response = $this->send(
+            $this->request(
+                'PATCH',
+                '/api/discussions/1',
+                [
+                    'json' => [
+                        'data' => [
+                            'attributes' => [
+                                'bestAnswerPostId' => 0,
+                            ],
+                        ],
+
+                    ],
+                    'authenticatedAs' => $userId,
+                ],
+            )
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     * @dataProvider withPermissionUserProvider
+     */
+    public function user_with_permission_can_unset_a_best_answer(int $userId)
+    {
+        $response = $this->send(
+            $this->request(
+                'PATCH',
+                '/api/discussions/1',
+                [
+                    'json' => [
+                        'data' => [
+                            'attributes' => [
+                                'bestAnswerPostId' => 0,
+                            ],
+                        ],
+
+                    ],
+                    'authenticatedAs' => $userId,
+                ],
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

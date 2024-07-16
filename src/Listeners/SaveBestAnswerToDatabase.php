@@ -93,6 +93,10 @@ class SaveBestAnswerToDatabase
 
     protected function removeBestAnswer(Discussion $discussion, User $actor): void
     {
+        if (!$this->bestAnswer->canRemoveBestAnswer($actor, $discussion)) {
+            throw new PermissionDeniedException();
+        }
+        
         /** @var Post|null $post */
         $post = $discussion->bestAnswerPost;
 
