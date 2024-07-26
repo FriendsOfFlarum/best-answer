@@ -11,8 +11,7 @@
 
 namespace FoF\BestAnswer\Search;
 
-use Flarum\Filter\FilterInterface;
-use Flarum\Filter\FilterState;
+use Flarum\Search\Filter\FilterInterface;
 use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
@@ -26,7 +25,7 @@ class BestAnswerFilter implements FilterInterface
         return 'solved-discussions';
     }
 
-    public function filter(FilterState $filterState, string $filterValue, bool $negate)
+    public function filter(SearchState $filterState, array|string $filterValue, bool $negate): void
     {
         $this->constrain($filterState->getQuery(), $filterState->getActor(), $negate);
     }

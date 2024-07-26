@@ -1,5 +1,5 @@
 import { override } from 'flarum/common/extend';
-import SortMap from 'ext:fof-user-directory/common/utils/SortMap';
+import SortMap from 'ext:fof/user-directory/common/utils/SortMap';
 
 export default () => {
   if (SortMap) return;

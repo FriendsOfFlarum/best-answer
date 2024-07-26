@@ -38,7 +38,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
     /**
      * Get the user that sent the notification.
      */
-    public function getFromUser()
+    public function getFromUser(): ?\Flarum\User\User
     {
         return $this->actor;
     }
@@ -46,7 +46,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
     /**
      * Get the model that is the subject of this activity.
      */
-    public function getSubject()
+    public function getSubject(): ?\Flarum\Database\AbstractModel
     {
         return $this->discussion;
     }
@@ -54,7 +54,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
     /**
      * Get the data to be stored in the notification.
      */
-    public function getData()
+    public function getData(): mixed
     {
     }
 
@@ -63,7 +63,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      *
      * @return string
      */
-    public static function getType()
+    public static function getType(): string
     {
         return 'bestAnswerInDiscussion';
     }
@@ -73,7 +73,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      *
      * @return string
      */
-    public static function getSubjectModel()
+    public static function getSubjectModel(): string
     {
         return Discussion::class;
     }
@@ -83,7 +83,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      *
      * @return array{text?: string, html?: string}
      */
-    public function getEmailView()
+    public function getEmailViews(): array
     {
         return ['text' => 'fof-best-answer::emails.bestAnswerSetInDiscussion'];
     }
@@ -93,7 +93,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      *
      * @return string
      */
-    public function getEmailSubject(TranslatorInterface $translator)
+    public function getEmailSubject(\Flarum\Locale\TranslatorInterface $translator): string
     {
         return $translator->trans('fof-best-answer.email.subject.ba-set', [
             '{display_name}'     => $this->actor->display_name,

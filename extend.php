@@ -82,14 +82,14 @@ return [
 
     (new Extend\ApiResource(Resource\UserResource::class))
         ->fields(UserBestAnswerCount::class)
-        ->sorts([
+        ->sorts(fn () => [
             Sort\SortColumn::make('bestAnswerCount'),
         ]),
 
     (new Extend\Conditional())
         ->whenExtensionEnabled('flarum-tags', fn () => [
             (new Extend\ApiResource(\Flarum\Tags\Api\Resource\TagResource::class))
-                ->fields([
+                ->fields(fn () => [
                     Schema\Boolean::make('isQnA'),
                     Schema\Boolean::make('reminders')
                         ->property('qna_reminders'),
