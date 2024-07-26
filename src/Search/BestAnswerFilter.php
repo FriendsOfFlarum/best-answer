@@ -13,23 +13,17 @@ namespace FoF\BestAnswer\Search;
 
 use Flarum\Filter\FilterInterface;
 use Flarum\Filter\FilterState;
-use Flarum\Search\AbstractRegexGambit;
 use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
-class BestAnswerFilterGambit extends AbstractRegexGambit implements FilterInterface
+class BestAnswerFilter implements FilterInterface
 {
     public function getFilterKey(): string
     {
         return 'solved-discussions';
-    }
-
-    protected function getGambitPattern()
-    {
-        return 'is:solved';
     }
 
     public function filter(FilterState $filterState, string $filterValue, bool $negate)
@@ -42,22 +36,6 @@ class BestAnswerFilterGambit extends AbstractRegexGambit implements FilterInterf
         $method = $negate ? 'whereNull' : 'whereNotNull';
 
         $query->$method('best_answer_post_id');
-    }
-
-    protected function conditions(SearchState $search, array $matches, $negate)
-    {
-        $actor = $search->getActor();
-
-        $search->getQuery()->where(function ($query) use ($negate, $actor) {
-            $method = $negate ? 'whereNull' : 'whereNotNull';
-
-            $query->whereIn('id', function ($query) use ($actor) {
-                $query->select('discussion_id')
-                    ->from('discussion_tag')
-                    ->whereIn('tag_id', $this->allowedQnATags($actor))
-                    ->pluck('discussion_id');
-            })->$method('best_answer_post_id');
-        });
     }
 
     protected function allowedQnATags(User $actor): Collection

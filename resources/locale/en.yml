@@ -10,35 +10,46 @@ fof-best-answer:
         reminders: Reminders
         search: Search
         advanced: Advanced
-        reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
+        reminders_notice: For reminders to function, you must have set up the Flarum
+          scheduler correctly.
       allow_select_own_post: Select own post
       allow_select_own_post_help: Allow a user to select their own post as a best answer to a discussion
       show_max_lines_label: Max lines to show in post preview
-      show_max_lines_help: Set to 0 to disable. If a post is longer than the configured amount of lines, it will be truncated in the post preview with a fade out effect.
+      show_max_lines_help: Set to 0 to disable. If a post is longer than the
+        configured amount of lines, it will be truncated in the post preview
+        with a fade out effect.
       select_best_answer_reminder_days: Reminder frequency
-      select_best_answer_reminder_days_help: Send a reminder after the configurable amount of days to the OP to select a Best Answer, 0 = disable reminders.
+      select_best_answer_reminder_days_help: Send a reminder after the configurable
+        amount of days to the OP to select a Best Answer, 0 = disable reminders.
       select_best_answer_tags_label: Tags for discussions with Best Answers
-      select_best_answer_tags_help: Select which tags, if any, to add to discussions when a Best Answer is set. Only secondary tags are allowed. These tags will be removed if the Best Answer is removed.
+      select_best_answer_tags_help: Select which tags, if any, to add to discussions
+        when a Best Answer is set. Only secondary tags are allowed. These tags
+        will be removed if the Best Answer is removed.
       schedule_on_one_server: Use 'onOneServer()' directive for the task scheduler
       schedule_on_one_server_help: Requires Redis/Memcache
       schedule_stop_overnight: Prevent reminder notifications being sent during unsocial hours
       schedule_stop_overnight_help: 9pm - 8am server time
       schedule_log_output: Append scheduler output to log storage
       show_filter_label: Display Best Answer filter dropdown
-      show_filter_help: For tags which have Best Answers enabled, choose to display solved/unsolved filter option in the discussion list
+      show_filter_help: For tags which have Best Answers enabled, choose to display
+        solved/unsolved filter option in the discussion list
       use_alt_ui: Alternative layout
       use_alt_ui_help: Best answer controls in post footer
       documentation: Documentation
       enabled_tags_label: Enabled Tags
-      enabled_tags_help: Select which tags, if any, to enable Best Answers for. These tags will become "Q&A" formatted tags, and will have the ability to set Best Answers.
+      enabled_tags_help: Select which tags, if any, to enable Best Answers for. These
+        tags will become "Q&A" formatted tags, and will have the ability to set
+        Best Answers.
       remind_tags_label: Reminder Tags
-      remind_tags_help: Select which tags, if any, to send reminders for. Reminders will only be sent for discussions with these tags.
+      remind_tags_help: Select which tags, if any, to send reminders for. Reminders
+        will only be sent for discussions with these tags.
       tags_info: |
         When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
       solution_search: Solution search
       solution_search_help: Enable the ability to search for discussions with Best Answers
       discussion_sidebar_jump_button: Display jump to Best Answer button in discussion sidebar
-      discussion_sidebar_jump_button_help: Adds a button to the discussion sidebar which jumps to the Best Answer in the stream of posts.
+      discussion_sidebar_jump_button_help: Adds a button to the discussion sidebar
+        which jumps to the Best Answer in the stream of posts.
     edit_tag:
       qna_label: Enable Best Answers to be set in this tag
       reminders: Send reminders to set a Best Answer for discussions in this tag
@@ -74,7 +85,8 @@ fof-best-answer:
     composer:
       titlePlaceholder: Question title
     user:
-      best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
+      best-answer-count: "{count, plural, one { {count} best answer} other {{count}
+        best answers}}"
     search:
       discussions_solutions_heading: "Discussions with solutions"
       all_discussions_solutions_button: "Search all discussions with solutions for \"{query}\""
@@ -108,6 +120,10 @@ fof-best-answer:
         Visit the discussion here: {discussion_url}, and select the most appropriate post as the best answer.
 
         Thanks!
+  lib:
+    gambits:
+      solved-discussions:
+        key: solved
 
 fof-user-directory:
   lib:

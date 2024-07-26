@@ -110,14 +110,11 @@ return [
         ->serializeToForum('solutionSearchEnabled', 'fof-best-answer.search.solution_search', 'boolVal')
         ->serializeToForum('bestAnswerDiscussionSidebarJumpButton', 'fof-best-answer.discussion_sidebar_jump_button', 'boolVal'),
 
-    (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
-        ->addGambit(Search\BestAnswerFilterGambit::class),
-
     (new Extend\Console())
         ->command(Console\NotifyCommand::class)
         ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
-    (new Extend\Filter(DiscussionFilterer::class))
-        ->addFilter(Search\BestAnswerFilterGambit::class),
+    (new Extend\SearchDriver(\Flarum\Search\Database\DatabaseSearchDriver::class))
+        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class),
 ];
