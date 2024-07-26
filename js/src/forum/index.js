@@ -1,3 +1,4 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
@@ -34,8 +35,8 @@ app.initializers.add('fof/best-answer', () => {
   extendNotifications();
   extendSearch();
 
-  extend(IndexPage.prototype, 'sidebarItems', function (items) {
-    const tag = this.currentTag();
+  extend(IndexSidebar.prototype, 'items', function (items) {
+    const tag = app.currentTag();
 
     if (!tag?.isQnA?.()) return;
 
@@ -55,7 +56,7 @@ app.initializers.add('fof/best-answer', () => {
       return;
     }
 
-    const tag = this.currentTag();
+    const tag = app.currentTag();
 
     if (!tag?.isQnA?.()) {
       if (app.discussions.bestAnswer) {
