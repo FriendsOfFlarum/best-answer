@@ -4,7 +4,6 @@ import IndexPage from 'flarum/forum/components/IndexPage';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
 import DiscussionListState from 'flarum/forum/states/DiscussionListState';
-import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 
 import SelectBestAnswerNotification from './components/SelectBestAnswerNotification';
 import addBestAnswerAction from './addBestAnswerAction';
@@ -117,7 +116,7 @@ app.initializers.add('fof/best-answer', () => {
     }
   });
 
-  extend(DiscussionComposer.prototype, 'headerItems', function (items) {
+  extend('flarum/forum/components/DiscussionComposer', 'headerItems', function (items) {
     const tags = this.composer.fields.tags;
     if (tags === undefined) return;
 
