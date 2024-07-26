@@ -1,11 +1,10 @@
 import { override } from 'flarum/common/extend';
+import SortMap from 'ext:fof-user-directory/common/utils/SortMap';
 
 export default () => {
-  const FoFUserDirectory = require('@fof-user-directory');
+  if (SortMap) return;
 
-  if (!FoFUserDirectory) return;
-
-  override(FoFUserDirectory.SortMap.prototype, 'sortMap', (map) => ({
+  override(SortMap.prototype, 'sortMap', (map) => ({
     ...map(),
     most_best_answers: '-bestAnswerCount',
     least_best_answers: 'bestAnswerCount',
