@@ -65,9 +65,9 @@ return [
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
     (new Extend\Notification())
-        ->type(Notification\SelectBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert', 'email'])
-        ->type(Notification\AwardedBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert'])
-        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
+        ->type(Notification\SelectBestAnswerBlueprint::class, ['alert', 'email'])
+        ->type(Notification\AwardedBestAnswerBlueprint::class, ['alert'])
+        ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, []),
 
     (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
         ->attributes(DiscussionAttributes::class),
