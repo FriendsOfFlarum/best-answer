@@ -11,25 +11,32 @@
 
 namespace FoF\BestAnswer;
 
-use Flarum\Api\Serializer\DiscussionSerializer;
+use Flarum\Api\Context;
+use Flarum\Api\Schema;
 use Flarum\Discussion\Discussion;
 
 class DiscussionAttributes
 {
-    /**
-     * @var BestAnswerRepository
-     */
-    protected $bestAnswerRepository;
-
-    public function __construct(BestAnswerRepository $bestAnswerRepository)
-    {
-        $this->bestAnswerRepository = $bestAnswerRepository;
+    public function __construct(
+        protected BestAnswerRepository $bestAnswerRepository
+    ) {
     }
 
-    public function __invoke(DiscussionSerializer $serializer, Discussion $discussion, array $attributes): array
+    public function __invoke(): array
     {
-        $attributes['canSelectBestAnswer'] = $this->bestAnswerRepository->canSelectBestAnswer($serializer->getActor(), $discussion);
+        return [
+            Schema\Boolean::make('canSelectBestAnswer')
+                ->get(fn (Discussion $discussion, Context $context) => $this->bestAnswerRepository->canSelectBestAnswer($context->getActor(), $discussion)),
+            Schema\Attribute::make('hasBestAnswer')
+                ->get(fn (Discussion $discussion) => $discussion->bestAnswerPost !== null ? $discussion->bestAnswerPost->id : false),
+            Schema\DateTime::make('bestAnswerSetAt'),
 
-        return $attributes;
+            Schema\Relationship\ToOne::make('bestAnswerPost')
+                ->type('posts')
+                ->includable(),
+            Schema\Relationship\ToOne::make('bestAnswerUser')
+                ->type('users')
+                ->includable(),
+        ];
     }
 }

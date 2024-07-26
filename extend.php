@@ -11,12 +11,6 @@
 
 namespace FoF\BestAnswer;
 
-use Flarum\Api\Controller\ListDiscussionsController;
-use Flarum\Api\Controller\ListPostsController;
-use Flarum\Api\Controller\ListUsersController;
-use Flarum\Api\Controller\ShowDiscussionController;
-use Flarum\Api\Controller\UpdateDiscussionController;
-use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -24,10 +18,13 @@ use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
 use Flarum\Settings\Event\Saving as SettingsSaving;
-use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
+use Flarum\Api\Resource;
+use Flarum\Api\Endpoint;
+use Flarum\Api\Schema;
+use Flarum\Api\Sort;
 
 return [
     (new Extend\Frontend('forum'))
@@ -69,19 +66,35 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, []),
 
-    (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attributes(DiscussionAttributes::class),
+    (new Extend\ApiResource(Resource\DiscussionResource::class))
+        ->fields(DiscussionAttributes::class)
+        ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
+            return $endpoint
+                ->defaultInclude(['bestAnswerPost', 'bestAnswerUser']) // @todo: move to adding the includes in the frontend request instead (performance)
+                ->eagerLoad(['bestAnswerPost.user']);
+        }),
 
-    (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
-        ->attributes(BasicDiscussionAttributes::class),
+    (new Extend\ApiResource(Resource\PostResource::class))
+        ->endpoint(Endpoint\Index::class, function (Endpoint\Index $endpoint) {
+            return $endpoint
+                ->defaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
+        }),
 
-    (new Extend\ApiSerializer(Serializer\UserSerializer::class))
-        ->attributes(UserBestAnswerCount::class),
+    (new Extend\ApiResource(Resource\UserResource::class))
+        ->fields(UserBestAnswerCount::class)
+        ->sorts([
+            Sort\SortColumn::make('bestAnswerCount'),
+        ]),
 
-    (new Extend\ApiController(ListUsersController::class))
-        ->addSortField('bestAnswerCount'),
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-tags', fn () => [
+            (new Extend\ApiResource(\Flarum\Tags\Api\Resource\TagResource::class))
+                ->fields([
+                    Schema\Boolean::make('isQnA'),
+                    Schema\Boolean::make('reminders')
+                        ->property('qna_reminders'),
+                ])
+        ]),
 
     (new Extend\Settings())
         ->default('fof-best-answer.schedule_on_one_server', false)
@@ -97,19 +110,6 @@ return [
         ->serializeToForum('solutionSearchEnabled', 'fof-best-answer.search.solution_search', 'boolVal')
         ->serializeToForum('bestAnswerDiscussionSidebarJumpButton', 'fof-best-answer.discussion_sidebar_jump_button', 'boolVal'),
 
-    (new Extend\ApiController(ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
-        ->load(['bestAnswerPost.user']),
-
-    (new Extend\ApiController(ListDiscussionsController::class))
-        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser']),
-
-    (new Extend\ApiController(UpdateDiscussionController::class))
-        ->addOptionalInclude('tags'),
-
-    (new Extend\ApiController(ListPostsController::class))
-        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
-
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Search\BestAnswerFilterGambit::class),
 
@@ -120,12 +120,4 @@ return [
 
     (new Extend\Filter(DiscussionFilterer::class))
         ->addFilter(Search\BestAnswerFilterGambit::class),
-
-    (new Extend\ApiSerializer(TagSerializer::class))
-        ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
-            $attributes['isQnA'] = (bool) $tag->is_qna;
-            $attributes['reminders'] = (bool) $tag->qna_reminders;
-
-            return $attributes;
-        }),
 ];
