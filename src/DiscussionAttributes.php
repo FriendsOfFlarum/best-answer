@@ -62,6 +62,10 @@ class DiscussionAttributes
                         throw new PermissionDeniedException();
                     }
 
+                    if (! $post && !$this->bestAnswerRepository->canRemoveBestAnswer($actor, $discussion)) {
+                        throw new PermissionDeniedException();
+                    }
+
                     // Attaching a best answer.
                     if ($post) {
                         $discussion->best_answer_post_id = $post->id;

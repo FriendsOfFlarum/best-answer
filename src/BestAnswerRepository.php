@@ -53,6 +53,11 @@ class BestAnswerRepository
         return true;
     }
 
+    public function canRemoveBestAnswer(User $user, Discussion $discussion): bool
+    {
+        return self::canSelectBestAnswer($user, $discussion);
+    }
+
     public function tagEnabledForBestAnswer(Discussion $discussion): bool
     {
         $enabled = false;
