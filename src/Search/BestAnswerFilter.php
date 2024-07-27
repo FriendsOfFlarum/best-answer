@@ -15,7 +15,7 @@ use Flarum\Search\Filter\FilterInterface;
 use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class BestAnswerFilter implements FilterInterface
@@ -30,7 +30,7 @@ class BestAnswerFilter implements FilterInterface
         $this->constrain($filterState->getQuery(), $filterState->getActor(), $negate);
     }
 
-    protected function constrain(Builder $query, User $actor, bool $negate)
+    protected function constrain(Builder $query, User $actor, bool $negate): void
     {
         $method = $negate ? 'whereNull' : 'whereNotNull';
 

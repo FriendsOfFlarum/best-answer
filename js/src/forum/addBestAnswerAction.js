@@ -26,9 +26,7 @@ export default () => {
     discussion
       .save(
         {
-          bestAnswerPostId: isBestAnswer ? post.id() : 0,
-          bestAnswerUserId: app.session.user.id(),
-          relationships: isBestAnswer ? { bestAnswerPost: post, bestAnswerUser: app.session.user } : { bestAnswerPost: null },
+          relationships: { bestAnswerPost: isBestAnswer ? post : { data: null } },
         },
         {
           params: {

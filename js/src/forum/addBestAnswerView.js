@@ -45,11 +45,13 @@ export default () => {
             <ul>
               <li className="item-user">
                 <div className="PostUser">
-                  {user && userOnline(user)}
-                  <h3>{user ? <Link href={app.route.user(user)}>{username(user)}</Link> : username(user)}</h3>
+                  <h3 className="PostUser-name">
+                    {user && userOnline(user)}
+                    {user ? <Link href={app.route.user(user)}>{username(user)}</Link> : username(user)}
+                  </h3>
                 </div>
               </li>
-              {post.discussion() && <li className="item-meta">{PostMeta.component({ post })}</li>}
+              {post.discussion() && <li className="item-meta">{PostMeta.component({post})}</li>}
               {SelectBestAnswerItem.component({
                 post,
                 discussion,

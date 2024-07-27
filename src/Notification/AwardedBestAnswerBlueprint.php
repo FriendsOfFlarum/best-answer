@@ -56,6 +56,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
      */
     public function getData(): mixed
     {
+        return [];
     }
 
     /**

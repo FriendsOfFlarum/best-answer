@@ -1,17 +1,19 @@
 @best-answer-badge-color: #58a400;
 @best-answer-post-background: rgba(88, 164, 0, 0.23);
 
+[data-theme^="dark"] {
+  .Button--color-vars(@text-on-light, @best-answer-badge-color, 'best-answer');
+}
+[data-theme^="light"] {
+  .Button--color-vars(@text-on-dark, @best-answer-badge-color, 'best-answer');
+}
+
 .Badge--bestAnswer {
   background-color: @best-answer-badge-color;
 }
 
 .Button-jumpBestAnswer {
-  background-color: @best-answer-badge-color;
-  color: var(--text-on-dark);
-  &:hover {
-    background-color: @best-answer-post-background;
-    color: var(--text-on-light);
-  }
+  .Button--color-auto('best-answer');
 }
 
 .Post-header {

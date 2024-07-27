@@ -56,6 +56,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      */
     public function getData(): mixed
     {
+        return [];
     }
 
     /**

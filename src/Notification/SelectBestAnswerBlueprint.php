@@ -46,6 +46,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      */
     public function getData(): mixed
     {
+        return [];
     }
 
     /**

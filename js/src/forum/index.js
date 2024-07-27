@@ -15,7 +15,6 @@ import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscuss
 import extendNotifications from './extenders/extendNotifications';
 import addBestAnswerCountToUsers from './addBestAnswerCountToUsers';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
-import extendSearch from './extenders/extendSearch';
 
 export * from './components';
 
@@ -33,7 +32,6 @@ app.initializers.add('fof/best-answer', () => {
   addBestAnswerCountSort();
 
   extendNotifications();
-  extendSearch();
 
   extend(IndexSidebar.prototype, 'items', function (items) {
     const tag = app.currentTag();
@@ -110,10 +108,6 @@ app.initializers.add('fof/best-answer', () => {
       const prepend = negate ? '-' : '';
 
       params.filter[`${prepend}solved-discussions`] = true;
-
-      if (params.filter.q) {
-        params.filter.q += ` ${prepend}is:solved`;
-      }
     }
   });
 

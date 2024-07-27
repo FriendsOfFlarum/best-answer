@@ -56,7 +56,6 @@ return [
         ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
-        ->listen(DiscussionSaving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
@@ -70,14 +69,14 @@ return [
         ->fields(DiscussionAttributes::class)
         ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
             return $endpoint
-                ->defaultInclude(['bestAnswerPost', 'bestAnswerUser']) // @todo: move to adding the includes in the frontend request instead (performance)
+                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerUser']) // @todo: move to adding the includes in the frontend request instead (performance)
                 ->eagerLoad(['bestAnswerPost.user']);
         }),
 
     (new Extend\ApiResource(Resource\PostResource::class))
         ->endpoint(Endpoint\Index::class, function (Endpoint\Index $endpoint) {
             return $endpoint
-                ->defaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
+                ->addDefaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
         }),
 
     (new Extend\ApiResource(Resource\UserResource::class))
