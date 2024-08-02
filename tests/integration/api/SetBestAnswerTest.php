@@ -94,8 +94,13 @@ class SetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => $postId,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id' => $postId
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -125,9 +130,11 @@ class SetBestAnswerTest extends TestCase
 
         $response = $this->setBestAnswer($userId, 3);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $contents = $response->getBody()->getContents();
 
-        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertEquals(200, $response->getStatusCode(), $contents);
+
+        $data = json_decode($contents, true);
 
         $attributes = $data['data']['attributes'];
 

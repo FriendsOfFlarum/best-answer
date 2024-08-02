@@ -93,8 +93,10 @@ class UnsetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => null
+                                ],
                             ],
                         ],
 
@@ -130,8 +132,13 @@ class UnsetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 3,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id' => 3,
+                                    ]
+                                ],
                             ],
                         ],
 
@@ -141,9 +148,11 @@ class UnsetBestAnswerTest extends TestCase
             )
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $contents = $response->getBody()->getContents();
 
-        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertEquals(200, $response->getStatusCode(), $contents);
+
+        $data = json_decode($contents, true);
 
         $attributes = $data['data']['attributes'];
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
@@ -178,8 +187,10 @@ class UnsetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => null
+                                ],
                             ],
                         ],
 
@@ -206,8 +217,10 @@ class UnsetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => null
+                                ],
                             ],
                         ],
 

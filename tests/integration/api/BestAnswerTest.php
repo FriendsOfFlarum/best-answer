@@ -114,9 +114,13 @@ class BestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 2,
-                                'bestAnswerUserId' => 1,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id' => 2
+                                    ]
+                                ],
                             ],
                         ],
 
@@ -126,7 +130,7 @@ class BestAnswerTest extends TestCase
             )
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode(), $response->getBody()->getContents());
 
         $discussion = Discussion::find(1);
 
@@ -149,8 +153,10 @@ class BestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => null
+                                ],
                             ],
                         ],
 
