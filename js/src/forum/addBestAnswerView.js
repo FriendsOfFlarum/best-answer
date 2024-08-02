@@ -51,7 +51,7 @@ export default () => {
                   </h3>
                 </div>
               </li>
-              {post.discussion() && <li className="item-meta">{PostMeta.component({post})}</li>}
+              {post.discussion() && <li className="item-meta">{PostMeta.component({ post })}</li>}
               {SelectBestAnswerItem.component({
                 post,
                 discussion,
