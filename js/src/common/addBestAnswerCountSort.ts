@@ -2,7 +2,7 @@ import { override } from 'flarum/common/extend';
 import SortMap from 'ext:fof/user-directory/common/utils/SortMap';
 
 export default () => {
-  if (SortMap) return;
+  if (!SortMap) return;
 
   override(SortMap.prototype, 'sortMap', (map) => ({
     ...map(),
