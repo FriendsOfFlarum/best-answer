@@ -17,6 +17,8 @@ use Flarum\Post\Post;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
+use PHPUnit\Metadata\Test;
+use PHPUnit\Metadata\DataProvider;
 
 class BestAnswerTest extends TestCase
 {
@@ -58,9 +60,7 @@ class BestAnswerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function default_answer_count_for_new_user_is_zero()
     {
         $response = $this->send(
@@ -80,9 +80,7 @@ class BestAnswerTest extends TestCase
         $this->assertEquals(0, $data['data']['attributes']['bestAnswerCount']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_with_extising_best_answer_has_correct_count()
     {
         $response = $this->send(
@@ -102,9 +100,7 @@ class BestAnswerTest extends TestCase
         $this->assertEquals(1, $data['data']['attributes']['bestAnswerCount']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setting_best_answer_increases_author_best_answer_count()
     {
         $response = $this->send(
@@ -141,9 +137,7 @@ class BestAnswerTest extends TestCase
         $this->assertEquals(1, $answerAuthor->best_answer_count);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function unsetting_best_answer_decreases_author_best_answer_count()
     {
         $response = $this->send(
@@ -177,9 +171,7 @@ class BestAnswerTest extends TestCase
         $this->assertEquals(0, $answerAuthor->best_answer_count);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleting_the_best_answer_post_in_a_discussion_reduces_author_best_answer_count()
     {
         $response = $this->send(
@@ -208,9 +200,7 @@ class BestAnswerTest extends TestCase
         $this->assertEquals(0, $answerAuthor->best_answer_count);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleting_a_discussion_with_a_best_answer_reduces_author_best_answer_count()
     {
         $response = $this->send(

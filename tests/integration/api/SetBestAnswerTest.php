@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Metadata\Test;
+use PHPUnit\Metadata\DataProvider;
 
 class SetBestAnswerTest extends TestCase
 {
@@ -56,7 +58,7 @@ class SetBestAnswerTest extends TestCase
         ]);
     }
 
-    public function allowedUsersProvider(): array
+    public static function allowedUsersProvider(): array
     {
         return [
             [1],
@@ -65,7 +67,7 @@ class SetBestAnswerTest extends TestCase
         ];
     }
 
-    public function notAllowedUsersProvider(): array
+    public static function notAllowedUsersProvider(): array
     {
         return [
             [3],
@@ -110,11 +112,8 @@ class SetBestAnswerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider allowedUsersProvider
-     */
+    #[Test]
+    #[DataProvider('allowedUsersProvider')]
     public function user_with_permission_can_set_best_answer(int $userId)
     {
         $response = $this->getDiscussion($userId);
@@ -141,11 +140,8 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider notAllowedUsersProvider
-     */
+    #[Test]
+    #[DataProvider('notAllowedUsersProvider')]
     public function user_without_permission_cannot_set_best_answer(int $userId)
     {
         $response = $this->getDiscussion($userId);

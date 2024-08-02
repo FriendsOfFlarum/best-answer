@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Metadata\Test;
+use PHPUnit\Metadata\DataProvider;
 
 class UnsetBestAnswerTest extends TestCase
 {
@@ -70,9 +72,7 @@ class UnsetBestAnswerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_unset_best_answer_in_own_discussion_and_select_a_different_post()
     {
         // Check best answer is already present
@@ -158,14 +158,14 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    public function noPermissionUserProvider(): array
+    public static function noPermissionUserProvider(): array
     {
         return [
             [3],
         ];
     }
 
-    public function withPermissionUserProvider(): array
+    public static function withPermissionUserProvider(): array
     {
         return [
             [2],
@@ -173,11 +173,8 @@ class UnsetBestAnswerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider noPermissionUserProvider
-     */
+    #[Test]
+    #[DataProvider('noPermissionUserProvider')]
     public function user_without_permission_cannot_unset_a_best_answer(int $userId)
     {
         $response = $this->send(
@@ -203,11 +200,8 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider withPermissionUserProvider
-     */
+    #[Test]
+    #[DataProvider('withPermissionUserProvider')]
     public function user_with_permission_can_unset_a_best_answer(int $userId)
     {
         $response = $this->send(
