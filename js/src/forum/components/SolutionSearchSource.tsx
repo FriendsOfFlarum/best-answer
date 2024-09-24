@@ -6,6 +6,7 @@ import LinkButton from 'flarum/common/components/LinkButton';
 import { SearchSource } from 'flarum/forum/components/Search';
 import type Mithril from 'mithril';
 import BestAnswerBadge from './BestAnswerBadge';
+/** @ts-ignore */
 import tagsLabel from 'flarum/tags/helpers/tagsLabel';
 
 export default class SolutionSearchSource implements SearchSource {
