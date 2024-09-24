@@ -59,19 +59,9 @@ export default class SolutionSearchItem extends Component<SolutionSearchItemAttr
   viewItems(): ItemList<Mithril.Children> {
     const items = new ItemList<Mithril.Children>();
 
-    items.add(
-        'tags',
-        <div className="SolutionSearchResult-tags">
-            {tagsLabel(this.tags)}
-        </div>,
-        100);
+    items.add('tags', <div className="SolutionSearchResult-tags">{tagsLabel(this.tags)}</div>, 100);
 
-    items.add(
-        'discussion-title',
-        <div className="DiscussionSearchResult-title">
-            {highlight(this.discussionTitle(), this.query)}
-        </div>,
-        90);
+    items.add('discussion-title', <div className="DiscussionSearchResult-title">{highlight(this.discussionTitle(), this.query)}</div>, 90);
 
     !!this.mostRelevantPost &&
       items.add(
