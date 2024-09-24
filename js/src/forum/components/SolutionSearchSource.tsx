@@ -1,13 +1,10 @@
 import app from 'flarum/forum/app';
-import highlight from 'flarum/common/helpers/highlight';
 import Discussion from 'flarum/common/models/Discussion';
-import Link from 'flarum/common/components/Link';
 import LinkButton from 'flarum/common/components/LinkButton';
 import { SearchSource } from 'flarum/forum/components/Search';
 import type Mithril from 'mithril';
 import BestAnswerBadge from './BestAnswerBadge';
-/** @ts-ignore */
-import tagsLabel from 'flarum/tags/helpers/tagsLabel';
+import SolutionSearchItem from './SolutionSearchItem';
 
 export default class SolutionSearchSource implements SearchSource {
   protected results = new Map<string, Discussion[]>();
@@ -20,7 +17,7 @@ export default class SolutionSearchSource implements SearchSource {
     const params = {
       filter: { q: query + ' is:solved' },
       page: { limit: 3 },
-      include: 'mostRelevantPost,bestAnswerPost,tags',
+      include: this.includes().join(','),
     };
 
     return app.store.find<Discussion[]>('discussions', params).then((results) => {
@@ -35,23 +32,11 @@ export default class SolutionSearchSource implements SearchSource {
     const results = (this.results.get(query) || []).map((discussion) => {
       const bestAnswerPost = discussion.bestAnswerPost();
       const mostRelevantPost = discussion.mostRelevantPost();
+      /** @ts-ignore */
       const tags = discussion.tags();
 
       return (
-        <li className="SolutionSearchResult DiscussionSearchResult" data-index={'discussions' + discussion.id()}>
-          <Link href={app.route.discussion(discussion, (bestAnswerPost && bestAnswerPost.number()) || 0)}>
-            <div className="SolutionSearchResult-tags">{tagsLabel(tags)}</div>
-            <div className="DiscussionSearchResult-title">{highlight(discussion.title(), query)}</div>
-            {!!mostRelevantPost && (
-              <div className="DiscussionSearchResult-excerpt">{highlight(mostRelevantPost.contentPlain() ?? '', query, 100)}</div>
-            )}
-            {!!bestAnswerPost && (
-              <div className="DiscussionSearchResult-excerpt SolutionSearchResult-bestAnswer">
-                {highlight(bestAnswerPost.contentPlain() ?? '', query, 100)}
-              </div>
-            )}
-          </Link>
-        </li>
+        <SolutionSearchItem query={query} discussion={discussion} bestAnswerPost={bestAnswerPost} mostRelevantPost={mostRelevantPost} tags={tags} />
       );
     }) as Array<Mithril.Vnode>;
 
@@ -66,5 +51,9 @@ export default class SolutionSearchSource implements SearchSource {
       </li>,
       ...results,
     ];
+  }
+
+  includes(): string[] {
+    return ['mostRelevantPost', 'bestAnswerPost', 'tags'];
   }
 }
