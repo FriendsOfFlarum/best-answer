@@ -102,7 +102,7 @@ return [
         ->load(['bestAnswerPost.user']),
 
     (new Extend\ApiController(ListDiscussionsController::class))
-        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser']),
+        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.discussion']),
 
     (new Extend\ApiController(UpdateDiscussionController::class))
         ->addOptionalInclude('tags'),
