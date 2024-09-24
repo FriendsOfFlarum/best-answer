@@ -16,7 +16,7 @@ export default class SolutionSearchSource implements SearchSource {
 
     const params = {
       filter: { q: query + ' is:solved' },
-      page: { limit: 3 },
+      page: { limit: this.limit() },
       include: this.includes().join(','),
     };
 
@@ -55,5 +55,9 @@ export default class SolutionSearchSource implements SearchSource {
 
   includes(): string[] {
     return ['mostRelevantPost', 'bestAnswerPost', 'tags'];
+  }
+
+  limit(): number {
+    return 3;
   }
 }
