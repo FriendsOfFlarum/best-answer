@@ -55,9 +55,9 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
   headerItems(): ItemList<Mithril.Children> {
     const items = new ItemList<Mithril.Children>();
 
-    items.add('user', this.userItem());
-    this.post.discussion() && items.add('meta', this.metaItem());
-    items.add('bestAnswer', <SelectBestAnswerItem post={this.post} discussion={this.post.discussion()} />);
+    items.add('user', this.userItem()), 100;
+    this.post.discussion() && items.add('meta', this.metaItem()), 90;
+    items.add('bestAnswer', <SelectBestAnswerItem post={this.post} discussion={this.post.discussion()} />, -100);
 
     return items;
   }

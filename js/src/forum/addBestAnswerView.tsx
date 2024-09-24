@@ -18,7 +18,8 @@ export default () => {
         SelectBestAnswerItem.component({
           post,
           discussion: post.discussion(),
-        })
+        }),
+        -100
       );
     }
   });
