@@ -49,14 +49,15 @@ class BestAnswerFilterGambit extends AbstractRegexGambit implements FilterInterf
         $actor = $search->getActor();
 
         $search->getQuery()->where(function ($query) use ($negate, $actor) {
-            $method = $negate ? 'whereNull' : 'whereNotNull';
+            $method = $negate ? 'whereNotIn' : 'whereIn';
+            $methodBestAnswerPostId = $negate ? 'whereNull' : 'whereNotNull';
 
-            $query->whereIn('id', function ($query) use ($actor) {
+            $query->$method('discussions.id', function ($query) use ($actor) {
                 $query->select('discussion_id')
                     ->from('discussion_tag')
                     ->whereIn('tag_id', $this->allowedQnATags($actor))
                     ->pluck('discussion_id');
-            })->$method('best_answer_post_id');
+            })->$methodBestAnswerPostId('discussions.best_answer_post_id');
         });
     }
 
