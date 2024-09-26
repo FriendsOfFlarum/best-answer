@@ -14,8 +14,10 @@ export default class SolutionSearchSource implements SearchSource {
 
     this.results.set(query, []);
 
+    const queryString = query + ' ' + this.queryMutators().join(' ');
+
     const params = {
-      filter: { q: query + ' is:solved' },
+      filter: { q: queryString },
       page: { limit: this.limit() },
       include: this.includes().join(','),
     };
@@ -59,5 +61,9 @@ export default class SolutionSearchSource implements SearchSource {
 
   limit(): number {
     return 3;
+  }
+
+  queryMutators(): string[] {
+    return ['is:solved'];
   }
 }

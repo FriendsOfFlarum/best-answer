@@ -84,6 +84,12 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
                 label: app.translator.trans('fof-best-answer.admin.settings.solution_search'),
                 help: app.translator.trans('fof-best-answer.admin.settings.solution_search_help'),
               })}
+              {this.buildSettingComponent({
+                type: 'boolean',
+                setting: 'fof-best-answer.search.display_tags',
+                label: app.translator.trans('fof-best-answer.admin.settings.display_tags'),
+                help: app.translator.trans('fof-best-answer.admin.settings.display_tags_help'),
+              })}
             </div>
             <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
             <p className="helpText">
