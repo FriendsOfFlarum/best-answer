@@ -89,13 +89,12 @@ return [
         ->default('fof-best-answer.store_log_output', false)
         ->default('fof-best-answer.enabled-tags', '[]')
         ->default('fof-best-answer.search.solution_search', true)
+        ->default('fof-best-answer.search.display_tags', true)
         ->default('fof-best-answer.discussion_sidebar_jump_button', false)
-        ->serializeToForum('canSelectBestAnswerOwnPost', 'fof-best-answer.allow_select_own_post', 'boolVal')
-        ->serializeToForum('useAlternativeBestAnswerUi', 'fof-best-answer.use_alternative_ui', 'boolVal')
-        ->serializeToForum('showBestAnswerFilterUi', 'fof-best-answer.show_filter_dropdown', 'boolVal')
-        ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal')
-        ->serializeToForum('solutionSearchEnabled', 'fof-best-answer.search.solution_search', 'boolVal')
-        ->serializeToForum('bestAnswerDiscussionSidebarJumpButton', 'fof-best-answer.discussion_sidebar_jump_button', 'boolVal'),
+        ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),
+
+    (new Extend\ApiSerializer(Serializer\ForumSerializer::class))
+        ->attributes(ForumAttributes::class),
 
     (new Extend\ApiController(ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
