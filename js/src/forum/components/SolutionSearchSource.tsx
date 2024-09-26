@@ -8,16 +8,17 @@ import SolutionSearchItem from './SolutionSearchItem';
 
 export default class SolutionSearchSource implements SearchSource {
   protected results = new Map<string, Discussion[]>();
+  queryString: string | null = null;
 
   async search(query: string): Promise<void> {
     query = query.toLowerCase();
 
     this.results.set(query, []);
 
-    const queryString = query + ' ' + this.queryMutators().join(' ');
+    this.setQueryString(query);
 
     const params = {
-      filter: { q: queryString },
+      filter: { q: this.queryString || query },
       page: { limit: this.limit() },
       include: this.includes().join(','),
     };
@@ -47,7 +48,7 @@ export default class SolutionSearchSource implements SearchSource {
         <BestAnswerBadge /> {app.translator.trans('fof-best-answer.forum.search.discussions_solutions_heading')}
       </li>,
       <li>
-        <LinkButton icon="fas fa-search" href={app.route('index', { q: query + ' is:solved' })}>
+        <LinkButton icon="fas fa-search" href={app.route('index', { q: this.queryString })}>
           {app.translator.trans('fof-best-answer.forum.search.all_discussions_solutions_button', { query })}
         </LinkButton>
       </li>,
@@ -65,5 +66,9 @@ export default class SolutionSearchSource implements SearchSource {
 
   queryMutators(): string[] {
     return ['is:solved'];
+  }
+
+  setQueryString(query: string): void {
+    this.queryString = query + ' ' + this.queryMutators().join(' ');
   }
 }
