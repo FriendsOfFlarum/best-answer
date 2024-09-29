@@ -14,17 +14,12 @@ namespace FoF\BestAnswer\Jobs;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
+use Flarum\Queue\AbstractJob;
 use Flarum\User\User;
 use FoF\BestAnswer\Notification;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\SerializesModels;
 
-class SendNotificationWhenBestAnswerSetInDiscussion implements ShouldQueue
+class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
 {
-    use Queueable;
-    use SerializesModels;
-
     /**
      * @var Discussion
      */
