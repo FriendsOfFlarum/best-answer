@@ -20,10 +20,10 @@ export default class SelectBestAnswerItem extends Component {
   }
 
   getSetTime(discussion) {
-    if (discussion.bestAnswerSetAt() === null) {
+    if (discussion.bestAnswerSetAt?.() === null|undefined) {
       return;
     }
-    return humanTime(discussion.bestAnswerSetAt());
+    return humanTime(discussion.bestAnswerSetAt?.());
   }
 
   items() {
@@ -50,7 +50,7 @@ export default class SelectBestAnswerItem extends Component {
         {app.translator.trans('fof-best-answer.forum.best_answer_label', {
           user: this.discussion.bestAnswerUser?.(),
           time_set: this.getSetTime(this.discussion),
-          a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser()))} />,
+          a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser?.()))} />,
         })}
       </span>
     );
