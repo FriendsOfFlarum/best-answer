@@ -20,7 +20,7 @@ export default class SelectBestAnswerItem extends Component {
   }
 
   getSetTime(discussion) {
-    if (discussion.bestAnswerSetAt?.() === null|undefined) {
+    if ((discussion.bestAnswerSetAt?.() === null) | undefined) {
       return;
     }
     return humanTime(discussion.bestAnswerSetAt?.());
