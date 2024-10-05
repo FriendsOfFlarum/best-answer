@@ -48,7 +48,7 @@ export default class SelectBestAnswerItem extends Component {
       'user',
       <span className="BestAnswer--User">
         {app.translator.trans('fof-best-answer.forum.best_answer_label', {
-          user: this.discussion.bestAnswerUser(),
+          user: this.discussion.bestAnswerUser?.(),
           time_set: this.getSetTime(this.discussion),
           a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser()))} />,
         })}
