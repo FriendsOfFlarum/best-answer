@@ -97,8 +97,8 @@ return [
         ->attributes(ForumAttributes::class),
 
     (new Extend\ApiController(ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerUser'])
-        ->load(['bestAnswerPost.user']),
+        ->addInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.user'])
+        ->load(['bestAnswerPost', 'bestAnswerPost.user']),
 
     (new Extend\ApiController(ListDiscussionsController::class))
         ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.discussion']),
