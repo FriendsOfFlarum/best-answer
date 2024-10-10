@@ -13,14 +13,7 @@ export default () => {
     const discussion = post.discussion();
 
     if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
-      items.add(
-        'isBestAnswer',
-        SelectBestAnswerItem.component({
-          post,
-          discussion: post.discussion(),
-        }),
-        -100
-      );
+      items.add('isBestAnswer', <SelectBestAnswerItem post={post} discussion={discussion} />, -100);
     }
   });
 
@@ -32,7 +25,7 @@ export default () => {
     if (post && !post.isHidden() && thisPost.number() === 1 && !thisPost.isHidden()) {
       const user = post.user();
 
-      items.add('bestAnswerPost', <BestAnswerFooterPreview post={post} user={user} />, -10);
+      items.add('bestAnswerPost', <BestAnswerFooterPreview post={post} user={user} discussion={discussion} />, -10);
     }
   });
 

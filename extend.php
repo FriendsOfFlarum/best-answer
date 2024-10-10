@@ -15,6 +15,7 @@ use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
+use Flarum\Api\Controller\ShowPostController;
 use Flarum\Api\Controller\UpdateDiscussionController;
 use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
@@ -31,14 +32,14 @@ use FoF\BestAnswer\Events\BestAnswerSet;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__.'/resources/locale'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
@@ -49,7 +50,7 @@ return [
         ->cast('best_answer_notified', 'boolean'),
 
     (new Extend\View())
-        ->namespace('fof-best-answer', __DIR__.'/resources/views'),
+        ->namespace('fof-best-answer', __DIR__ . '/resources/views'),
 
     (new Extend\Model(Tag::class))
         ->cast('is_qna', 'boolean')
@@ -107,7 +108,12 @@ return [
         ->addOptionalInclude('tags'),
 
     (new Extend\ApiController(ListPostsController::class))
-        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
+        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
+        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
+
+    (new Extend\ApiController(ShowPostController::class))
+        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
+        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Search\BestAnswerFilterGambit::class),

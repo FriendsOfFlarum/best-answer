@@ -1,33 +1,42 @@
 import app from 'flarum/forum/app';
-import Component from 'flarum/common/Component';
+import Component, { ComponentAttrs } from 'flarum/common/Component';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/helpers/humanTime';
 import Link from 'flarum/common/components/Link';
 import ItemList from 'flarum/common/utils/ItemList';
+import Discussion from 'flarum/common/models/Discussion';
+import Mithril from 'mithril';
+import Post from 'flarum/common/models/Post';
 
-export default class SelectBestAnswerItem extends Component {
-  oninit(vnode) {
+export interface ISelectBestAnswerItemAttrs extends ComponentAttrs {
+  post: Post;
+  discussion: Discussion;
+}
+
+export default class SelectBestAnswerItem extends Component<ISelectBestAnswerItemAttrs> {
+  post!: Post;
+  discussion!: Discussion;
+
+  oninit(vnode: Mithril.Vnode<ISelectBestAnswerItemAttrs, this>) {
     super.oninit(vnode);
 
-    const { post, discussion } = this.attrs;
-
-    this.post = post;
-    this.discussion = discussion;
+    this.post = this.attrs.post;
+    this.discussion = this.attrs.discussion;
   }
 
   view() {
     return <li className="Post--BestAnswer">{this.items().toArray()}</li>;
   }
 
-  getSetTime(discussion) {
-    if ((discussion.bestAnswerSetAt?.() === null) | undefined) {
+  getSetTime(discussion: Discussion) {
+    if (!discussion.bestAnswerSetAt?.()) {
       return;
     }
     return humanTime(discussion.bestAnswerSetAt?.());
   }
 
-  items() {
-    const items = new ItemList();
+  items(): ItemList<Mithril.Children> {
+    const items = new ItemList<Mithril.Children>();
 
     items.add(
       'post',
@@ -51,6 +60,7 @@ export default class SelectBestAnswerItem extends Component {
           user: this.discussion.bestAnswerUser?.(),
           time_set: this.getSetTime(this.discussion),
           a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser?.()))} />,
+          //a: <Link href={app.route.user(this.discussion.bestAnswerUser?.())} />,
         })}
       </span>
     );

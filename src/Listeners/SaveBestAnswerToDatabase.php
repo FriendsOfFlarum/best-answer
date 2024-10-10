@@ -108,6 +108,7 @@ class SaveBestAnswerToDatabase
         $discussion->best_answer_user_id = null;
         $discussion->best_answer_set_at = null;
         $discussion->unsetRelation('bestAnswerPost');
+        $discussion->unsetRelation('bestAnswerUser');
 
         $this->changeTags($discussion, 'detach');
 
