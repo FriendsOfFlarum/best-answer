@@ -15,6 +15,7 @@ use Flarum\Api\Controller\ListDiscussionsController;
 use Flarum\Api\Controller\ListPostsController;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowDiscussionController;
+use Flarum\Api\Controller\ShowPostController;
 use Flarum\Api\Controller\UpdateDiscussionController;
 use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
@@ -107,7 +108,12 @@ return [
         ->addOptionalInclude('tags'),
 
     (new Extend\ApiController(ListPostsController::class))
-        ->addInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']),
+        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
+        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
+
+    (new Extend\ApiController(ShowPostController::class))
+        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
+        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
     (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
         ->addGambit(Search\BestAnswerFilterGambit::class),

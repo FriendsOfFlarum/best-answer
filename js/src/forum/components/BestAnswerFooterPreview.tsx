@@ -3,28 +3,32 @@ import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Mithril from 'mithril';
 import username from 'flarum/common/helpers/username';
 import userOnline from 'flarum/common/helpers/userOnline';
-import PostMeta from 'flarum/forum/components/PostMeta';
 import Link from 'flarum/common/components/Link';
 import classList from 'flarum/common/utils/classList';
 import SelectBestAnswerItem from './SelectBestAnswerItem';
 import Post from 'flarum/common/models/Post';
 import User from 'flarum/common/models/User';
 import ItemList from 'flarum/common/utils/ItemList';
+import Discussion from 'flarum/common/models/Discussion';
+import humanTime from 'flarum/common/helpers/humanTime';
 
 export interface BestAnswerFooterPreviewAttrs extends ComponentAttrs {
   post: Post;
   user: User;
+  discussion: Discussion;
 }
 
 export default class BestAnswerFooterPreview extends Component<BestAnswerFooterPreviewAttrs> {
   user!: User;
   post!: Post;
+  discussion!: Discussion;
 
   oninit(vnode: Mithril.Vnode<BestAnswerFooterPreviewAttrs, this>) {
     super.oninit(vnode);
 
     this.user = this.attrs.user;
     this.post = this.attrs.post;
+    this.discussion = this.attrs.discussion;
   }
 
   view() {
@@ -56,8 +60,8 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
     const items = new ItemList<Mithril.Children>();
 
     items.add('user', this.userItem()), 100;
-    this.post.discussion() && items.add('meta', this.metaItem()), 90;
-    items.add('bestAnswer', <SelectBestAnswerItem post={this.post} discussion={this.post.discussion()} />, -100);
+    items.add('meta', this.metaItem()), 90;
+    items.add('bestAnswer', <SelectBestAnswerItem post={this.post} discussion={this.discussion} />, -100);
 
     return items;
   }
@@ -74,9 +78,10 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
   }
 
   metaItem(): Mithril.Children {
+    const post = this.post;
     return (
       <li className="item-meta">
-        <PostMeta post={this.post} />
+        <span className="PostMeta-time">{humanTime(post.createdAt())}</span>
       </li>
     );
   }
