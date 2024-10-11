@@ -6,7 +6,6 @@ import Button from 'flarum/common/components/Button';
 
 export default function extendIndexPage() {
   extend(IndexPage.prototype, 'sidebarItems', function (items) {
-    /** @ts-ignore */
     const tag = this.currentTag();
 
     if (!tag?.isQnA?.()) return;
@@ -27,7 +26,6 @@ export default function extendIndexPage() {
       return;
     }
 
-    /** @ts-ignore */
     const tag = this.currentTag();
 
     if (!tag?.isQnA?.()) {

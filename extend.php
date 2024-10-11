@@ -90,6 +90,7 @@ return [
         ->default('fof-best-answer.store_log_output', false)
         ->default('fof-best-answer.enabled-tags', '[]')
         ->default('fof-best-answer.search.solution_search', true)
+        ->default('fof-best-answer.search.remove_solutions_from_main_search', false)
         ->default('fof-best-answer.search.display_tags', true)
         ->default('fof-best-answer.discussion_sidebar_jump_button', false)
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),

@@ -37,6 +37,8 @@ fof-best-answer:
         When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
       solution_search: Solution search
       solution_search_help: Enable the ability to search for discussions with Best Answers
+      remove_solutions_from_main_search: Remove solutions from main search
+      remove_solutions_from_main_search_help: Remove discussions with Best Answers from the main 'all discussions' search results
       display_tags: Display tags in search results
       display_tags_help: Display the tag(s) in search results for discussions with Best Answers
       discussion_sidebar_jump_button: Display jump to Best Answer button in discussion sidebar

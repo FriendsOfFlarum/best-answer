@@ -10,3 +10,9 @@ declare module 'flarum/common/models/Discussion' {
     bestAnswerSetAt(): Date;
   }
 }
+
+declare module 'flarum/tags/models/Tag' {
+  export default interface Tag {
+    isQnA(): boolean;
+  }
+}
