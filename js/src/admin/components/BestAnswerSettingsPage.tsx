@@ -86,6 +86,12 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
               })}
               {this.buildSettingComponent({
                 type: 'boolean',
+                setting: 'fof-best-answer.search.remove_solutions_from_main_search',
+                label: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search'),
+                help: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search_help'),
+              })}
+              {this.buildSettingComponent({
+                type: 'boolean',
                 setting: 'fof-best-answer.search.display_tags',
                 label: app.translator.trans('fof-best-answer.admin.settings.display_tags'),
                 help: app.translator.trans('fof-best-answer.admin.settings.display_tags_help'),

@@ -30,6 +30,7 @@ class ForumAttributes
     {
         if ($value = $this->getBooleanSetting('fof-best-answer.search.solution_search')) {
             $attributes['showTagsInSearchResults'] = $this->getBooleanSetting('fof-best-answer.search.display_tags');
+            $attributes['removeSolutionResultsFromMainSearch'] = $this->getBooleanSetting('fof-best-answer.search.remove_solutions_from_main_search');
         }
 
         $attributes['solutionSearchEnabled'] = $value;

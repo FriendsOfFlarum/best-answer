@@ -60,7 +60,6 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
           user: this.discussion.bestAnswerUser?.(),
           time_set: this.getSetTime(this.discussion),
           a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser?.()))} />,
-          //a: <Link href={app.route.user(this.discussion.bestAnswerUser?.())} />,
         })}
       </span>
     );
