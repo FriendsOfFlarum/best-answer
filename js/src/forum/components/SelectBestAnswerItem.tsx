@@ -46,7 +46,7 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
           {app.translator.trans('fof-best-answer.forum.best_answer_button')}
         </span>
       ) : (
-        <Link href={app.route.post(this.post)} data-number={this.post.number()}>
+        <Link href={app.route.post(this.post as Post)} data-number={(this.post as Post).number()}>
           {icon('fas fa-check')}
           {app.translator.trans('fof-best-answer.forum.best_answer_button')}
         </Link>

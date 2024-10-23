@@ -8,7 +8,11 @@ export default function extendDiscussionListState() {
       const negate = app.discussions.bestAnswer === '2';
       const prepend = negate ? '-' : '';
 
-      params.filter[`${prepend}solved-discussions`] = true;
+      if (!params.filter) {
+        params.filter = {};
+      }
+
+      (params.filter as Record<string, string>)[`${prepend}solved-discussions`] = 'true';
 
       if (params.filter.q) {
         params.filter.q += ` ${prepend}is:solved`;

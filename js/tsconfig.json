@@ -12,7 +12,7 @@
     "paths": {
       "flarum/*": ["../vendor/flarum/core/js/dist-typings/*"],
       "@flarum/*": ["../vendor/flarum/core/js/dist-typings/*"],
-      "flarum/tags": ["../vendor/flarum/tags/js/dist-typings/*"]
+      "flarum/tags/*": ["../vendor/flarum/tags/js/dist-typings/*"]
     }
   }
 }

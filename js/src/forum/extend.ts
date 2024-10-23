@@ -4,7 +4,7 @@ import Extend from 'flarum/common/extenders';
 import Post from 'flarum/common/models/Post';
 import User from 'flarum/common/models/User';
 import Model from 'flarum/common/Model';
-import Tag from 'flarum/tags/models/Tag';
+import Tag from 'flarum/tags/common/models/Tag';
 
 export default [
   ...commonExtend,
