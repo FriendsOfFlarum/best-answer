@@ -8,6 +8,7 @@ import type Mithril from 'mithril';
 
 export default function addBestAnswerCountToUsers() {
   extend(UserCard.prototype, 'infoItems', function (items: ItemList<Mithril.Children>) {
+    // @ts-expect-error
     const user = this.attrs.user;
 
     items.add(

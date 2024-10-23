@@ -4,30 +4,32 @@ import Button from 'flarum/common/components/Button';
 import PostControls from 'flarum/forum/utils/PostControls';
 import DiscussionPage from 'flarum/forum/components/DiscussionPage';
 import CommentPost from 'flarum/forum/components/CommentPost';
+import Discussion from 'flarum/common/models/Discussion';
+import Post from 'flarum/common/models/Post';
 
-export default () => {
-  const ineligible = (discussion, post) => {
+export default function addBestAnswerAction() {
+  const ineligible = (discussion: Discussion, post: Post) => {
     return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user;
   };
 
-  const blockSelectOwnPost = (post) => {
-    return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user().id() === app.session.user.id();
+  const blockSelectOwnPost = (post: Post) => {
+    return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user?.()?.id() === app.session.user?.id();
   };
 
-  const isThisBestAnswer = (discussion, post) => {
+  const isThisBestAnswer = (discussion: Discussion, post: Post) => {
     return discussion.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
   };
 
-  const actionLabel = (isBestAnswer) => {
+  const actionLabel = (isBestAnswer: boolean) => {
     return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
   };
 
-  const saveDiscussion = (discussion, isBestAnswer, post) =>
+  const saveDiscussion = (discussion: Discussion, isBestAnswer: boolean, post: Post) =>
     discussion
       .save(
         {
           bestAnswerPostId: isBestAnswer ? post.id() : 0,
-          bestAnswerUserId: app.session.user.id(),
+          bestAnswerUserId: app.session.user?.id(),
           relationships: isBestAnswer ? { bestAnswerPost: post, bestAnswerUser: app.session.user } : { bestAnswerPost: null },
         },
         {
@@ -114,4 +116,4 @@ export default () => {
       )
     );
   });
-};
+}

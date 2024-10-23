@@ -39,7 +39,7 @@ export default function extendIndexPage() {
 
     const options = ['all', 'solved', 'unsolved'];
 
-    const selected = app.discussions.bestAnswer;
+    const selected = app.discussions.bestAnswer as unknown as number;
 
     items.add(
       'solved-filter',
