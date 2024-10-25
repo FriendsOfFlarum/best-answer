@@ -12,12 +12,13 @@
 namespace FoF\BestAnswer\Notification;
 
 use Flarum\Discussion\Discussion;
+use Flarum\Notification\AlertableInterface;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
 use Flarum\User\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterface
+class AwardedBestAnswerBlueprint implements BlueprintInterface, AlertableInterface, MailableInterface
 {
     /**
      * @var Discussion
