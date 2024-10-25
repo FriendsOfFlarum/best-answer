@@ -69,7 +69,7 @@ return [
         ->fields(DiscussionAttributes::class)
         ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
             return $endpoint
-                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerUser']) // @todo: move to adding the includes in the frontend request instead (performance)
+                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerUser'])
                 ->eagerLoad(['bestAnswerPost.user']);
         }),
 
