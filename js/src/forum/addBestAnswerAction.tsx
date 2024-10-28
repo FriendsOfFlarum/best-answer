@@ -6,22 +6,23 @@ import DiscussionPage from 'flarum/forum/components/DiscussionPage';
 import CommentPost from 'flarum/forum/components/CommentPost';
 import Discussion from 'flarum/common/models/Discussion';
 import Post from 'flarum/common/models/Post';
+import extractText from 'flarum/common/utils/extractText';
 
 export default function addBestAnswerAction() {
   const ineligible = (discussion: Discussion, post: Post) => {
     return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user;
   };
 
-  const blockSelectOwnPost = (post: Post) => {
-    return !app.forum.attribute('canSelectBestAnswerOwnPost') && post.user() && post.user?.()?.id() === app.session.user?.id();
+  const blockSelectOwnPost = (post: Post): boolean => {
+    return !app.forum.attribute<boolean>('canSelectBestAnswerOwnPost') && post.user() && post.user?.()?.id() === app.session.user?.id();
   };
 
-  const isThisBestAnswer = (discussion: Discussion, post: Post) => {
+  const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
     return discussion.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
   };
 
-  const actionLabel = (isBestAnswer: boolean) => {
-    return app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer');
+  const actionLabel = (isBestAnswer: boolean): string => {
+    return extractText(app.translator.trans(isBestAnswer ? 'fof-best-answer.forum.remove_best_answer' : 'fof-best-answer.forum.this_best_answer'));
   };
 
   const saveDiscussion = (discussion: Discussion, isBestAnswer: boolean, post: Post) =>
@@ -69,19 +70,18 @@ export default function addBestAnswerAction() {
 
     items.add(
       'bestAnswer',
-      Button.component(
-        {
-          icon: `fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`,
-          onclick: () => {
-            isBestAnswer = !isBestAnswer;
+      <Button
+        icon={`fa${isBestAnswer ? 's' : 'r'} fa-comment-dots`}
+        onclick={() => {
+          isBestAnswer = !isBestAnswer;
 
-            saveDiscussion(discussion, isBestAnswer, post).finally(() => {
-              isBestAnswer = isThisBestAnswer(discussion, post);
-            });
-          },
-        },
-        actionLabel(isBestAnswer)
-      )
+          saveDiscussion(discussion, isBestAnswer, post).finally(() => {
+            isBestAnswer = isThisBestAnswer(discussion, post);
+          });
+        }}
+      >
+        {actionLabel(isBestAnswer)}
+      </Button>
     );
   });
 
@@ -99,21 +99,20 @@ export default function addBestAnswerAction() {
 
     items.add(
       'bestAnswer',
-      Button.component(
-        {
-          className: `Button Button--${!hasBestAnswer || isBestAnswer ? 'primary' : 'link'}`,
-          onclick: function onclick() {
-            hasBestAnswer = !hasBestAnswer;
-            isBestAnswer = !isBestAnswer;
+      <Button
+        className={`Button Button--${!hasBestAnswer || isBestAnswer ? 'primary' : 'link'}`}
+        onclick={() => {
+          hasBestAnswer = !hasBestAnswer;
+          isBestAnswer = !isBestAnswer;
 
-            saveDiscussion(discussion, isBestAnswer, post).finally(() => {
-              hasBestAnswer = discussion.hasBestAnswer() && discussion.bestAnswerPost() !== false;
-              isBestAnswer = isThisBestAnswer(discussion, post);
-            });
-          },
-        },
-        actionLabel(isBestAnswer)
-      )
+          saveDiscussion(discussion, isBestAnswer, post).finally(() => {
+            hasBestAnswer = discussion.hasBestAnswer() && discussion.bestAnswerPost() !== false;
+            isBestAnswer = isThisBestAnswer(discussion, post);
+          });
+        }}
+      >
+        {actionLabel(isBestAnswer)}
+      </Button>
     );
   });
 }

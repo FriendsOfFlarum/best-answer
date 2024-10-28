@@ -12,7 +12,7 @@ export default () => {
     const post = this.attrs.post;
     const discussion = post.discussion();
 
-    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
+    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost()?.id() === post.id() && !post.isHidden()) {
       items.add('isBestAnswer', <SelectBestAnswerItem post={post} discussion={discussion} />, -100);
     }
   });
@@ -41,14 +41,13 @@ export default () => {
   extend(DiscussionPage.prototype, 'sidebarItems', function (items) {
     if (!app.forum.attribute<boolean>('bestAnswerDiscussionSidebarJumpButton')) return;
 
-    /** @ts-ignore */
     const discussion = this.discussion;
 
     if (!discussion) return;
 
     const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
 
-    if (post && !post.isHidden() && post.number() !== 1 && !discussion.bestAnswerPost().isHidden()) {
+    if (post && !post.isHidden() && post.number() !== 1 && !discussion.bestAnswerPost()?.isHidden()) {
       items.add(
         'jumpToBestAnswer',
         <Button className="Button Button-jumpBestAnswer" icon="fas fa-check" onclick={() => app.current.get('stream').goToNumber(post.number())}>
