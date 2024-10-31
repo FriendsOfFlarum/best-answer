@@ -30,6 +30,7 @@ export default function extendIndexPage() {
 
     if (!tag?.isQnA?.()) {
       if (app.discussions.bestAnswer) {
+        // @ts-expect-error
         delete app.discussions.bestAnswer;
         app.discussions.refresh();
       }
@@ -47,12 +48,12 @@ export default function extendIndexPage() {
         {
           buttonClassName: 'Button',
           label: app.translator.trans(
-            `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[key])[0]}_label`
+            `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[Number(key)])[0]}_label`
           ),
           accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
         },
         Object.keys(options).map((value) => {
-          const label = options[value];
+          const label = options[Number(value)];
           const active = (selected || Object.keys(options)[0]) === value;
 
           return Button.component(
@@ -62,6 +63,7 @@ export default function extendIndexPage() {
               onclick: () => {
                 app.discussions.bestAnswer = value;
                 if (value === '0') {
+                  // @ts-expect-error
                   delete app.discussions.bestAnswer;
                 }
                 app.discussions.refresh();

@@ -26,3 +26,9 @@ declare module 'flarum/forum/states/DiscussionListState' {
     bestAnswer: string;
   }
 }
+
+declare module 'flarum/common/models/User' {
+  export default interface User {
+    bestAnswerCount(): number;
+  }
+}
