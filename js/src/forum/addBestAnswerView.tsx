@@ -41,6 +41,7 @@ export default () => {
   extend(DiscussionPage.prototype, 'sidebarItems', function (items) {
     if (!app.forum.attribute<boolean>('bestAnswerDiscussionSidebarJumpButton')) return;
 
+    // @ts-ignore
     const discussion = this.discussion;
 
     if (discussion === null) return;
