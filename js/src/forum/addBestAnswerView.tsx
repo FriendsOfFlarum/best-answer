@@ -43,7 +43,7 @@ export default () => {
 
     const discussion = this.discussion;
 
-    if (!discussion) return;
+    if (discussion === null) return;
 
     const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
 

@@ -14,11 +14,14 @@ export default function addBestAnswerAction() {
   };
 
   const blockSelectOwnPost = (post: Post): boolean => {
-    return !app.forum.attribute<boolean>('canSelectBestAnswerOwnPost') && post.user() && post.user?.()?.id() === app.session.user?.id();
+    const user = post.user();
+    return !app.forum.attribute<boolean>('canSelectBestAnswerOwnPost') && user !== false && user.id() === app.session.user?.id();
   };
 
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
-    return discussion.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id();
+    const bestAnswerPost = discussion.bestAnswerPost();
+    const hasBestAnswer = discussion.hasBestAnswer();
+    return hasBestAnswer !== undefined && hasBestAnswer && bestAnswerPost !== null && bestAnswerPost.id() === post.id();
   };
 
   const actionLabel = (isBestAnswer: boolean): string => {
@@ -41,8 +44,10 @@ export default function addBestAnswerAction() {
       )
       .then(() => {
         if (!isBestAnswer) {
-          delete discussion.data.relationships.bestAnswerPost;
-          delete discussion.data.relationships.bestAnswerUser;
+          if (discussion.data.relationships) {
+            delete discussion.data.relationships.bestAnswerPost;
+            delete discussion.data.relationships.bestAnswerUser;
+          }
         }
 
         if (app.current.matches(DiscussionPage)) {
@@ -91,7 +96,7 @@ export default function addBestAnswerAction() {
     const post = this.attrs.post;
     const discussion = this.attrs.post.discussion();
     let isBestAnswer = isThisBestAnswer(discussion, post);
-    let hasBestAnswer = discussion.bestAnswerPost() !== false;
+    let hasBestAnswer = discussion.bestAnswerPost() !== null;
 
     post.pushAttributes({ isBestAnswer });
 
@@ -106,7 +111,7 @@ export default function addBestAnswerAction() {
           isBestAnswer = !isBestAnswer;
 
           saveDiscussion(discussion, isBestAnswer, post).finally(() => {
-            hasBestAnswer = discussion.hasBestAnswer() && discussion.bestAnswerPost() !== false;
+            hasBestAnswer = !!discussion.hasBestAnswer() && discussion.bestAnswerPost() !== null;
             isBestAnswer = isThisBestAnswer(discussion, post);
           });
         }}
