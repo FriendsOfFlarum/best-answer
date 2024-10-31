@@ -32,7 +32,11 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
     if (!discussion.bestAnswerSetAt?.()) {
       return;
     }
-    return humanTime(discussion.bestAnswerSetAt?.());
+    const bestAnswerSetAt = discussion.bestAnswerSetAt?.();
+    if (!bestAnswerSetAt) {
+      return;
+    }
+    return humanTime(bestAnswerSetAt);
   }
 
   items(): ItemList<Mithril.Children> {
@@ -53,16 +57,19 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
       )
     );
 
-    items.add(
-      'user',
-      <span className="BestAnswer--User">
-        {app.translator.trans('fof-best-answer.forum.best_answer_label', {
-          user: this.discussion.bestAnswerUser?.(),
-          time_set: this.getSetTime(this.discussion),
-          a: <a onclick={() => m.route.set(app.route.user(this.discussion.bestAnswerUser?.()))} />,
-        })}
-      </span>
-    );
+    const bestAnswerUser = this.discussion.bestAnswerUser?.();
+
+    bestAnswerUser &&
+      items.add(
+        'user',
+        <span className="BestAnswer--User">
+          {app.translator.trans('fof-best-answer.forum.best_answer_label', {
+            user: this.discussion.bestAnswerUser?.(),
+            time_set: this.getSetTime(this.discussion),
+            a: <a onclick={() => m.route.set(app.route.user(bestAnswerUser))} />,
+          })}
+        </span>
+      );
 
     return items;
   }
