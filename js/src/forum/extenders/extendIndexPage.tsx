@@ -63,7 +63,6 @@ export default function extendIndexPage() {
               onclick: () => {
                 app.discussions.bestAnswer = value;
                 if (value === '0') {
-                  // @ts-expect-error
                   delete app.discussions.bestAnswer;
                 }
                 app.discussions.refresh();
