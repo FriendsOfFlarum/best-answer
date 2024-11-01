@@ -1,8 +1,8 @@
-import Post from 'flarum/common/models/Post';
-import Discussion from 'flarum/common/models/Discussion';
-import User from 'flarum/common/models/User';
-import Tag from 'flarum/tags/common/models/Tag';
-import DiscussionListState from 'flarum/forum/states/DiscussionListState';
+import type Post from 'flarum/common/models/Post';
+import type Discussion from 'flarum/common/models/Discussion';
+import type User from 'flarum/common/models/User';
+import type Tag from 'flarum/tags/common/models/Tag';
+import type DiscussionListState from 'flarum/forum/states/DiscussionListState';
 
 declare module 'flarum/common/models/Discussion' {
   export default interface Discussion {
