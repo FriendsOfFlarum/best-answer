@@ -51,7 +51,12 @@ export default () => {
     if (post && !post.isHidden() && post.number() !== 1 && !discussion.bestAnswerPost()?.isHidden()) {
       items.add(
         'jumpToBestAnswer',
-        <Button className="Button Button-jumpBestAnswer" icon="fas fa-check" onclick={() => app.current.get('stream').goToNumber(post.number())}>
+        <Button
+          className="Button Button-jumpBestAnswer"
+          icon="fas fa-check"
+          onclick={() => app.current.get('stream').goToNumber(post.number())}
+          aria-label={app.translator.trans('fof-best-answer.forum.discussion.jump_to_best_answer_button')}
+        >
           {app.translator.trans('fof-best-answer.forum.discussion.jump_to_best_answer_button')}
         </Button>,
         90
