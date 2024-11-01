@@ -1,4 +1,4 @@
-import Discussion from 'flarum/common/models/Discussion';
+import type Discussion from 'flarum/common/models/Discussion';
 import app from 'flarum/forum/app';
 import Notification from 'flarum/forum/components/Notification';
 
