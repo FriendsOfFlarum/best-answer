@@ -30,7 +30,6 @@ export default function extendIndexPage() {
 
     if (!tag?.isQnA?.()) {
       if (app.discussions.bestAnswer) {
-        // @ts-expect-error
         delete app.discussions.bestAnswer;
         app.discussions.refresh();
       }
