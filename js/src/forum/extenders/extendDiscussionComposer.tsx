@@ -1,7 +1,7 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
-import Tag from 'flarum/tags/common/models/Tag';
+import type Tag from 'flarum/tags/common/models/Tag';
 
 export default function extendDiscussionComposer() {
   extend(DiscussionComposer.prototype, 'headerItems', function (items) {
