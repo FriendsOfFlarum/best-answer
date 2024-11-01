@@ -7,7 +7,7 @@ import Post from 'flarum/common/models/Post';
 import type Mithril from 'mithril';
 import tagsLabel from 'flarum/tags/common/helpers/tagsLabel';
 import ItemList from 'flarum/common/utils/ItemList';
-import Tag from 'flarum/tags/common/models/Tag';
+import type Tag from 'flarum/tags/common/models/Tag';
 
 export interface SolutionSearchItemAttrs extends ComponentAttrs {
   query: string;
