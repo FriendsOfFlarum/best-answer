@@ -3,7 +3,7 @@ import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Link from 'flarum/common/components/Link';
 import highlight from 'flarum/common/helpers/highlight';
 import Discussion from 'flarum/common/models/Discussion';
-import Post from 'flarum/common/models/Post';
+import type Post from 'flarum/common/models/Post';
 import type Mithril from 'mithril';
 import tagsLabel from 'flarum/tags/common/helpers/tagsLabel';
 import ItemList from 'flarum/common/utils/ItemList';
