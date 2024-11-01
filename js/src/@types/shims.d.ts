@@ -23,7 +23,7 @@ declare module 'flarum/tags/common/models/Tag' {
 
 declare module 'flarum/forum/states/DiscussionListState' {
   export default interface DiscussionListState {
-    bestAnswer: string;
+    bestAnswer: string | undefined;
   }
 }
 
