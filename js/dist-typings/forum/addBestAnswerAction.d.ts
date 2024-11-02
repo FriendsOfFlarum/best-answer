@@ -1,2 +1,1 @@
-declare function _default(): void;
-export default _default;
+export default function addBestAnswerAction(): void;
