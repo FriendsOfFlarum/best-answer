@@ -1,7 +1,7 @@
-import 'flarum/common/models/Discussion'
-import 'flarum/tags/common/models/Tag'
-import 'flarum/forum/states/DiscussionListState'
-import 'flarum/common/models/User'
+import 'flarum/common/models/Discussion';
+import 'flarum/tags/common/models/Tag';
+import 'flarum/forum/states/DiscussionListState';
+import 'flarum/common/models/User';
 
 import type Post from 'flarum/common/models/Post';
 import type Discussion from 'flarum/common/models/Discussion';
