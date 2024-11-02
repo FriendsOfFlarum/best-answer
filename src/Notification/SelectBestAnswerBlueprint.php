@@ -77,7 +77,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, AlertableInterfac
      */
     public function getEmailViews(): array
     {
-        return ['text' => 'fof-best-answer::emails.selectBestAnswer'];
+        return ['text' => 'fof-best-answer::email.plain.selectBestAnswer', 'html' => 'fof-best-answer::email.html.selectBestAnswer'];
     }
 
     /**
