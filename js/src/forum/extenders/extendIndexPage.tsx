@@ -39,7 +39,7 @@ export default function extendIndexPage() {
 
     const options = ['all', 'solved', 'unsolved'];
 
-    const selected = app.discussions.bestAnswer;
+    const selected = app.discussions.bestAnswer as unknown as number;
 
     items.add(
       'solved-filter',
@@ -47,12 +47,12 @@ export default function extendIndexPage() {
         {
           buttonClassName: 'Button',
           label: app.translator.trans(
-            `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[key])[0]}_label`
+            `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[Number(key)])[0]}_label`
           ),
           accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
         },
         Object.keys(options).map((value) => {
-          const label = options[value];
+          const label = options[Number(value)];
           const active = (selected || Object.keys(options)[0]) === value;
 
           return Button.component(

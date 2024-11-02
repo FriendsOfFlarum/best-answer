@@ -1,3 +1,4 @@
+import type Discussion from 'flarum/common/models/Discussion';
 import app from 'flarum/forum/app';
 import Notification from 'flarum/forum/components/Notification';
 
@@ -8,7 +9,7 @@ export default class BestAnswerInDiscussionNotification extends Notification {
 
   href() {
     const notification = this.attrs.notification;
-    const discussion = notification.subject();
+    const discussion = notification.subject() as Discussion;
 
     return app.route.discussion(discussion);
   }

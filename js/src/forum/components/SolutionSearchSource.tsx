@@ -37,7 +37,6 @@ export default class SolutionSearchSource implements SearchSource {
     const results = (this.results.get(query) || []).map((discussion) => {
       const bestAnswerPost = discussion.bestAnswerPost();
       const mostRelevantPost = discussion.mostRelevantPost();
-      /** @ts-ignore */
       const tags = discussion.tags();
 
       return (
