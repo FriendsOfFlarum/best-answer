@@ -23,6 +23,7 @@ use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
+use Flarum\Post\Filter\PostFilterer;
 use Flarum\Post\Post;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
@@ -126,6 +127,9 @@ return [
 
     (new Extend\Filter(DiscussionFilterer::class))
         ->addFilter(Search\BestAnswerFilterGambit::class),
+
+    (new Extend\Filter(PostFilterer::class))
+        ->addFilter(Search\BestAnswerPostFilter::class),
 
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
