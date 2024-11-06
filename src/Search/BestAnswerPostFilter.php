@@ -13,8 +13,10 @@ namespace FoF\BestAnswer\Search;
 
 use Flarum\Filter\FilterInterface;
 use Flarum\Filter\FilterState;
+use Flarum\Tags\Tag;
 use Flarum\User\User;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 
 class BestAnswerPostFilter implements FilterInterface
 {
@@ -45,5 +47,20 @@ class BestAnswerPostFilter implements FilterInterface
             $query->whereNotNull('discussions.best_answer_post_id')
                 ->whereColumn('posts.id', '=', 'discussions.best_answer_post_id');
         }
+
+        // Constrain to discussions within the allowed Q&A tags
+        $query->whereIn('discussions.id', function ($subQuery) use ($actor) {
+            $subQuery->select('discussion_id')
+                ->from('discussion_tag')
+                ->whereIn('tag_id', $this->allowedQnATags($actor));
+        });
+    }
+
+    protected function allowedQnATags(User $actor): Collection
+    {
+        return Tag::query()
+            ->whereVisibleTo($actor)
+            ->where('is_qna', true)
+            ->pluck('id');
     }
 }
