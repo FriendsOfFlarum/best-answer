@@ -11,12 +11,7 @@
 
 namespace FoF\BestAnswer;
 
-use Flarum\Api\Controller\ListDiscussionsController;
-use Flarum\Api\Controller\ListPostsController;
-use Flarum\Api\Controller\ListUsersController;
-use Flarum\Api\Controller\ShowDiscussionController;
-use Flarum\Api\Controller\ShowPostController;
-use Flarum\Api\Controller\UpdateDiscussionController;
+use Flarum\Api\Controller;
 use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
@@ -29,7 +24,6 @@ use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use FoF\BestAnswer\Events\BestAnswerSet;
 
 return [
     (new Extend\Frontend('forum'))
@@ -41,6 +35,9 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
+
+    (new Extend\ServiceProvider())
+        ->register(Providers\BestAnswerServiceProvider::class),
 
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
@@ -62,7 +59,7 @@ return [
 
     (new Extend\Event())
         ->listen(DiscussionSaving::class, Listeners\SaveBestAnswerToDatabase::class)
-        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
+        ->listen(Events\BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
@@ -72,17 +69,17 @@ return [
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
     (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attributes(DiscussionAttributes::class),
+        ->attributes(Api\DiscussionAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
         ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
-        ->attributes(BasicDiscussionAttributes::class),
+        ->attributes(Api\BasicDiscussionAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\UserSerializer::class))
-        ->attributes(UserBestAnswerCount::class),
+        ->attributes(Api\UserBestAnswerCount::class),
 
-    (new Extend\ApiController(ListUsersController::class))
+    (new Extend\ApiController(Controller\ListUsersController::class))
         ->addSortField('bestAnswerCount'),
 
     (new Extend\Settings())
@@ -97,23 +94,23 @@ return [
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),
 
     (new Extend\ApiSerializer(Serializer\ForumSerializer::class))
-        ->attributes(ForumAttributes::class),
+        ->attributes(Api\ForumAttributes::class),
 
-    (new Extend\ApiController(ShowDiscussionController::class))
+    (new Extend\ApiController(Controller\ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.user'])
         ->load(['bestAnswerPost', 'bestAnswerPost.user']),
 
-    (new Extend\ApiController(ListDiscussionsController::class))
+    (new Extend\ApiController(Controller\ListDiscussionsController::class))
         ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.discussion', 'bestAnswerPost.user']),
 
-    (new Extend\ApiController(UpdateDiscussionController::class))
+    (new Extend\ApiController(Controller\UpdateDiscussionController::class))
         ->addOptionalInclude('tags'),
 
-    (new Extend\ApiController(ListPostsController::class))
+    (new Extend\ApiController(Controller\ListPostsController::class))
         ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
         ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
-    (new Extend\ApiController(ShowPostController::class))
+    (new Extend\ApiController(Controller\ShowPostController::class))
         ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
         ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
@@ -132,10 +129,5 @@ return [
         ->addFilter(Search\BestAnswerPostFilter::class),
 
     (new Extend\ApiSerializer(TagSerializer::class))
-        ->attributes(function (TagSerializer $serializer, Tag $tag, array $attributes) {
-            $attributes['isQnA'] = (bool) $tag->is_qna;
-            $attributes['reminders'] = (bool) $tag->qna_reminders;
-
-            return $attributes;
-        }),
+        ->attributes(Api\AddTagAttributes::class),
 ];
