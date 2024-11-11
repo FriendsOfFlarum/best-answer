@@ -14,7 +14,6 @@ namespace FoF\BestAnswer\tests\unit;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving;
 use Flarum\Notification\NotificationSyncer;
-use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Testing\unit\TestCase;
 use Flarum\User\User;
 use FoF\BestAnswer\Listeners\SaveBestAnswerToDatabase;
@@ -22,7 +21,6 @@ use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
 use Illuminate\Events\Dispatcher;
 use Mockery as m;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SaveBestAnswerToDatabaseTest extends TestCase
 {
