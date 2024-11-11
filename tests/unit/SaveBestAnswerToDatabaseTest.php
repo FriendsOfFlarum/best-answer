@@ -19,7 +19,6 @@ use Flarum\User\User;
 use FoF\BestAnswer\Listeners\SaveBestAnswerToDatabase;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
-use Illuminate\Events\Dispatcher;
 use Mockery as m;
 
 class SaveBestAnswerToDatabaseTest extends TestCase
