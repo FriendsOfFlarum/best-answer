@@ -46,10 +46,7 @@ class SaveBestAnswerToDatabaseTest extends TestCase
 
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
             m::mock(NotificationSyncer::class),
-            m::mock(Dispatcher::class),
-            m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldNotReceive('removeBestAnswer');
@@ -70,10 +67,7 @@ class SaveBestAnswerToDatabaseTest extends TestCase
 
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
             m::mock(NotificationSyncer::class),
-            m::mock(Dispatcher::class),
-            m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldNotReceive('removeBestAnswer');
@@ -98,9 +92,7 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer]', [
             $notifications,
             m::mock(Dispatcher::class),
-            m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldReceive('removeBestAnswer')->once();
@@ -124,9 +116,7 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[setBestAnswer]', [
             $notifications,
             m::mock(Dispatcher::class),
-            m::mock(TranslatorInterface::class),
             m::mock(BestAnswerRepository::class),
-            m::mock(SettingsRepositoryInterface::class),
         ])->shouldAllowMockingProtectedMethods();
 
         $this->sut->shouldReceive('setBestAnswer')->once();
