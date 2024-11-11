@@ -17,7 +17,7 @@ use Flarum\Notification\NotificationSyncer;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Testing\unit\TestCase;
 use Flarum\User\User;
-use FoF\BestAnswer\BestAnswerRepository;
+use FoF\BestAnswer\Repository\BestAnswerRepository;
 use FoF\BestAnswer\Listeners\SaveBestAnswerToDatabase;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use Illuminate\Events\Dispatcher;
