@@ -13,8 +13,8 @@ namespace FoF\BestAnswer\Listeners;
 
 use Flarum\Discussion\Event\Saving;
 use Flarum\Notification\NotificationSyncer;
-use FoF\BestAnswer\Repository\BestAnswerRepository;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
+use FoF\BestAnswer\Repository\BestAnswerRepository;
 use Illuminate\Support\Arr;
 
 class SaveBestAnswerToDatabase
