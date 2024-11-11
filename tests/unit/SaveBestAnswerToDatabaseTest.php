@@ -89,7 +89,6 @@ class SaveBestAnswerToDatabaseTest extends TestCase
 
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer]', [
             $notifications,
-            m::mock(Dispatcher::class),
             m::mock(BestAnswerRepository::class),
         ])->shouldAllowMockingProtectedMethods();
 
@@ -113,7 +112,6 @@ class SaveBestAnswerToDatabaseTest extends TestCase
 
         $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[setBestAnswer]', [
             $notifications,
-            m::mock(Dispatcher::class),
             m::mock(BestAnswerRepository::class),
         ])->shouldAllowMockingProtectedMethods();
 
