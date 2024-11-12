@@ -59,14 +59,14 @@ class BestAnswerRepository
             return false;
         }
 
-        return self::tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
+        return $this->tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
             ? $user->can('selectBestAnswerOwnDiscussion', $discussion)
             : $user->can('selectBestAnswerNotOwnDiscussion', $discussion));
     }
 
     public function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
-        if (!self::canSelectBestAnswer($user, $post->discussion)) {
+        if (!$this->canSelectBestAnswer($user, $post->discussion)) {
             return false;
         }
 
@@ -79,7 +79,7 @@ class BestAnswerRepository
 
     public function canRemoveBestAnswer(User $user, Discussion $discussion): bool
     {
-        return self::canSelectBestAnswer($user, $discussion);
+        return $this->canSelectBestAnswer($user, $discussion);
     }
 
     public function tagEnabledForBestAnswer(Discussion $discussion): bool
@@ -184,7 +184,7 @@ class BestAnswerRepository
         }
     }
 
-    protected function changeTags(Discussion $discussion, string $method)
+    public function changeTags(Discussion $discussion, string $method)
     {
         $tagsToChange = @json_decode($this->settings->get('fof-best-answer.select_best_answer_tags'));
 
