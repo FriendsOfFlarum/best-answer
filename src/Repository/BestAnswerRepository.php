@@ -125,7 +125,7 @@ class BestAnswerRepository
         return $count;
     }
 
-    protected function removeBestAnswer(Discussion $discussion, User $actor): void
+    public function removeBestAnswer(Discussion $discussion, User $actor): void
     {
         if (!$this->canRemoveBestAnswer($actor, $discussion)) {
             throw new PermissionDeniedException();
@@ -151,7 +151,7 @@ class BestAnswerRepository
         });
     }
 
-    protected function setBestAnswer(Discussion $discussion, User $actor, int $id): void
+    public function setBestAnswer(Discussion $discussion, User $actor, int $id): void
     {
         /** @var Post|null $post */
         $post = $discussion->posts()->find($id);

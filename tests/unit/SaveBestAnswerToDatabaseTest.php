@@ -24,7 +24,7 @@ use Mockery as m;
 class SaveBestAnswerToDatabaseTest extends TestCase
 {
     /**
-     * @var m\MockInterface|SaveBestAnswerToDatabase
+     * @var SaveBestAnswerToDatabase
      */
     protected $sut;  // System Under Test
 
@@ -34,22 +34,20 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         parent::tearDown();
     }
 
-    // testing the `handle()` method
-
     public function testHandle_WhenKeyIsMissing_ReturnsWithoutAction()
     {
         $event = m::mock(Saving::class);
         $event->data = [];
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
-            m::mock(NotificationSyncer::class),
-            m::mock(BestAnswerRepository::class),
-        ])->shouldAllowMockingProtectedMethods();
+        $notifications = m::mock(NotificationSyncer::class);
+        $repository = m::mock(BestAnswerRepository::class);
 
-        $this->sut->shouldNotReceive('removeBestAnswer');
-        $this->sut->shouldNotReceive('setBestAnswer');
+        $this->sut = new SaveBestAnswerToDatabase($notifications, $repository);
 
-        $this->sut->handle($event);
+        $result = $this->sut->handle($event);
+
+        // Assert that no actions were taken
+        $this->assertNull($result);
     }
 
     public function testHandle_DiscussionDoesNotExistOrMatches_ReturnsWithoutAction()
@@ -62,18 +60,18 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $event->discussion->exists = false;
         $event->discussion->best_answer_post_id = 1;
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer,setBestAnswer]', [
-            m::mock(NotificationSyncer::class),
-            m::mock(BestAnswerRepository::class),
-        ])->shouldAllowMockingProtectedMethods();
+        $notifications = m::mock(NotificationSyncer::class);
+        $repository = m::mock(BestAnswerRepository::class);
 
-        $this->sut->shouldNotReceive('removeBestAnswer');
-        $this->sut->shouldNotReceive('setBestAnswer');
+        $this->sut = new SaveBestAnswerToDatabase($notifications, $repository);
 
-        $this->sut->handle($event);
+        $result = $this->sut->handle($event);
+
+        // Assert that no actions were taken
+        $this->assertNull($result);
     }
 
-    public function testHandle_IdIsZero_CallsRemoveBestAnswer()
+    public function testHandle_IdIsZero_CallsHandleRemoveBestAnswer()
     {
         $event = m::mock(Saving::class);
         $event->data = ['attributes.bestAnswerPostId' => 0];
@@ -86,17 +84,16 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $notifications = m::mock(NotificationSyncer::class);
         $notifications->shouldReceive('delete')->with(m::type(SelectBestAnswerBlueprint::class))->once();
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[removeBestAnswer]', [
-            $notifications,
-            m::mock(BestAnswerRepository::class),
-        ])->shouldAllowMockingProtectedMethods();
+        $repository = m::mock(BestAnswerRepository::class);
+        $repository->shouldReceive('canRemoveBestAnswer')->with($event->actor, $event->discussion)->andReturn(true);
+        $repository->shouldReceive('removeBestAnswer')->with($event->discussion, $event->actor, 0)->once();
 
-        $this->sut->shouldReceive('removeBestAnswer')->once();
+        $this->sut = new SaveBestAnswerToDatabase($notifications, $repository);
 
         $this->sut->handle($event);
     }
 
-    public function testHandle_IdIsNotZero_CallsSetBestAnswer()
+    public function testHandle_IdIsNotZero_CallsHandleSetBestAnswer()
     {
         $event = m::mock(Saving::class);
         $event->data = ['attributes.bestAnswerPostId' => 2];
@@ -109,12 +106,11 @@ class SaveBestAnswerToDatabaseTest extends TestCase
         $notifications = m::mock(NotificationSyncer::class);
         $notifications->shouldReceive('delete')->with(m::type(SelectBestAnswerBlueprint::class))->once();
 
-        $this->sut = m::mock(SaveBestAnswerToDatabase::class.'[setBestAnswer]', [
-            $notifications,
-            m::mock(BestAnswerRepository::class),
-        ])->shouldAllowMockingProtectedMethods();
+        $repository = m::mock(BestAnswerRepository::class);
+        $repository->shouldReceive('canSelectPostAsBestAnswer')->with($event->actor, m::type(Discussion::class))->andReturn(true);
+        $repository->shouldReceive('setBestAnswer')->with($event->discussion, $event->actor, 2)->once();
 
-        $this->sut->shouldReceive('setBestAnswer')->once();
+        $this->sut = new SaveBestAnswerToDatabase($notifications, $repository);
 
         $this->sut->handle($event);
     }
