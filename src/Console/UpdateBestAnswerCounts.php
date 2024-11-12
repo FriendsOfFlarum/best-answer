@@ -12,7 +12,7 @@
 namespace FoF\BestAnswer\Console;
 
 use Flarum\User\User;
-use FoF\BestAnswer\BestAnswerRepository;
+use FoF\BestAnswer\Repository\BestAnswerRepository;
 use Illuminate\Console\Command;
 
 class UpdateBestAnswerCounts extends Command

@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FoF\BestAnswer;
+namespace FoF\BestAnswer\Api;
 
 use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Discussion\Discussion;
+use FoF\BestAnswer\Repository\BestAnswerRepository;
 
 class DiscussionAttributes
 {
