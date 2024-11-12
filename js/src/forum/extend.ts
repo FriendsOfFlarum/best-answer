@@ -11,7 +11,7 @@ export default [
   new Extend.Model(Discussion) //
     .hasOne<Post>('bestAnswerPost')
     .hasOne<User>('bestAnswerUser')
-    .attribute<boolean|number>('hasBestAnswer')
+    .attribute<boolean | number>('hasBestAnswer')
     .attribute<boolean>('canSelectBestAnswer')
     .attribute('bestAnswerSetAt', Model.transformDate),
 
