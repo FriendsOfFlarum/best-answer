@@ -6,6 +6,7 @@ import SelectBestAnswerItem from './SelectBestAnswerItem';
 import SelectBestAnswerNotification from './SelectBestAnswerNotification';
 import SolutionSearchItem from './SolutionSearchItem';
 import SolutionSearchSource from './SolutionSearchSource';
+import SolvedFilter from './SolvedFilter';
 
 export const components = {
   SelectBestAnswerItem,
@@ -16,4 +17,5 @@ export const components = {
   BestAnswerInDiscussionNotification,
   SelectBestAnswerNotification,
   SolutionSearchItem,
+  SolvedFilter,
 };
