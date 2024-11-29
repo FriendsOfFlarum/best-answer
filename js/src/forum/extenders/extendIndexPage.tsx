@@ -21,21 +21,6 @@ export default function extendIndexPage() {
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
-    if (!app.forum.attribute('showBestAnswerFilterUi')) {
-      return;
-    }
-
-    const tag = this.currentTag();
-
-    if (!tag?.isQnA?.()) {
-      if (app.discussions.bestAnswer) {
-        delete app.discussions.bestAnswer;
-        app.discussions.refresh();
-      }
-
-      return;
-    }
-
     items.add('solved-filter', <SolvedFilter />);
   });
 }

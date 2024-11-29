@@ -3,10 +3,16 @@ import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
 
-export interface SolvedFilterAttrs extends ComponentAttrs {}
+import type Mithril from 'mithril';
+import type Tag from 'flarum/tags/common/models/Tag';
+export interface SolvedFilterAttrs extends ComponentAttrs {
+  alwaysShow?: boolean;
+}
 
 export default class SolvedFilter extends Component<SolvedFilterAttrs> {
   view() {
+    if (!this.shouldShowFilter()) return null;
+
     const selected = app.discussions.bestAnswer as unknown as number;
     const options = ['all', 'solved', 'unsolved'];
 
@@ -38,5 +44,25 @@ export default class SolvedFilter extends Component<SolvedFilterAttrs> {
         );
       })
     );
+  }
+
+  shouldShowFilter() {
+    const { alwaysShow } = this.attrs;
+
+    if (alwaysShow) return true;
+
+    if (!app.forum.attribute('showBestAnswerFilterUi')) return false;
+
+    const tag: Tag = app.current.get('tag');
+
+    if (!tag?.isQnA?.()) {
+      if (app.discussions.bestAnswer) {
+        delete app.discussions.bestAnswer;
+        app.discussions.refresh();
+      }
+      return false;
+    }
+
+    return true;
   }
 }
