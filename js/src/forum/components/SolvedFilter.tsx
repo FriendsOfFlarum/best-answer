@@ -3,13 +3,11 @@ import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
 
-export interface SolvedFilterAttrs extends ComponentAttrs {
-  selected: number;
-}
+export interface SolvedFilterAttrs extends ComponentAttrs {}
 
 export default class SolvedFilter extends Component<SolvedFilterAttrs> {
   view() {
-    const { selected } = this.attrs;
+    const selected = app.discussions.bestAnswer as unknown as number;
     const options = ['all', 'solved', 'unsolved'];
 
     return Dropdown.component(

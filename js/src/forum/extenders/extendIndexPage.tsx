@@ -36,8 +36,6 @@ export default function extendIndexPage() {
       return;
     }
 
-    const selected = app.discussions.bestAnswer as unknown as number;
-
-    items.add('solved-filter', <SolvedFilter selected={selected} />);
+    items.add('solved-filter', <SolvedFilter />);
   });
 }
