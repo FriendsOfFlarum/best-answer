@@ -2,9 +2,8 @@ import app from 'flarum/forum/app';
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Dropdown from 'flarum/common/components/Dropdown';
 import Button from 'flarum/common/components/Button';
-
-import type Mithril from 'mithril';
 import type Tag from 'flarum/tags/common/models/Tag';
+
 export interface SolvedFilterAttrs extends ComponentAttrs {
   alwaysShow?: boolean;
 }
