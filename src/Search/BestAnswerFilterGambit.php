@@ -49,10 +49,9 @@ class BestAnswerFilterGambit extends AbstractRegexGambit implements FilterInterf
         $actor = $search->getActor();
 
         $search->getQuery()->where(function ($query) use ($negate, $actor) {
-            $method = $negate ? 'whereNotIn' : 'whereIn';
             $methodBestAnswerPostId = $negate ? 'whereNull' : 'whereNotNull';
 
-            $query->$method('discussions.id', function ($query) use ($actor) {
+            $query->whereIn('discussions.id', function ($query) use ($actor) {
                 $query->select('discussion_id')
                     ->from('discussion_tag')
                     ->whereIn('tag_id', $this->allowedQnATags($actor))
