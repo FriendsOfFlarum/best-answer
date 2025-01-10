@@ -36,13 +36,17 @@ export default class SolvedFilter extends Component<SolvedFilterAttrs> {
               if (value === '0') {
                 delete app.discussions.bestAnswer;
               }
-              app.discussions.refresh();
+              this.reloadDiscussions();
             },
           },
           app.translator.trans(`fof-best-answer.forum.filter.${label}_label`)
         );
       })
     );
+  }
+
+  reloadDiscussions(): void {
+    app.discussions.refresh();
   }
 
   shouldShowFilter() {
