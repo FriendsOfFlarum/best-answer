@@ -4,5 +4,6 @@ export interface SolvedFilterAttrs extends ComponentAttrs {
 }
 export default class SolvedFilter extends Component<SolvedFilterAttrs> {
     view(): any;
+    reloadDiscussions(): void;
     shouldShowFilter(): boolean;
 }
