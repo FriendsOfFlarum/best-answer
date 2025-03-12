@@ -5,7 +5,7 @@ import Button from 'flarum/common/components/Button';
 import type Tag from 'flarum/tags/common/models/Tag';
 
 export interface SolvedFilterAttrs extends ComponentAttrs {
-  currentTag: Tag;
+  currentTag?: Tag;
   alwaysShow?: boolean;
 }
 
