@@ -2,6 +2,7 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import SolvedFilter from '../components/SolvedFilter';
+import type Tag from 'flarum/tags/common/models/Tag';
 
 export default function extendIndexPage() {
   extend(IndexPage.prototype, 'sidebarItems', function (items) {
@@ -21,6 +22,10 @@ export default function extendIndexPage() {
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
-    items.add('solved-filter', <SolvedFilter />);
+    const currentTag: Tag | undefined = this.currentTag();
+
+    if (!currentTag) return;
+
+    items.add('solved-filter', <SolvedFilter currentTag={currentTag} />);
   });
 }
