@@ -11,6 +11,9 @@ export default function extendIndexPage() {
     if (!tag?.isQnA?.()) return;
 
     const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
+
+    if (!items.has('newDiscussion')) return;
+
     const cta = items.get('newDiscussion');
     cta.children = app.translator.trans(
       canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.forum.index.cannot_ask_question'
