@@ -1,3 +1,5 @@
-module.exports = require('flarum-webpack-config')({
+import flarumWebpackConfig from 'flarum-webpack-config';
+
+export default flarumWebpackConfig({
   useExtensions: ['fof-user-directory'],
 });

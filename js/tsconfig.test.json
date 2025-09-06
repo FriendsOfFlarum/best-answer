@@ -1,10 +1,24 @@
 {
     "extends": "./tsconfig.json",
     "include": ["tests/**/*"],
-    "files": ["../../../node_modules/@flarum/jest-config/shims.d.ts"],
+    "files": ["node_modules/@flarum/jest-config/shims.d.ts"],
     "compilerOptions": {
+        "noEmit": true,
+        "emitDeclarationOnly": false,
         "strict": false,
         "noImplicitReturns": false,
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "types": ["mithril", "jest"],
+        "paths": {
+            "@src/*": [ "src/*", "dist-typings/*"],
+            "@tests/*": ["tests/unit/*"],
+            "@helpers/*": ["tests/unit/helpers/*"],
+            "@stubs/*": ["tests/unit/stubs/*"],
+            "flarum/*": ["tests/unit/stubs/flarum/*", "../vendor/flarum/core/js/dist-typings/*"],
+            "@flarum/*": ["tests/unit/stubs/flarum/*", "../vendor/flarum/core/js/dist-typings/*"],
+            "flarum/tags/*": ["tests/unit/stubs/flarum/tags/*", "../vendor/flarum/tags/js/dist-typings/*"],
+            "jquery": ["tests/unit/stubs/jquery"],
+            "@fof-user-directory": ["tests/unit/stubs/fof-user-directory"]
+        }
     }
 }

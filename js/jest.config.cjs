@@ -1,1 +1,25 @@
-module.exports = require('@flarum/jest-config')({});
+module.exports = require('@flarum/jest-config')({
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/setup-env.ts'],
+  moduleNameMapper: {
+    '^((\\\.\\\./)+)src\\/(.*)$': '<rootDir>/src/$3',
+    '^@src/(.*)$': '<rootDir>/src/$1',
+    '^@tests/(.*)$': '<rootDir>/tests/unit/$1',
+    '^@helpers/(.*)$': '<rootDir>/tests/unit/helpers/$1',
+    '^@stubs/(.*)$': '<rootDir>/tests/unit/stubs/$1',
+    '^flarum/(.*)$': '<rootDir>/tests/unit/stubs/flarum/$1',
+    '^@flarum/core/src/(.*)$': '<rootDir>/tests/unit/stubs/flarum/core/src/$1',
+    '^jquery$': '<rootDir>/tests/unit/stubs/jquery.ts',
+    '^mithril$': '<rootDir>/tests/unit/stubs/mithril.ts',
+    '^@fof-user-directory$': '<rootDir>/tests/unit/stubs/fof-user-directory.ts',
+  },
+  collectCoverageFrom: [
+    '<rootDir>/src/forum/**/*.{ts,tsx,js,jsx}',
+    '<rootDir>/src/common/addBestAnswerCountSort.ts',
+    '<rootDir>/src/admin/**/*.{ts,tsx,js,jsx}',
+    '!<rootDir>/src/**/extend.ts',
+    '!<rootDir>/src/admin/index.ts',
+    '!<rootDir>/src/@types/**',
+    '!<rootDir>/src/**/*.d.ts',
+  ],
+  coveragePathIgnorePatterns: ['<rootDir>/tests/'],
+});
