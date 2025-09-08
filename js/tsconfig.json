@@ -9,12 +9,9 @@
     // This will output typings to `dist-typings`
     "declarationDir": "./dist-typings",
     "baseUrl": ".",
-    // Path aliases: keep both 'flarum/*' (runtime/browser module IDs)
-    // and '@flarum/*' (npm package scope) to avoid TS/Jest resolution
-    // mismatches across source, vendor d.ts, and stubs.
+    // Path aliases for Flarum runtime module IDs used by the source.
     "paths": {
       "flarum/*": ["../vendor/flarum/core/js/dist-typings/*"],
-      "@flarum/*": ["../vendor/flarum/core/js/dist-typings/*"],
       "flarum/tags/*": ["../vendor/flarum/tags/js/dist-typings/*"]
     }
   }

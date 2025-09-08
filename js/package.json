@@ -7,9 +7,11 @@
         "@flarum/jest-config": "^1.0.1",
         "@flarum/prettier-config": "^1.0.0",
         "@types/jest": "^30.0.0",
+        "cross-env": "^7.0.3",
         "flarum-tsconfig": "^1.0.3",
         "flarum-webpack-config": "^2.0.2",
         "prettier": "^3.3.3",
+        "rimraf": "^5.0.5",
         "typescript-coverage-report": "^0.6.1",
         "webpack": "^5.88.0",
         "webpack-cli": "^5.1.4"
@@ -24,19 +26,17 @@
     "scripts": {
         "dev": "webpack --mode development --watch",
         "build": "webpack --mode production",
-        "analyze": "cross-env ANALYZER=true npm run build",
+        "analyze": "cross-env ANALYZER=true yarn build",
         "format": "prettier --write src",
         "format:tests": "prettier --write tests",
         "format:check": "prettier --check src",
-        "clean-typings": "npx rimraf dist-typings && mkdir dist-typings",
-        "build-typings": "npm run clean-typings && ([ -e src/@types ] && cp -r src/@types dist-typings/@types || true) && tsc && npm run post-build-typings",
-        "post-build-typings": "node scripts/post-build-typings.mjs",
+        "clean-typings": "rimraf dist-typings && mkdir dist-typings",
+        "build-typings": "yarn clean-typings && ([ -e src/@types ] && cp -r src/@types dist-typings/@types || true) && tsc && yarn post-build-typings",
+        "post-build-typings": "find dist-typings -type f -name '*.d.ts' -print0 | xargs -0 sed -i 's,../src/@types,@types,g'",
         "check-typings": "tsc --noEmit --emitDeclarationOnly false",
-        "check-typings:tests": "yarn build-typings && tsc -p tsconfig.test.json --noEmit",
         "check-typings-coverage": "typescript-coverage-report",
-        "check-typings-coverage:tests": "typescript-coverage-report -p tsconfig.test.json -o coverage-ts/tests",
         "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
-        "test:coverage": "npm run test -- --coverage"
+        "test:coverage": "yarn test --coverage"
     },
     "type": "module"
 }
