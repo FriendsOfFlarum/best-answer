@@ -1,4 +1,5 @@
 module.exports = require('@flarum/jest-config')({
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFilesAfterEnv: ['<rootDir>/tests/unit/setup-env.ts'],
   moduleNameMapper: {
     '^((\\\.\\\./)+)src\\/(.*)$': '<rootDir>/src/$3',

@@ -21,4 +21,3 @@ declare module '@jest/globals' {
   export const beforeAll: any;
   export const afterAll: any;
 }
-

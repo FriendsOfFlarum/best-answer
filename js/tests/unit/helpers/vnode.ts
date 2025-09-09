@@ -2,22 +2,13 @@
 import type m from 'mithril';
 
 // Allow either Mithril VNodes or our lightweight stub objects and strings.
-type VLike =
-  | m.Vnode<any, any>
-  | { attrs?: { className?: string }; children?: VLike[] }
-  | string
-  | null
-  | undefined;
+type VLike = m.Vnode<any, any> | { attrs?: { className?: string }; children?: VLike[] } | string | null | undefined;
 
 type MatchedNode = { attrs: any; children?: any };
 
 export function findByClassName(vnode: VLike, cls: string): MatchedNode | undefined {
   if (!vnode) return undefined;
-  if (
-    typeof vnode !== 'string' &&
-    (vnode as any)?.attrs?.className &&
-    String((vnode as any).attrs.className).includes(cls)
-  )
+  if (typeof vnode !== 'string' && (vnode as any)?.attrs?.className && String((vnode as any).attrs.className).includes(cls))
     return vnode as unknown as MatchedNode;
 
   const children: VLike[] = (typeof vnode !== 'string' && ((vnode as any)?.children as VLike[])) || [];
