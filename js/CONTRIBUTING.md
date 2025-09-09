@@ -1,4 +1,6 @@
-# Frontend Testing
+# Frontend Unit Testing
+
+Quick-start for running tests, coverage, formatting, and type checks. For deeper rationale and patterns, see `js/TESTING_ADVANCED.md`.
 
 ## Quick Start
 - Install and test:
@@ -37,6 +39,8 @@
 ---
 
 ## Advanced
+
+See also: `js/TESTING_ADVANCED.md` for the advanced companion (stubs/test harness rationale, patterns, typings details).
 
 ### Philosophy: Stubs vs Mocks
 - Stubs under `tests/unit/stubs` provide minimal, stable module surfaces.
