@@ -36,7 +36,8 @@
         "check-typings": "tsc --noEmit --emitDeclarationOnly false",
         "check-typings-coverage": "typescript-coverage-report",
         "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
-        "test:coverage": "yarn test --coverage"
+        "test:coverage": "yarn test --coverage",
+        "test:coverage:summary": "yarn test --coverage --coverageReporters=text-summary"
     },
     "type": "module"
 }
