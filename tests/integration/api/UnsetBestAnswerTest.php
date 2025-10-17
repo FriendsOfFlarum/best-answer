@@ -15,6 +15,12 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
+use Flarum\Tags\Tag;
+use Flarum\Discussion\Discussion;
+use Flarum\Post\Post;
 
 class UnsetBestAnswerTest extends TestCase
 {
@@ -28,18 +34,18 @@ class UnsetBestAnswerTest extends TestCase
         $this->extension('fof-best-answer');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
                 ['id' => 4, 'username' => 'moderator', 'email' => 'mod:machine.local', 'is_email_confirmed' => 1],
             ],
-            'tags' => [
+            Tag::class => [
                 ['id' => 2, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => 'Q&A description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
             ],
-            'discussions' => [
+            Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2, 'best_answer_post_id' => 2, 'best_answer_user_id' => 1, 'best_answer_set_at' => Carbon::now()],
             ],
-            'posts' => [
+            Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
                 ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
@@ -70,9 +76,7 @@ class UnsetBestAnswerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_unset_best_answer_in_own_discussion_and_select_a_different_post()
     {
         // Check best answer is already present
@@ -149,14 +153,14 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    public function noPermissionUserProvider(): array
+    public static function noPermissionUserProvider(): array
     {
         return [
             [3],
         ];
     }
 
-    public function withPermissionUserProvider(): array
+    public static function withPermissionUserProvider(): array
     {
         return [
             [2],
@@ -164,11 +168,8 @@ class UnsetBestAnswerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider noPermissionUserProvider
-     */
+    #[Test]
+    #[DataProvider('noPermissionUserProvider')]
     public function user_without_permission_cannot_unset_a_best_answer(int $userId)
     {
         $response = $this->send(
@@ -192,11 +193,8 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider withPermissionUserProvider
-     */
+    #[Test]
+    #[DataProvider('withPermissionUserProvider')]
     public function user_with_permission_can_unset_a_best_answer(int $userId)
     {
         $response = $this->send(

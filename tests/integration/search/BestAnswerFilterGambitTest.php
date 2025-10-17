@@ -14,6 +14,10 @@ namespace FoF\BestAnswer\tests\integration\search;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
+use Flarum\Discussion\Discussion;
+use Flarum\Post\Post;
+use Flarum\Tags\Tag;
 
 class BestAnswerFilterGambitTest extends TestCase
 {
@@ -27,21 +31,21 @@ class BestAnswerFilterGambitTest extends TestCase
         $this->extension('fof-best-answer');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'best_answer_count' => 1],
             ],
-            'discussions' => [
+            Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 1, 'created_at' => Carbon::now(), 'comment_count' => 2, 'best_answer_post_id' => null],
                 ['id' => 2, 'title' => __CLASS__, 'user_id' => 1, 'created_at' => Carbon::now(), 'comment_count' => 2, 'best_answer_post_id' => 4, 'best_answer_user_id' => 3, 'best_answer_set_at' => Carbon::now()],
             ],
-            'posts' => [
+            Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 1', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 2', 'created_at' => Carbon::now()],
                 ['id' => 3, 'discussion_id' => 2, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1', 'created_at' => Carbon::now()],
                 ['id' => 4, 'discussion_id' => 2, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2', 'created_at' => Carbon::now()],
             ],
-            'tags' => [
+            Tag::class => [
                 ['id' => 1, 'name' => 'Tag 1', 'slug' => 'tag-1', 'description' => 'Tag 1 description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
             ],
             'discussion_tag' => [
