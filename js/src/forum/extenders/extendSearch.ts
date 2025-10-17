@@ -1,13 +1,13 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import ItemList from 'flarum/common/utils/ItemList';
-import Search, { SearchSource } from 'flarum/forum/components/Search';
-import SolutionSearchSource from '../components/SolutionSearchSource';
+import GlobalSearch, { GlobalSearchSource } from 'flarum/common/components/GlobalSearch';
+import SolutionGlobalSearchSource from '../components/SolutionGlobalSearchSource';
 
 export default function extendSearch() {
-  extend(Search.prototype, 'sourceItems', function (items: ItemList<SearchSource>) {
+  extend(GlobalSearch.prototype, 'sourceItems', function (items: ItemList<GlobalSearchSource>) {
     if (app.forum.attribute<boolean>('solutionSearchEnabled')) {
-      items.add('solution', new SolutionSearchSource(), 110);
+      items.add('solution', new SolutionGlobalSearchSource(), 110);
     }
   });
 }

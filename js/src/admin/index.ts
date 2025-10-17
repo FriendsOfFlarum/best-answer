@@ -7,7 +7,7 @@ export { default as extend } from './extend';
 app.initializers.add(
   'fof-best-answer',
   () => {
-    app.extensionData
+    app.registry
       .for('fof-best-answer')
       .registerPage(BestAnswerSettingsPage)
       .registerPermission(
