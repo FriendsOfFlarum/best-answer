@@ -5,7 +5,7 @@ import highlight from 'flarum/common/helpers/highlight';
 import type Discussion from 'flarum/common/models/Discussion';
 import type Post from 'flarum/common/models/Post';
 import type Mithril from 'mithril';
-import tagsLabel from 'flarum/tags/common/helpers/tagsLabel';
+import tagsLabel from 'ext:flarum/tags/common/helpers/tagsLabel';
 import ItemList from 'flarum/common/utils/ItemList';
 import type Tag from 'flarum/tags/common/models/Tag';
 
