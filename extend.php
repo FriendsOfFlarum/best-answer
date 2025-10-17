@@ -24,6 +24,10 @@ use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
+use Flarum\Api\Context;
+use Flarum\Api\Endpoint;
+use Flarum\Api\Resource;
+use Flarum\Api\Schema;
 
 return [
     (new Extend\Frontend('forum'))
@@ -68,17 +72,21 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, []),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
         ->attributes(Api\DiscussionAttributes::class),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
         ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
         ->attributes(Api\BasicDiscussionAttributes::class),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(Serializer\UserSerializer::class))
         ->attributes(Api\UserBestAnswerCount::class),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\ListUsersController::class))
         ->addSortField('bestAnswerCount'),
 
@@ -93,23 +101,29 @@ return [
         ->default('fof-best-answer.discussion_sidebar_jump_button', false)
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(Serializer\ForumSerializer::class))
         ->attributes(Api\ForumAttributes::class),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\ShowDiscussionController::class))
         ->addInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.user'])
         ->load(['bestAnswerPost', 'bestAnswerPost.user']),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\ListDiscussionsController::class))
         ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.discussion', 'bestAnswerPost.user']),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\UpdateDiscussionController::class))
         ->addOptionalInclude('tags'),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\ListPostsController::class))
         ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
         ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiController(Controller\ShowPostController::class))
         ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
         ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
@@ -128,6 +142,7 @@ return [
     (new Extend\Filter(PostFilterer::class))
         ->addFilter(Search\BestAnswerPostFilter::class),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(Api\AddTagAttributes::class),
 ];
