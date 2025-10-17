@@ -128,21 +128,16 @@ return [
         ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
         ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
 
-    (new Extend\SimpleFlarumSearch(DiscussionSearcher::class))
-        ->addGambit(Search\BestAnswerFilterGambit::class),
-
     (new Extend\Console())
         ->command(Console\NotifyCommand::class)
         ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
-    (new Extend\Filter(DiscussionFilterer::class))
-        ->addFilter(Search\BestAnswerFilterGambit::class),
-
-    (new Extend\Filter(PostFilterer::class))
-        ->addFilter(Search\BestAnswerPostFilter::class),
-
     // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(Api\AddTagAttributes::class),
+    (new Extend\SearchDriver(\Flarum\Search\Database\DatabaseSearchDriver::class))
+        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
+        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
+        ->addFilter(\Flarum\Post\Filter\PostSearcher::class, Search\BestAnswerPostFilter::class),
 ];
