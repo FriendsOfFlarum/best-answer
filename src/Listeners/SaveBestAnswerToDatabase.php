@@ -21,20 +21,8 @@ class SaveBestAnswerToDatabase
 {
     private $key = 'attributes.bestAnswerPostId';
 
-    /**
-     * @var NotificationSyncer
-     */
-    private $notifications;
-
-    /**
-     * @var BestAnswerRepository
-     */
-    protected $bestAnswer;
-
-    public function __construct(NotificationSyncer $notifications, BestAnswerRepository $bestAnswer)
+    public function __construct(private NotificationSyncer $notifications, protected BestAnswerRepository $bestAnswer)
     {
-        $this->notifications = $notifications;
-        $this->bestAnswer = $bestAnswer;
     }
 
     public function handle(Saving $event)

@@ -22,22 +22,9 @@ use Throwable;
 
 class NotifyCommand extends Command
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    private $settings;
-
-    /**
-     * @var NotificationSyncer
-     */
-    private $notifications;
-
-    public function __construct(SettingsRepositoryInterface $settings, NotificationSyncer $notifications)
+    public function __construct(private SettingsRepositoryInterface $settings, private NotificationSyncer $notifications)
     {
         parent::__construct();
-
-        $this->settings = $settings;
-        $this->notifications = $notifications;
     }
 
     /**

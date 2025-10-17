@@ -11,24 +11,22 @@
 
 namespace FoF\BestAnswer\Notification;
 
+use Flarum\Notification\AlertableInterface;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
+class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface, AlertableInterface
 {
-    public $discussion;
-
-    public function __construct(Discussion $discussion)
+    public function __construct(public Discussion $discussion)
     {
-        $this->discussion = $discussion;
     }
 
     /**
      * Get the user that sent the notification.
      */
-    public function getFromUser()
+    public function getFromUser(): ?\Flarum\User\User
     {
         return $this->discussion->user;
     }
@@ -36,7 +34,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
     /**
      * Get the model that is the subject of this activity.
      */
-    public function getSubject()
+    public function getSubject(): ?\Flarum\Database\AbstractModel
     {
         return $this->discussion;
     }
@@ -44,8 +42,9 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
     /**
      * Get the data to be stored in the notification.
      */
-    public function getData()
+    public function getData(): mixed
     {
+        return [];
     }
 
     /**
@@ -53,7 +52,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      *
      * @return string
      */
-    public static function getType()
+    public static function getType(): string
     {
         return 'selectBestAnswer';
     }
@@ -63,7 +62,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      *
      * @return string
      */
-    public static function getSubjectModel()
+    public static function getSubjectModel(): string
     {
         return Discussion::class;
     }
@@ -73,7 +72,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      *
      * @return array{text?: string, html?: string}
      */
-    public function getEmailView()
+    public function getEmailViews(): array
     {
         return ['text' => 'fof-best-answer::emails.selectBestAnswer'];
     }
@@ -83,7 +82,7 @@ class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface
      *
      * @return string
      */
-    public function getEmailSubject(TranslatorInterface $translator)
+    public function getEmailSubject(\Flarum\Locale\TranslatorInterface $translator): string
     {
         return $translator->trans('fof-best-answer.email.subject.select', [
             '{discussion_title}' => $this->discussion->title,

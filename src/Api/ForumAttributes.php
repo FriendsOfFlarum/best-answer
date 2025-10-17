@@ -16,14 +16,8 @@ use Flarum\Settings\SettingsRepositoryInterface;
 
 class ForumAttributes
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(protected SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
     }
 
     public function __invoke(ForumSerializer $serializer, $model, array $attributes): array

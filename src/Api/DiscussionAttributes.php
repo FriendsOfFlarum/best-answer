@@ -17,14 +17,8 @@ use FoF\BestAnswer\Repository\BestAnswerRepository;
 
 class DiscussionAttributes
 {
-    /**
-     * @var BestAnswerRepository
-     */
-    protected $bestAnswerRepository;
-
-    public function __construct(BestAnswerRepository $bestAnswerRepository)
+    public function __construct(protected BestAnswerRepository $bestAnswerRepository)
     {
-        $this->bestAnswerRepository = $bestAnswerRepository;
     }
 
     public function __invoke(DiscussionSerializer $serializer, Discussion $discussion, array $attributes): array

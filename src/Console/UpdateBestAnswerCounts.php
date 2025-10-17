@@ -17,15 +17,9 @@ use Illuminate\Console\Command;
 
 class UpdateBestAnswerCounts extends Command
 {
-    /**
-     * @var BestAnswerRepository
-     */
-    public $bestAnswers;
-
-    public function __construct(BestAnswerRepository $bestAnswers)
+    public function __construct(public BestAnswerRepository $bestAnswers)
     {
         parent::__construct();
-        $this->bestAnswers = $bestAnswers;
     }
 
     /**

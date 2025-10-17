@@ -17,14 +17,8 @@ use FoF\BestAnswer\Repository\BestAnswerRepository;
 
 class UserBestAnswerCount
 {
-    /**
-     * @var BestAnswerRepository
-     */
-    public $bestAnswers;
-
-    public function __construct(BestAnswerRepository $bestAnswers)
+    public function __construct(public BestAnswerRepository $bestAnswers)
     {
-        $this->bestAnswers = $bestAnswers;
     }
 
     public function __invoke(UserSerializer $serializer, User $user, array $attributes): array

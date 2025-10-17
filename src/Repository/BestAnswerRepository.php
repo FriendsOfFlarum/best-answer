@@ -27,29 +27,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BestAnswerRepository
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
-    /**
-     * @var Dispatcher
-     */
-    protected $events;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    public function __construct(
-        SettingsRepositoryInterface $settings,
-        Dispatcher $events,
-        TranslatorInterface $translator
-    ) {
-        $this->settings = $settings;
-        $this->events = $events;
-        $this->translator = $translator;
+    public function __construct(protected SettingsRepositoryInterface $settings, protected Dispatcher $events, protected TranslatorInterface $translator)
+    {
     }
 
     public function canSelectBestAnswer(User $user, Discussion $discussion): bool
