@@ -75,7 +75,7 @@ class AwardedBestAnswerBlueprint implements BlueprintInterface, MailableInterfac
      */
     public function getEmailViews(): array
     {
-        return ['text' => 'fof-best-answer::emails.awardedBestAnswer'];
+        return ['text' => 'fof-best-answer::email.plain.awardedBestAnswer', 'html' => 'fof-best-answer::email.html.awardedBestAnswer'];
     }
 
     /**

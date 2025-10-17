@@ -75,7 +75,7 @@ class BestAnswerSetInDiscussionBlueprint implements BlueprintInterface, Mailable
      */
     public function getEmailViews(): array
     {
-        return ['text' => 'fof-best-answer::emails.bestAnswerSetInDiscussion'];
+        return ['text' => 'fof-best-answer::email.plain.bestAnswerSetInDiscussion', 'html' => 'fof-best-answer::email.html.bestAnswerSetInDiscussion'];
     }
 
     /**
