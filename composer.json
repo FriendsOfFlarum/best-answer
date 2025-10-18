@@ -87,7 +87,8 @@
     },
     "require-dev": {
         "flarum/phpstan": "^2.0.0-beta",
-        "flarum/testing": "^2.0.0-beta"
+        "flarum/testing": "^2.0.0-beta",
+        "fof/user-directory": "^2.0.0-beta"
     },
     "autoload-dev": {
         "psr-4": {
