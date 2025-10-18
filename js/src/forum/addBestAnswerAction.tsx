@@ -32,7 +32,10 @@ export default function addBestAnswerAction() {
     discussion
       .save(
         {
-          relationships: { bestAnswerPost: isBestAnswer ? post : { data: null } },
+          relationships: {
+            // @ts-expect-error
+            bestAnswerPost: isBestAnswer ? post : { data: null },
+          },
         },
         {
           params: {

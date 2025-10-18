@@ -85,7 +85,7 @@ class DiscussionAttributes
                     }
                     // Removing the best answer.
                     else {
-                        if (!$discussion->bestAnswerPost) {
+                        if ($discussion->bestAnswerPost === null) {
                             return;
                         }
 

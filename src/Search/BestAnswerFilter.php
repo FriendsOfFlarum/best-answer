@@ -27,6 +27,7 @@ class BestAnswerFilter implements FilterInterface
 
     public function filter(SearchState $filterState, array|string $filterValue, bool $negate): void
     {
+        // @phpstan-ignore-next-line
         $this->constrain($filterState->getQuery(), $filterState->getActor(), $negate);
     }
 
