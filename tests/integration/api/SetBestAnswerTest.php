@@ -100,7 +100,7 @@ class SetBestAnswerTest extends TestCase
         return $this->send(
             $this->request(
                 'PATCH',
-                '/api/discussions/' . $discussionId,
+                '/api/discussions/'.$discussionId,
                 [
                     'json' => [
                         'data' => [
