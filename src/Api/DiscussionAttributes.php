@@ -36,33 +36,34 @@ class DiscussionAttributes
         protected Dispatcher $bus,
         protected TranslatorInterface $translator,
         protected SettingsRepositoryInterface $settings
-    ) {}
+    ) {
+    }
 
     public function __invoke(): array
     {
         return [
             Schema\Boolean::make('canSelectBestAnswer')
-                ->get(fn(Discussion $discussion, Context $context) => $this->bestAnswerRepository->canSelectBestAnswer($context->getActor(), $discussion)),
+                ->get(fn (Discussion $discussion, Context $context) => $this->bestAnswerRepository->canSelectBestAnswer($context->getActor(), $discussion)),
             Schema\Attribute::make('hasBestAnswer')
-                ->get(fn(Discussion $discussion) => $discussion->bestAnswerPost !== null ? $discussion->bestAnswerPost->id : false),
+                ->get(fn (Discussion $discussion) => $discussion->bestAnswerPost !== null ? $discussion->bestAnswerPost->id : false),
             Schema\DateTime::make('bestAnswerSetAt'),
 
             Schema\Relationship\ToOne::make('bestAnswerPost')
                 ->type('posts')
                 ->includable()
                 ->writableOnUpdate()
-                ->set(function (Discussion $discussion, ?Post $post, Context  $context) {
+                ->set(function (Discussion $discussion, ?Post $post, Context $context) {
                     $actor = $context->getActor();
 
                     if ($discussion->best_answer_post_id === $post?->id) {
                         return;
                     }
 
-                    if ($post && (! $this->bestAnswerRepository->canSelectPostAsBestAnswer($actor, $post) || ! $post->isVisibleTo($actor))) {
+                    if ($post && (!$this->bestAnswerRepository->canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
                         throw new PermissionDeniedException();
                     }
 
-                    if (! $post && !$this->bestAnswerRepository->canRemoveBestAnswer($actor, $discussion)) {
+                    if (!$post && !$this->bestAnswerRepository->canRemoveBestAnswer($actor, $discussion)) {
                         throw new PermissionDeniedException();
                     }
 
@@ -84,7 +85,7 @@ class DiscussionAttributes
                     }
                     // Removing the best answer.
                     else {
-                        if (! $discussion->bestAnswerPost) {
+                        if (!$discussion->bestAnswerPost) {
                             return;
                         }
 

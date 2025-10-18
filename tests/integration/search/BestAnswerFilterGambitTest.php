@@ -12,12 +12,12 @@
 namespace FoF\BestAnswer\tests\integration\search;
 
 use Carbon\Carbon;
-use Flarum\Testing\integration\RetrievesAuthorizedUsers;
-use Flarum\Testing\integration\TestCase;
-use Flarum\User\User;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
 use Flarum\Tags\Tag;
+use Flarum\Testing\integration\RetrievesAuthorizedUsers;
+use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 
 class BestAnswerFilterGambitTest extends TestCase
 {

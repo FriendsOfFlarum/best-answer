@@ -11,11 +11,10 @@
 
 namespace FoF\BestAnswer\Notification;
 
-use Flarum\Notification\AlertableInterface;
 use Flarum\Discussion\Discussion;
+use Flarum\Notification\AlertableInterface;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SelectBestAnswerBlueprint implements BlueprintInterface, MailableInterface, AlertableInterface
 {

@@ -15,7 +15,6 @@ use Flarum\Search\Filter\FilterInterface;
 use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class BestAnswerPostFilter implements FilterInterface

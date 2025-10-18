@@ -14,11 +14,11 @@ namespace FoF\BestAnswer\tests\integration\api;
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
+use Flarum\Tags\Tag;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\Tags\Tag;
 
 class BestAnswerTest extends TestCase
 {
@@ -114,7 +114,7 @@ class BestAnswerTest extends TestCase
                                 'bestAnswerPost' => [
                                     'data' => [
                                         'type' => 'posts',
-                                        'id' => '2',
+                                        'id'   => '2',
                                     ],
                                 ],
                             ],

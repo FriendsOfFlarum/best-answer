@@ -19,13 +19,14 @@ class UserBestAnswerCount
 {
     public function __construct(
         public BestAnswerRepository $bestAnswers
-    ) {}
+    ) {
+    }
 
     public function __invoke(): array
     {
         return [
             Schema\Integer::make('bestAnswerCount')
-                ->get(fn(User $user) => $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user)),
+                ->get(fn (User $user) => $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user)),
         ];
     }
 }

@@ -12,15 +12,15 @@
 namespace FoF\BestAnswer\tests\integration\api;
 
 use Carbon\Carbon;
-use Flarum\Testing\integration\RetrievesAuthorizedUsers;
-use Flarum\Testing\integration\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
-use Flarum\Tags\Tag;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
+use Flarum\Tags\Tag;
+use Flarum\Testing\integration\RetrievesAuthorizedUsers;
+use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\ResponseInterface;
 
 class SetBestAnswerTest extends TestCase
 {
@@ -104,7 +104,7 @@ class SetBestAnswerTest extends TestCase
                                 'bestAnswerPost' => [
                                     'data' => [
                                         'type' => 'posts',
-                                        'id' => (string) $postId,
+                                        'id'   => (string) $postId,
                                     ],
                                 ],
                             ],

@@ -11,6 +11,10 @@
 
 namespace FoF\BestAnswer;
 
+use Flarum\Api\Endpoint;
+use Flarum\Api\Resource;
+use Flarum\Api\Schema;
+use Flarum\Api\Sort;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
@@ -18,11 +22,6 @@ use Flarum\Post\Post;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Flarum\Api\Context;
-use Flarum\Api\Endpoint;
-use Flarum\Api\Resource;
-use Flarum\Api\Schema;
-use Flarum\Api\Sort;
 
 return [
     (new Extend\Frontend('forum'))
@@ -93,7 +92,7 @@ return [
                     Schema\Boolean::make('isQnA'),
                     Schema\Boolean::make('reminders')
                         ->property('qna_reminders'),
-                ])
+                ]),
         ]),
 
     (new Extend\Settings())
