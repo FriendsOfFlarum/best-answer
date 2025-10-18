@@ -44,14 +44,18 @@ class SetBestAnswerTest extends TestCase
             ],
             Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2],
+                ['id' => 2, 'title' => 'Another discussion', 'user_id' => 3, 'created_at' => Carbon::now(), 'comment_count' => 1],
             ],
             Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
                 ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
+                ['id' => 4, 'discussion_id' => 2, 'user_id' => 3, 'type' => 'comment', 'content' => 'question', 'created_at' => Carbon::now()],
+                ['id' => 5, 'discussion_id' => 2, 'user_id' => 3, 'type' => 'comment', 'content' => 'answer', 'created_at' => Carbon::now()],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 2],
+                ['discussion_id' => 2, 'tag_id' => 2],
             ],
             'group_permission' => [
                 ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
@@ -91,12 +95,12 @@ class SetBestAnswerTest extends TestCase
         );
     }
 
-    public function setBestAnswer(int $userId, int $postId): ResponseInterface
+    public function setBestAnswer(int $userId, int $postId, int $discussionId = 1): ResponseInterface
     {
         return $this->send(
             $this->request(
                 'PATCH',
-                '/api/discussions/1',
+                '/api/discussions/' . $discussionId,
                 [
                     'json' => [
                         'data' => [
@@ -160,5 +164,29 @@ class SetBestAnswerTest extends TestCase
         $response = $this->setBestAnswer($userId, 3);
 
         $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    #[Test]
+    public function user_cannot_set_own_post_as_best_answer_if_not_permitted()
+    {
+        $response = $this->setBestAnswer(3, 5, 2);
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    #[Test]
+    public function user_can_set_own_post_as_best_answer_if_permitted()
+    {
+        $this->setting('fof-best-answer.allow_select_own_post', true);
+
+        $response = $this->setBestAnswer(3, 5, 2);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $attributes = $data['data']['attributes'];
+
+        $this->assertEquals(5, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 5');
     }
 }

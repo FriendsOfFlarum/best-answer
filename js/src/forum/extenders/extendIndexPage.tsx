@@ -8,7 +8,7 @@ import type Tag from 'ext:flarum/tags/common/models/Tag';
 export default function extendIndexPage() {
   extend(IndexSidebar.prototype, 'items', function (items) {
     const tag = app.currentTag();
-
+    console.log('tag: ', tag);
     if (!tag?.isQnA?.()) return;
 
     const canStartDiscussion = app.forum.attribute<boolean>('canStartDiscussion') || !app.session.user;

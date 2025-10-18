@@ -76,27 +76,6 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
                 help: app.translator.trans('fof-best-answer.admin.settings.discussion_sidebar_jump_button_help'),
               })}
             </div>
-            <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
-            <div className="Section">
-              {this.buildSettingComponent({
-                type: 'boolean',
-                setting: 'fof-best-answer.search.solution_search',
-                label: app.translator.trans('fof-best-answer.admin.settings.solution_search'),
-                help: app.translator.trans('fof-best-answer.admin.settings.solution_search_help'),
-              })}
-              {this.buildSettingComponent({
-                type: 'boolean',
-                setting: 'fof-best-answer.search.remove_solutions_from_main_search',
-                label: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search'),
-                help: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search_help'),
-              })}
-              {this.buildSettingComponent({
-                type: 'boolean',
-                setting: 'fof-best-answer.search.display_tags',
-                label: app.translator.trans('fof-best-answer.admin.settings.display_tags'),
-                help: app.translator.trans('fof-best-answer.admin.settings.display_tags_help'),
-              })}
-            </div>
             <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
             <p className="helpText">
               {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
