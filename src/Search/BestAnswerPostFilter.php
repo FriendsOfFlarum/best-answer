@@ -11,11 +11,10 @@
 
 namespace FoF\BestAnswer\Search;
 
-use Flarum\Filter\FilterInterface;
-use Flarum\Filter\FilterState;
+use Flarum\Search\Filter\FilterInterface;
+use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class BestAnswerPostFilter implements FilterInterface
@@ -25,12 +24,13 @@ class BestAnswerPostFilter implements FilterInterface
         return 'is:solution';
     }
 
-    public function filter(FilterState $filterState, string $filterValue, bool $negate)
+    public function filter(SearchState $state, array|string $value, bool $negate): void
     {
-        $this->constrain($filterState->getQuery(), $filterState->getActor(), $negate);
+        // @phpstan-ignore-next-line
+        $this->constrain($state->getQuery(), $state->getActor(), $negate);
     }
 
-    protected function constrain(Builder $query, User $actor, bool $negate)
+    protected function constrain(\Illuminate\Database\Eloquent\Builder $query, User $actor, bool $negate): void
     {
         // Join the `discussions` table to access `best_answer_post_id`.
         $query->join('discussions', 'posts.discussion_id', '=', 'discussions.id')

@@ -20,29 +20,15 @@ use FoF\BestAnswer\Notification;
 
 class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
 {
-    /**
-     * @var Discussion
-     */
-    protected $discussion;
-
-    /**
-     * @var User
-     */
-    protected $actor;
-
     protected $settings;
 
-    public function __construct(
-        Discussion $discussion,
-        User $actor
-    ) {
-        $this->discussion = $discussion;
-        $this->actor = $actor;
+    public function __construct(protected ?Discussion $discussion, protected User $actor)
+    {
     }
 
     public function handle(NotificationSyncer $notifications)
     {
-        if ($this->discussion === null || $this->discussion->best_answer_post_id === null) {
+        if (!$this->discussion || $this->discussion->best_answer_post_id === null) {
             return;
         }
 

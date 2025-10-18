@@ -20,10 +20,12 @@ return [
             ->where('key', $remindersKey)
             ->value('value');
 
-        $schema->getConnection()
-            ->table('tags')
-            ->whereIn('id', explode(',', str_replace(' ', '', $reminderIds)))
-            ->update(['is_qna' => true, 'qna_reminders' => true]);
+        if (!empty($reminderIds)) {
+            $schema->getConnection()
+                        ->table('tags')
+                        ->whereIn('id', explode(',', str_replace(' ', '', $reminderIds)))
+                        ->update(['is_qna' => true, 'qna_reminders' => true]);
+        }
 
         $schema->getConnection()
             ->table('settings')

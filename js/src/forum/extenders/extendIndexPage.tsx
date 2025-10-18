@@ -1,16 +1,17 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import SolvedFilter from '../components/SolvedFilter';
-import type Tag from 'flarum/tags/common/models/Tag';
+import type Tag from 'ext:flarum/tags/common/models/Tag';
 
 export default function extendIndexPage() {
-  extend(IndexPage.prototype, 'sidebarItems', function (items) {
-    const tag = this.currentTag();
+  extend(IndexSidebar.prototype, 'items', function (items) {
+    const tag = app.currentTag();
 
     if (!tag?.isQnA?.()) return;
 
-    const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
+    const canStartDiscussion = app.forum.attribute<boolean>('canStartDiscussion') || !app.session.user;
 
     if (!items.has('newDiscussion')) return;
 
@@ -25,7 +26,7 @@ export default function extendIndexPage() {
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
-    const currentTag: Tag | undefined = this.currentTag();
+    const currentTag: Tag | undefined = app.currentTag();
 
     if (!currentTag) return;
 

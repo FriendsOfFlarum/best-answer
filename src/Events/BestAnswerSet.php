@@ -17,30 +17,7 @@ use Flarum\User\User;
 
 class BestAnswerSet
 {
-    /**
-     * @var Discussion
-     */
-    public $discussion;
-
-    /**
-     * @var Post
-     */
-    public $post;
-
-    /**
-     * @var User
-     */
-    public $actor;
-
-    /**
-     * @param Discussion $discussion
-     * @param Post       $post
-     * @param User       $actor
-     */
-    public function __construct(Discussion $discussion, Post $post, User $actor)
+    public function __construct(public Discussion $discussion, public Post $post, public User $actor)
     {
-        $this->discussion = $discussion;
-        $this->post = $post;
-        $this->actor = $actor;
     }
 }

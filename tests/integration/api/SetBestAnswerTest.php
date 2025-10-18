@@ -12,8 +12,14 @@
 namespace FoF\BestAnswer\tests\integration\api;
 
 use Carbon\Carbon;
+use Flarum\Discussion\Discussion;
+use Flarum\Post\Post;
+use Flarum\Tags\Tag;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
 
 class SetBestAnswerTest extends TestCase
@@ -28,18 +34,18 @@ class SetBestAnswerTest extends TestCase
         $this->extension('fof-best-answer');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
                 ['id' => 4, 'username' => 'moderator', 'email' => 'moderator@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
             ],
-            'tags' => [
+            Tag::class => [
                 ['id' => 2, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => 'Q&A description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
             ],
-            'discussions' => [
+            Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2],
             ],
-            'posts' => [
+            Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
                 ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
@@ -56,7 +62,7 @@ class SetBestAnswerTest extends TestCase
         ]);
     }
 
-    public function allowedUsersProvider(): array
+    public static function allowedUsersProvider(): array
     {
         return [
             [1],
@@ -65,7 +71,7 @@ class SetBestAnswerTest extends TestCase
         ];
     }
 
-    public function notAllowedUsersProvider(): array
+    public static function notAllowedUsersProvider(): array
     {
         return [
             [3],
@@ -94,8 +100,13 @@ class SetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => $postId,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id'   => (string) $postId,
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -105,11 +116,8 @@ class SetBestAnswerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider allowedUsersProvider
-     */
+    #[Test]
+    #[DataProvider('allowedUsersProvider')]
     public function user_with_permission_can_set_best_answer(int $userId)
     {
         $response = $this->getDiscussion($userId);
@@ -134,11 +142,8 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider notAllowedUsersProvider
-     */
+    #[Test]
+    #[DataProvider('notAllowedUsersProvider')]
     public function user_without_permission_cannot_set_best_answer(int $userId)
     {
         $response = $this->getDiscussion($userId);

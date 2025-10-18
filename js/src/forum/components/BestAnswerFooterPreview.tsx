@@ -70,8 +70,10 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
     return (
       <li className="item-user">
         <div className="PostUser">
-          {this.user && userOnline(this.user)}
-          <h3>{this.user ? <Link href={app.route.user(this.user)}>{username(this.user)}</Link> : username(this.user)}</h3>
+          <h3 className="PostUser-name">
+            {this.user && userOnline(this.user)}
+            {this.user ? <Link href={app.route.user(this.user)}>{username(this.user)}</Link> : username(this.user)}
+          </h3>
         </div>
       </li>
     );

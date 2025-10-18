@@ -17,14 +17,8 @@ use Illuminate\Console\Scheduling\Event;
 
 class NotifySchedule
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    public $settings;
-
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(public SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
     }
 
     public function __invoke(Event $event)
