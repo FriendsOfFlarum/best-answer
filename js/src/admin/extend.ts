@@ -3,9 +3,9 @@ import BestAnswerSettingsPage from './components/BestAnswerSettingsPage';
 import commonExtend from '../common/extend';
 
 export default [
-    ...commonExtend,
+  ...commonExtend,
 
-    new Extend.Admin()
+  new Extend.Admin()
     .page(BestAnswerSettingsPage)
     .permission(
       () => ({
