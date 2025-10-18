@@ -1,6 +1,6 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
-import type Tag from 'flarum/tags/common/models/Tag';
+import type Tag from 'ext:flarum/tags/common/models/Tag';
 
 export default function extendDiscussionComposer() {
   extend('flarum/forum/components/DiscussionComposer', 'headerItems', function (items) {
@@ -11,7 +11,6 @@ export default function extendDiscussionComposer() {
 
     if (!qna) return;
 
-    // @ts-expect-error
     this.attrs.titlePlaceholder = app.translator.trans('fof-best-answer.forum.composer.titlePlaceholder');
 
     if (items.has('discussionTitle')) {
@@ -21,9 +20,7 @@ export default function extendDiscussionComposer() {
           <input
             className="FormControl"
             bidi={this.title}
-            // @ts-expect-error
             placeholder={this.attrs.titlePlaceholder}
-            // @ts-expect-error
             disabled={!!this.attrs.disabled}
             onkeydown={this.onkeydown.bind(this)}
           />
