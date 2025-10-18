@@ -65,6 +65,9 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, []),
 
+    (new Extend\ApiResource(Resource\ForumResource::class))
+        ->fields(Api\ForumAttributes::class),
+
     (new Extend\ApiResource(Resource\DiscussionResource::class))
         ->fields(Api\DiscussionAttributes::class)
         ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
@@ -89,7 +92,8 @@ return [
         ->whenExtensionEnabled('flarum-tags', fn () => [
             (new Extend\ApiResource(\Flarum\Tags\Api\Resource\TagResource::class))
                 ->fields(fn () => [
-                    Schema\Boolean::make('isQnA'),
+                    Schema\Boolean::make('isQnA')
+                        ->property('is_qna'),
                     Schema\Boolean::make('reminders')
                         ->property('qna_reminders'),
                 ]),
@@ -100,9 +104,6 @@ return [
         ->default('fof-best-answer.stop_overnight', false)
         ->default('fof-best-answer.store_log_output', false)
         ->default('fof-best-answer.enabled-tags', '[]')
-        ->default('fof-best-answer.search.solution_search', true)
-        ->default('fof-best-answer.search.remove_solutions_from_main_search', false)
-        ->default('fof-best-answer.search.display_tags', true)
         ->default('fof-best-answer.discussion_sidebar_jump_button', false)
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),
 
