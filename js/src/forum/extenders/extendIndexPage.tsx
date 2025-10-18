@@ -3,7 +3,7 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import SolvedFilter from '../components/SolvedFilter';
-import type Tag from 'flarum/tags/common/models/Tag';
+import type Tag from 'ext:flarum/tags/common/models/Tag';
 
 export default function extendIndexPage() {
   extend(IndexSidebar.prototype, 'items', function (items) {
