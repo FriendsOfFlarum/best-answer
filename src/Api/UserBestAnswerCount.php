@@ -26,7 +26,7 @@ class UserBestAnswerCount
     {
         return [
             Schema\Integer::make('bestAnswerCount')
-                ->get(fn (User $user) => $user->best_answer_count ? (int) $user->best_answer_count : $this->bestAnswers->calculateBestAnswersForUser($user)),
+                ->get(fn (User $user) => $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user)),
         ];
     }
 }
