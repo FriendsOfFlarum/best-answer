@@ -11,23 +11,18 @@
 
 namespace FoF\BestAnswer;
 
-use Flarum\Api\Controller;
-use Flarum\Api\Serializer;
 use Flarum\Discussion\Discussion;
-use Flarum\Discussion\Event\Saving as DiscussionSaving;
-use Flarum\Discussion\Filter\DiscussionFilterer;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
-use Flarum\Post\Filter\PostFilterer;
 use Flarum\Post\Post;
 use Flarum\Settings\Event\Saving as SettingsSaving;
-use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use Flarum\Api\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
+use Flarum\Api\Sort;
 
 return [
     (new Extend\Frontend('forum'))
@@ -62,7 +57,6 @@ return [
         ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
-        ->listen(DiscussionSaving::class, Listeners\SaveBestAnswerToDatabase::class)
         ->listen(Events\BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
@@ -72,23 +66,35 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, []),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attributes(Api\DiscussionAttributes::class),
+    (new Extend\ApiResource(Resource\DiscussionResource::class))
+        ->fields(Api\DiscussionAttributes::class)
+        ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
+            return $endpoint
+                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerUser'])
+                ->eagerLoad(['bestAnswerPost.user']);
+        }),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
-        ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
-        ->hasOne('bestAnswerUser', Serializer\BasicUserSerializer::class)
-        ->attributes(Api\BasicDiscussionAttributes::class),
+    (new Extend\ApiResource(Resource\PostResource::class))
+        ->endpoint(Endpoint\Index::class, function (Endpoint\Index $endpoint) {
+            return $endpoint
+                ->addDefaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
+        }),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(Serializer\UserSerializer::class))
-        ->attributes(Api\UserBestAnswerCount::class),
+    (new Extend\ApiResource(Resource\UserResource::class))
+        ->fields(Api\UserBestAnswerCount::class)
+        ->sorts(fn () => [
+            Sort\SortColumn::make('bestAnswerCount'),
+        ]),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\ListUsersController::class))
-        ->addSortField('bestAnswerCount'),
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-tags', fn () => [
+            (new Extend\ApiResource(\Flarum\Tags\Api\Resource\TagResource::class))
+                ->fields(fn () => [
+                    Schema\Boolean::make('isQnA'),
+                    Schema\Boolean::make('reminders')
+                        ->property('qna_reminders'),
+                ])
+        ]),
 
     (new Extend\Settings())
         ->default('fof-best-answer.schedule_on_one_server', false)
@@ -101,43 +107,11 @@ return [
         ->default('fof-best-answer.discussion_sidebar_jump_button', false)
         ->serializeToForum('fof-best-answer.show_max_lines', 'fof-best-answer.show_max_lines', 'intVal'),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(Serializer\ForumSerializer::class))
-        ->attributes(Api\ForumAttributes::class),
-
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\ShowDiscussionController::class))
-        ->addInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.user'])
-        ->load(['bestAnswerPost', 'bestAnswerPost.user']),
-
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\ListDiscussionsController::class))
-        ->addOptionalInclude(['bestAnswerPost', 'bestAnswerUser', 'bestAnswerPost.discussion', 'bestAnswerPost.user']),
-
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\UpdateDiscussionController::class))
-        ->addOptionalInclude('tags'),
-
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\ListPostsController::class))
-        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
-        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
-
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiController(Controller\ShowPostController::class))
-        ->addInclude(['discussion', 'discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
-        ->load(['discussion', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost', 'discussion.bestAnswerPost.user']),
-
     (new Extend\Console())
         ->command(Console\NotifyCommand::class)
         ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(TagSerializer::class))
-        ->attributes(Api\AddTagAttributes::class),
     (new Extend\SearchDriver(\Flarum\Search\Database\DatabaseSearchDriver::class))
-        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
-        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
-        ->addFilter(\Flarum\Post\Filter\PostSearcher::class, Search\BestAnswerPostFilter::class),
+        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class),
 ];

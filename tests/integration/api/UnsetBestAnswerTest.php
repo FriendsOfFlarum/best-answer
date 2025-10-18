@@ -76,6 +76,33 @@ class UnsetBestAnswerTest extends TestCase
         );
     }
 
+    public function setBestAnswerOnDiscussion(?int $userId, int $discussionId, ?int $postId): ResponseInterface
+    {
+        return $this->send(
+            $this->request(
+                'PATCH',
+                '/api/discussions/'.$discussionId,
+                [
+                    'json' => [
+                        'data' => [
+                            'relationships' => [
+                                'bestAnswerPost' => $postId ? [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id' => (string) $postId,
+                                    ],
+                                ] : [
+                                    'data' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'authenticatedAs' => $userId,
+                ]
+            )
+        );
+    }
+
     #[Test]
     public function user_can_unset_best_answer_in_own_discussion_and_select_a_different_post()
     {
@@ -90,23 +117,7 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(2, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 2');
 
         // Unset best answer
-        $response = $this->send(
-            $this->request(
-                'PATCH',
-                '/api/discussions/1',
-                [
-                    'json' => [
-                        'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
-                            ],
-                        ],
-
-                    ],
-                    'authenticatedAs' => 2,
-                ],
-            )
-        );
+        $response = $this->setBestAnswerOnDiscussion(2, 1, null);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -127,23 +138,7 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertTrue($attributes['canSelectBestAnswer'], 'Expected user to be able to set a best answer');
 
         // Set a different post as best answer
-        $response = $this->send(
-            $this->request(
-                'PATCH',
-                '/api/discussions/1',
-                [
-                    'json' => [
-                        'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 3,
-                            ],
-                        ],
-
-                    ],
-                    'authenticatedAs' => 2,
-                ],
-            )
-        );
+        $response = $this->setBestAnswerOnDiscussion(2, 1, 3);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -172,23 +167,7 @@ class UnsetBestAnswerTest extends TestCase
     #[DataProvider('noPermissionUserProvider')]
     public function user_without_permission_cannot_unset_a_best_answer(int $userId)
     {
-        $response = $this->send(
-            $this->request(
-                'PATCH',
-                '/api/discussions/1',
-                [
-                    'json' => [
-                        'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
-                            ],
-                        ],
-
-                    ],
-                    'authenticatedAs' => $userId,
-                ],
-            )
-        );
+        $response = $this->setBestAnswerOnDiscussion($userId, 1, null);
 
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -197,23 +176,7 @@ class UnsetBestAnswerTest extends TestCase
     #[DataProvider('withPermissionUserProvider')]
     public function user_with_permission_can_unset_a_best_answer(int $userId)
     {
-        $response = $this->send(
-            $this->request(
-                'PATCH',
-                '/api/discussions/1',
-                [
-                    'json' => [
-                        'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => 0,
-                            ],
-                        ],
-
-                    ],
-                    'authenticatedAs' => $userId,
-                ],
-            )
-        );
+        $response = $this->setBestAnswerOnDiscussion($userId, 1, null);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

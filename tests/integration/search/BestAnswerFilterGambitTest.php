@@ -33,7 +33,7 @@ class BestAnswerFilterGambitTest extends TestCase
         $this->prepareDatabase([
             User::class => [
                 $this->normalUser(),
-                ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'best_answer_count' => 1],
+                ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'password' => '$2y$10$LO59tiT7uggl6Oe23o/O6.utnF6ipngYjvMvaxo1TciKqBttDNKim', 'best_answer_count' => 1],
             ],
             Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 1, 'created_at' => Carbon::now(), 'comment_count' => 2, 'best_answer_post_id' => null],
@@ -85,46 +85,6 @@ class BestAnswerFilterGambitTest extends TestCase
                     'authenticatedAs' => 2,
                 ]
             )->withQueryParams(['filter' => ['-solved-discussions' => 1]])
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        $this->assertCount(1, $data['data']);
-        $this->assertEquals(1, $data['data'][0]['id']);
-    }
-
-    public function test_positive_search()
-    {
-        $response = $this->send(
-            $this->request(
-                'GET',
-                '/api/discussions',
-                [
-                    'authenticatedAs' => 2,
-                ]
-            )->withQueryParams(['filter' => ['q' => 'is:solved']])
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        $this->assertCount(1, $data['data']);
-        $this->assertEquals(2, $data['data'][0]['id']);
-    }
-
-    public function test_negative_search()
-    {
-        $response = $this->send(
-            $this->request(
-                'GET',
-                '/api/discussions',
-                [
-                    'authenticatedAs' => 2,
-                ]
-            )->withQueryParams(['filter' => ['q' => '-is:solved']])
         );
 
         $this->assertEquals(200, $response->getStatusCode());

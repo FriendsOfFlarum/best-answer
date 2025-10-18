@@ -20,10 +20,7 @@
     ],
     "require": {
         "flarum/core": "^2.0.0-beta",
-        "flarum/tags": "*"
-    },
-    "replace": {
-        "wiwatsrt/flarum-ext-best-answer": "*"
+        "flarum/tags": "^2.0.0-beta"
     },
     "authors": [
         {
@@ -55,7 +52,10 @@
                 "fof/follow-tags",
                 "fof/user-directory",
                 "ianm/level-ranks"
-            ]
+            ],
+            "branch-alias": {
+                "2.x": "2.x-dev"
+            }
         },
         "flagrow": {
             "discuss": "https://discuss.flarum.org/d/21894"

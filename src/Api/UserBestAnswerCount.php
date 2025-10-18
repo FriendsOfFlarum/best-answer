@@ -11,20 +11,21 @@
 
 namespace FoF\BestAnswer\Api;
 
-use Flarum\Api\Serializer\UserSerializer;
+use Flarum\Api\Schema;
 use Flarum\User\User;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
 
 class UserBestAnswerCount
 {
-    public function __construct(public BestAnswerRepository $bestAnswers)
-    {
-    }
+    public function __construct(
+        public BestAnswerRepository $bestAnswers
+    ) {}
 
-    public function __invoke(UserSerializer $serializer, User $user, array $attributes): array
+    public function __invoke(): array
     {
-        $attributes['bestAnswerCount'] = $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user);
-
-        return $attributes;
+        return [
+            Schema\Integer::make('bestAnswerCount')
+                ->get(fn(User $user) => $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user)),
+        ];
     }
 }

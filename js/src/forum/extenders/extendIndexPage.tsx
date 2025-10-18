@@ -11,7 +11,7 @@ export default function extendIndexPage() {
 
     if (!tag?.isQnA?.()) return;
 
-    const canStartDiscussion = app.forum.attribute('canStartDiscussion') || !app.session.user;
+    const canStartDiscussion = app.forum.attribute<boolean>('canStartDiscussion') || !app.session.user;
 
     if (!items.has('newDiscussion')) return;
 

@@ -15,7 +15,7 @@ use Flarum\Search\Filter\FilterInterface;
 use Flarum\Search\SearchState;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class BestAnswerFilter implements FilterInterface
@@ -25,12 +25,12 @@ class BestAnswerFilter implements FilterInterface
         return 'solved-discussions';
     }
 
-    public function filter(SearchState $state, array|string $value, bool $negate): void
+    public function filter(SearchState $filterState, array|string $filterValue, bool $negate): void
     {
-        $this->constrain($state->getQuery(), $state->getActor(), $negate);
+        $this->constrain($filterState->getQuery(), $filterState->getActor(), $negate);
     }
 
-    protected function constrain(\Illuminate\Database\Eloquent\Builder $query, User $actor, bool $negate): void
+    protected function constrain(Builder $query, User $actor, bool $negate): void
     {
         $method = $negate ? 'whereNull' : 'whereNotNull';
 

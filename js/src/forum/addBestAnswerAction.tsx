@@ -19,9 +19,9 @@ export default function addBestAnswerAction() {
   };
 
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
-    const bestAnswerPost = discussion.bestAnswerPost();
+    const bAPost = discussion.bestAnswerPost();
     const hasBestAnswer = discussion.hasBestAnswer();
-    return hasBestAnswer !== undefined && hasBestAnswer && bestAnswerPost !== null && bestAnswerPost.id() === post.id();
+    return hasBestAnswer !== undefined && hasBestAnswer && bAPost !== null && bAPost.id() === post.id();
   };
 
   const actionLabel = (isBestAnswer: boolean): string => {
@@ -32,9 +32,7 @@ export default function addBestAnswerAction() {
     discussion
       .save(
         {
-          bestAnswerPostId: isBestAnswer ? post.id() : 0,
-          bestAnswerUserId: app.session.user?.id(),
-          relationships: isBestAnswer ? { bestAnswerPost: post, bestAnswerUser: app.session.user } : { bestAnswerPost: null },
+          relationships: { bestAnswerPost: isBestAnswer ? post : { data: null } },
         },
         {
           params: {

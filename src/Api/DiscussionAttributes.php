@@ -11,20 +11,131 @@
 
 namespace FoF\BestAnswer\Api;
 
-use Flarum\Api\Serializer\DiscussionSerializer;
+use Carbon\Carbon;
+use Flarum\Api\Context;
+use Flarum\Api\Schema;
 use Flarum\Discussion\Discussion;
+use Flarum\Notification\Notification;
+use Flarum\Notification\NotificationSyncer;
+use Flarum\Post\Post;
+use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\Tags\Tag;
+use Flarum\User\Exception\PermissionDeniedException;
+use FoF\BestAnswer\Events\BestAnswerSet;
+use FoF\BestAnswer\Events\BestAnswerUnset;
+use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
+use Illuminate\Events\Dispatcher;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscussionAttributes
 {
-    public function __construct(protected BestAnswerRepository $bestAnswerRepository)
+    public function __construct(
+        protected BestAnswerRepository $bestAnswerRepository,
+        protected NotificationSyncer $notifications,
+        protected Dispatcher $bus,
+        protected TranslatorInterface $translator,
+        protected SettingsRepositoryInterface $settings
+    ) {}
+
+    public function __invoke(): array
     {
+        return [
+            Schema\Boolean::make('canSelectBestAnswer')
+                ->get(fn(Discussion $discussion, Context $context) => $this->bestAnswerRepository->canSelectBestAnswer($context->getActor(), $discussion)),
+            Schema\Attribute::make('hasBestAnswer')
+                ->get(fn(Discussion $discussion) => $discussion->bestAnswerPost !== null ? $discussion->bestAnswerPost->id : false),
+            Schema\DateTime::make('bestAnswerSetAt'),
+
+            Schema\Relationship\ToOne::make('bestAnswerPost')
+                ->type('posts')
+                ->includable()
+                ->writableOnUpdate()
+                ->set(function (Discussion $discussion, ?Post $post, Context  $context) {
+                    $actor = $context->getActor();
+
+                    if ($discussion->best_answer_post_id === $post?->id) {
+                        return;
+                    }
+
+                    if ($post && (! $this->bestAnswerRepository->canSelectPostAsBestAnswer($actor, $post) || ! $post->isVisibleTo($actor))) {
+                        throw new PermissionDeniedException();
+                    }
+
+                    if (! $post && !$this->bestAnswerRepository->canRemoveBestAnswer($actor, $discussion)) {
+                        throw new PermissionDeniedException();
+                    }
+
+                    // Attaching a best answer.
+                    if ($post) {
+                        $discussion->best_answer_post_id = $post->id;
+                        $discussion->best_answer_user_id = $actor->id;
+                        $discussion->best_answer_set_at = Carbon::now();
+                        $discussion->best_answer_notified = false;
+
+                        Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
+
+                        $discussion->afterSave(function (Discussion $discussion) use ($actor) {
+                            $this->changeTags($discussion, 'attach');
+
+                            $post = $discussion->bestAnswerPost;
+                            $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
+                        });
+                    }
+                    // Removing the best answer.
+                    else {
+                        if (! $discussion->bestAnswerPost) {
+                            return;
+                        }
+
+                        $post = $discussion->bestAnswerPost;
+
+                        $discussion->best_answer_post_id = null;
+                        $discussion->best_answer_user_id = null;
+                        $discussion->best_answer_set_at = null;
+                        $discussion->best_answer_notified = null;
+                        $discussion->unsetRelation('bestAnswerPost');
+
+                        $discussion->afterSave(function (Discussion $discussion) use ($actor, $post) {
+                            $this->changeTags($discussion, 'detach');
+                            $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
+                        });
+                    }
+
+                    $discussion->afterSave(function (Discussion $discussion) {
+                        $this->notifications->delete(new SelectBestAnswerBlueprint($discussion));
+                    });
+                }),
+            Schema\Relationship\ToOne::make('bestAnswerUser')
+                ->type('users')
+                ->includable(),
+        ];
     }
 
-    public function __invoke(DiscussionSerializer $serializer, Discussion $discussion, array $attributes): array
+    protected function changeTags(Discussion $discussion, string $method): void
     {
-        $attributes['canSelectBestAnswer'] = $this->bestAnswerRepository->canSelectBestAnswer($serializer->getActor(), $discussion);
+        $tagsToChange = @json_decode($this->settings->get('fof-best-answer.select_best_answer_tags'));
 
-        return $attributes;
+        if (empty($tagsToChange)) {
+            return;
+        }
+
+        $validTags = Tag::query()->whereIn('id', $tagsToChange);
+
+        // Query errors if we try to attach tags that are already attached due to the unique constraint
+        if ($method === 'attach') {
+            /** @phpstan-ignore-next-line */
+            $existingTags = $discussion->tags()->pluck('id');
+            $validTags = $validTags->whereNotIn('id', $existingTags);
+        }
+
+        $validTagsIds = $validTags->pluck('id');
+
+        if ($validTagsIds->isEmpty()) {
+            return;
+        }
+
+        /** @phpstan-ignore-next-line */
+        $discussion->tags()->$method($validTagsIds);
     }
 }

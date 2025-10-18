@@ -100,8 +100,13 @@ class SetBestAnswerTest extends TestCase
                 [
                     'json' => [
                         'data' => [
-                            'attributes' => [
-                                'bestAnswerPostId' => $postId,
+                            'relationships' => [
+                                'bestAnswerPost' => [
+                                    'data' => [
+                                        'type' => 'posts',
+                                        'id' => (string) $postId,
+                                    ],
+                                ],
                             ],
                         ],
                     ],
