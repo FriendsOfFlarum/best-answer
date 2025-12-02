@@ -50,7 +50,7 @@ class BestAnswerRepository
         }
 
         if ($user->id === $post->user_id) {
-            return (bool) $this->settings->get('fof-best-answer.allow_select_own_post');
+            return $user->can('fof-best-answer.allow_select_own_post', $post->discussion);
         }
 
         return true;

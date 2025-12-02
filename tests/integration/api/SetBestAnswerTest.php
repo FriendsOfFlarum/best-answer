@@ -59,6 +59,7 @@ class SetBestAnswerTest extends TestCase
             ],
             'group_permission' => [
                 ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
+                ['group_id' => 4, 'permission' => 'discussion.fof-best-answer.allow_select_own_post', 'created_at' => Carbon::now()],
             ],
             'group_user' => [
                 ['user_id' => 4, 'group_id' => 4],
@@ -166,20 +167,36 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    #[Test]
-    public function user_cannot_set_own_post_as_best_answer_if_not_permitted()
+    public static function unauthorizedUsersOwnPostProvider(): array
     {
-        $response = $this->setBestAnswer(3, 5, 2);
+        return [
+            [2],
+            [3],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('unauthorizedUsersOwnPostProvider')]
+    public function user_cannot_set_own_post_as_best_answer_if_not_permitted(int $userId)
+    {
+        $response = $this->setBestAnswer($userId, 5, 2);
 
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    #[Test]
-    public function user_can_set_own_post_as_best_answer_if_permitted()
+    public static function permittedUsersOwnPostProvider(): array
     {
-        $this->setting('fof-best-answer.allow_select_own_post', true);
+        return [
+            [1],
+            [4],
+        ];
+    }
 
-        $response = $this->setBestAnswer(3, 5, 2);
+    #[Test]
+    #[DataProvider('permittedUsersOwnPostProvider')]
+    public function user_can_set_own_post_as_best_answer_if_permitted(int $userId)
+    {
+        $response = $this->setBestAnswer($userId, 5, 2);
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -3,6 +3,7 @@ fof-best-answer:
     permissions:
       best_answer: Select Best Answer (own Discussion)
       best_answer_not_own_discussion: Select Best Answer (not own Discussion)
+      allow_select_own_post: Select own post as Best Answer
     settings:
       label:
         tags: Best Answer Tags
@@ -10,8 +11,6 @@ fof-best-answer:
         reminders: Reminders
         advanced: Advanced
         reminders_notice: For reminders to function, you must have set up the Flarum scheduler correctly.
-      allow_select_own_post: Select own post
-      allow_select_own_post_help: Allow a user to select their own post as a best answer to a discussion
       show_max_lines_label: Max lines to show in post preview
       show_max_lines_help: Set to 0 to disable. If a post is longer than the configured amount of lines, it will be truncated in the post preview with a fade out effect.
       select_best_answer_reminder_days: Reminder frequency

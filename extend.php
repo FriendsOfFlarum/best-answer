@@ -77,6 +77,7 @@ return [
         }),
 
     (new Extend\ApiResource(Resource\PostResource::class))
+        ->fields(Api\PostAttributes::class)
         ->endpoint(Endpoint\Index::class, function (Endpoint\Index $endpoint) {
             return $endpoint
                 ->addDefaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
