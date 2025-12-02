@@ -11,6 +11,7 @@
 
 namespace FoF\BestAnswer\Api;
 
+use Flarum\Api\Context;
 use Flarum\Api\Schema;
 use Flarum\Settings\SettingsRepositoryInterface;
 
@@ -24,9 +25,6 @@ class ForumAttributes
     public function __invoke(): array
     {
         return [
-            Schema\Boolean::make('canSelectBestAnswerOwnPost')
-                ->get(fn () => (bool) $this->settings->get('fof-best-answer.allow_select_own_post')),
-
             Schema\Boolean::make('bestAnswerDiscussionSidebarJumpButton')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.discussion_sidebar_jump_button')),
 

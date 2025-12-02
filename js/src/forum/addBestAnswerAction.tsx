@@ -13,11 +13,6 @@ export default function addBestAnswerAction() {
     return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user;
   };
 
-  const blockSelectOwnPost = (post: Post): boolean => {
-    const user = post.user();
-    return !app.forum.attribute<boolean>('canSelectBestAnswerOwnPost') && user !== false && user.id() === app.session.user?.id();
-  };
-
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
     const bAPost = discussion.bestAnswerPost();
     const hasBestAnswer = discussion.hasBestAnswer();
@@ -72,7 +67,7 @@ export default function addBestAnswerAction() {
 
     if (post.contentType() !== 'comment') return;
 
-    if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
+    if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
     items.add(
       'bestAnswer',
@@ -101,7 +96,7 @@ export default function addBestAnswerAction() {
 
     post.pushAttributes({ isBestAnswer });
 
-    if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
+    if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
     items.add(
       'bestAnswer',
