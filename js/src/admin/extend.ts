@@ -26,9 +26,9 @@ export default [
     )
     .permission(
       () => ({
-        icon : 'fas fa-check',
+        icon: 'fas fa-check',
         label: app.translator.trans('fof-best-answer.admin.permissions.allow_select_own_post'),
-        permission: 'discussion.fof-best-answer.allow_select_own_post'
+        permission: 'discussion.fof-best-answer.allow_select_own_post',
       }),
       'reply'
     ),
