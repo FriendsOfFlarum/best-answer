@@ -14,9 +14,9 @@ export default function addBestAnswerAction() {
   };
 
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
-    const bAPost = discussion.bestAnswerPost();
+    const bAPost = discussion.bestAnswerPost?.();
     const hasBestAnswer = discussion.hasBestAnswer();
-    return hasBestAnswer !== undefined && hasBestAnswer && bAPost !== null && bAPost.id() === post.id();
+    return hasBestAnswer !== undefined && hasBestAnswer && bAPost !== null && bAPost.id?.() === post.id();
   };
 
   const actionLabel = (isBestAnswer: boolean): string => {
