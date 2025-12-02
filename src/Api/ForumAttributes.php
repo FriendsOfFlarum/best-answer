@@ -11,7 +11,6 @@
 
 namespace FoF\BestAnswer\Api;
 
-use Flarum\Api\Context;
 use Flarum\Api\Schema;
 use Flarum\Settings\SettingsRepositoryInterface;
 

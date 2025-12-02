@@ -59,7 +59,7 @@ class SetBestAnswerTest extends TestCase
             ],
             'group_permission' => [
                 ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
-                ['group_id' => 4, 'permission' => 'discussion.fof-best-answer.allow_select_own_post', 'created_at' => Carbon::now()]
+                ['group_id' => 4, 'permission' => 'discussion.fof-best-answer.allow_select_own_post', 'created_at' => Carbon::now()],
             ],
             'group_user' => [
                 ['user_id' => 4, 'group_id' => 4],
