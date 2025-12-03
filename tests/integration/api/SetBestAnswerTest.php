@@ -26,33 +26,102 @@ class SetBestAnswerTest extends TestCase
         $this->extension('flarum-tags');
         $this->extension('fof-best-answer');
         $this->prepareDatabase([
-            'users' => [
+            'users'            => [
                 $this->normalUser(),
-                ['id' => 3, 'username' => 'normal2', 'email' => 'normal2@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
-                ['id' => 4, 'username' => 'moderator', 'email' => 'moderator@machine.local', 'is_email_confirmed' => 1, 'best_answer_count' => 0],
+                [
+                    'id'                 => 3,
+                    'username'           => 'normal2',
+                    'email'              => 'normal2@machine.local',
+                    'is_email_confirmed' => 1,
+                    'best_answer_count'  => 0
+                ],
+                [
+                    'id'                 => 4,
+                    'username'           => 'moderator',
+                    'email'              => 'moderator@machine.local',
+                    'is_email_confirmed' => 1,
+                    'best_answer_count'  => 0
+                ],
             ],
-            'tags' => [
-                ['id' => 2, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => 'Q&A description', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
+            'tags'             => [
+                [
+                    'id'            => 2,
+                    'name'          => 'Q&A',
+                    'slug'          => 'q-a',
+                    'description'   => 'Q&A description',
+                    'color'         => '#FF0000',
+                    'position'      => 0,
+                    'parent_id'     => null,
+                    'is_restricted' => false,
+                    'is_hidden'     => false,
+                    'is_qna'        => true
+                ],
             ],
-            'discussions' => [
+            'discussions'      => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2],
             ],
-            'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
-                ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
-                ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
-                ['id' => 4, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 4 - answer by owner', 'created_at' => Carbon::now()],
-                ['id' => 5, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 5 - answer by normal2', 'created_at' => Carbon::now()],
-                ['id' => 6, 'discussion_id' => 1, 'user_id' => 4, 'type' => 'comment', 'content' => 'post 6 - answer by moderator', 'created_at' => Carbon::now()],
+            'posts'            => [
+                [
+                    'id'            => 1,
+                    'discussion_id' => 1,
+                    'user_id'       => 2,
+                    'type'          => 'comment',
+                    'content'       => 'post 1 - question',
+                    'created_at'    => Carbon::now()
+                ],
+                [
+                    'id'            => 2,
+                    'discussion_id' => 1,
+                    'user_id'       => 1,
+                    'type'          => 'comment',
+                    'content'       => 'post 2 - answer1',
+                    'created_at'    => Carbon::now()
+                ],
+                [
+                    'id'            => 3,
+                    'discussion_id' => 1,
+                    'user_id'       => 3,
+                    'type'          => 'comment',
+                    'content'       => 'post 2 - answer2',
+                    'created_at'    => Carbon::now()
+                ],
+                [
+                    'id'            => 4,
+                    'discussion_id' => 1,
+                    'user_id'       => 2,
+                    'type'          => 'comment',
+                    'content'       => 'post 4 - answer by owner',
+                    'created_at'    => Carbon::now()
+                ],
+                [
+                    'id'            => 5,
+                    'discussion_id' => 1,
+                    'user_id'       => 3,
+                    'type'          => 'comment',
+                    'content'       => 'post 5 - answer by normal2',
+                    'created_at'    => Carbon::now()
+                ],
+                [
+                    'id'            => 6,
+                    'discussion_id' => 1,
+                    'user_id'       => 4,
+                    'type'          => 'comment',
+                    'content'       => 'post 6 - answer by moderator',
+                    'created_at'    => Carbon::now()
+                ],
             ],
-            'discussion_tag' => [
+            'discussion_tag'   => [
                 ['discussion_id' => 1, 'tag_id' => 2],
             ],
             'group_permission' => [
-                ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
+                [
+                    'group_id'   => 4,
+                    'permission' => 'discussion.selectBestAnswerNotOwnDiscussion',
+                    'created_at' => Carbon::now()
+                ],
                 ['group_id' => 4, 'permission' => 'selectBestAnswerOwnPost', 'created_at' => Carbon::now()],
             ],
-            'group_user' => [
+            'group_user'       => [
                 ['user_id' => 4, 'group_id' => 4],
             ],
         ]);
@@ -89,7 +158,7 @@ class SetBestAnswerTest extends TestCase
         }
 
         foreach ($document['included'] as $resource) {
-            if ($resource['type'] === 'posts' && (int) $resource['id'] === $postId) {
+            if ($resource['type'] === 'posts' && (int)$resource['id'] === $postId) {
                 return $resource;
             }
         }
@@ -118,7 +187,7 @@ class SetBestAnswerTest extends TestCase
                 'PATCH',
                 '/api/discussions/1',
                 [
-                    'json' => [
+                    'json'            => [
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => $postId,
@@ -146,7 +215,10 @@ class SetBestAnswerTest extends TestCase
         $targetPost = $this->getPostFromResponse($data, 3);
         $this->assertNotNull($targetPost, 'Post 3 should be in the includes');
 
-        $this->assertTrue($targetPost['attributes']['canSelectBestAnswer'], 'Expected user to be able to set best answer on this post');
+        $this->assertTrue(
+            $targetPost['attributes']['canSelectBestAnswer'],
+            'Expected user to be able to set best answer on this post'
+        );
 
         $response = $this->setBestAnswer($userId, 3);
         $this->assertEquals(200, $response->getStatusCode());
@@ -182,7 +254,10 @@ class SetBestAnswerTest extends TestCase
         $targetPost = $this->getPostFromResponse($data, 3);
         $this->assertNotNull($targetPost, 'Post 3 should be in the includes');
 
-        $this->assertFalse($targetPost['attributes']['canSelectBestAnswer'], 'Expected user to not be able to set best answer');
+        $this->assertFalse(
+            $targetPost['attributes']['canSelectBestAnswer'],
+            'Expected user to not be able to set best answer'
+        );
 
         $response = $this->setBestAnswer($userId, 3);
         $this->assertEquals(403, $response->getStatusCode());
@@ -223,5 +298,4 @@ class SetBestAnswerTest extends TestCase
         $attributes = $data['data']['attributes'];
         $this->assertEquals($postId, $attributes['hasBestAnswer'], "Expected best answer post ID to be {$postId}");
     }
-
 }
