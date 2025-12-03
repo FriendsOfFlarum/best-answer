@@ -51,8 +51,19 @@ class BestAnswerRepository
         $this->events = $events;
         $this->translator = $translator;
     }
-
+    
     public function canSelectBestAnswer(User $user, Discussion $discussion): bool
+    {
+        // Prevent best answers being set in a private discussion (ie byobu, etc)
+        if ($discussion->is_private) {
+            return false;
+        }
+        return $this->tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
+            ? $user->can('discussion.selectBestAnswerOwnDiscussion', $discussion)
+            : $user->can('discussion.selectBestAnswerNotOwnDiscussion', $discussion));
+    }
+
+    public function canSelectBestAnswerOwnPost(User $user, Discussion $discussion): bool
     {
         // Prevent best answers being set in a private discussion (ie byobu, etc)
         if ($discussion->is_private) {
@@ -60,8 +71,7 @@ class BestAnswerRepository
         }
 
         return $this->tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
-            ? $user->can('selectBestAnswerOwnDiscussion', $discussion)
-            : $user->can('selectBestAnswerNotOwnDiscussion', $discussion));
+            && $user->can('discussion.fof-best-answer.allow_select_own_post', $discussion));
     }
 
     public function canSelectPostAsBestAnswer(User $user, Post $post): bool
@@ -71,7 +81,7 @@ class BestAnswerRepository
         }
 
         if ($user->id === $post->user_id) {
-            return (bool) $this->settings->get('fof-best-answer.allow_select_own_post');
+            return $user->can('discussion.fof-best-answer.allow_select_own_post', $post->discussion);
         }
 
         return true;

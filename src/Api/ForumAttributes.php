@@ -34,7 +34,6 @@ class ForumAttributes
         }
 
         $attributes['solutionSearchEnabled'] = $value;
-        $attributes['canSelectBestAnswerOwnPost'] = $this->getBooleanSetting('fof-best-answer.allow_select_own_post');
         $attributes['useAlternativeBestAnswerUi'] = $this->getBooleanSetting('fof-best-answer.use_alternative_ui');
         $attributes['showBestAnswerFilterUi'] = $this->getBooleanSetting('fof-best-answer.show_filter_dropdown');
         $attributes['bestAnswerDiscussionSidebarJumpButton'] = $this->getBooleanSetting('fof-best-answer.discussion_sidebar_jump_button');

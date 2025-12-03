@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FoF\BestAnswer\Api;
+
+use Flarum\Api\Context;
+use Flarum\Api\Schema;
+use Flarum\Post\Post;
+use FoF\BestAnswer\Repository\BestAnswerRepository;
+use Flarum\Api\Serializer\PostSerializer;
+class PostAttributes
+{
+    public function __construct(
+        protected BestAnswerRepository $bestAnswerRepository,
+    ) {
+    }
+
+    public function __invoke(PostSerializer $serializer, Post $post, array $attributes): array
+    {
+        $attributes['canSelectBestAnswer'] = $this->bestAnswerRepository->canSelectBestAnswer($serializer->getActor(), $post->discussion);
+
+        return $attributes;
+    }
+}

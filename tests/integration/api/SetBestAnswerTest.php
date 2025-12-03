@@ -23,7 +23,6 @@ class SetBestAnswerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
         $this->extension('flarum-tags');
         $this->extension('fof-best-answer');
 
@@ -43,24 +42,31 @@ class SetBestAnswerTest extends TestCase
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 1 - question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'post 2 - answer1', 'created_at' => Carbon::now()],
                 ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
+                ['id' => 4, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'post 4 - answer by owner', 'created_at' => Carbon::now()],
+                ['id' => 5, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 5 - answer by normal2', 'created_at' => Carbon::now()],
+                ['id' => 6, 'discussion_id' => 1, 'user_id' => 4, 'type' => 'comment', 'content' => 'post 6 - answer by moderator', 'created_at' => Carbon::now()],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 2],
             ],
             'group_permission' => [
                 ['group_id' => 4, 'permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'created_at' => Carbon::now()],
+                ['group_id' => 4, 'permission' => 'discussion.fof-best-answer.allow_select_own_post', 'created_at' => Carbon::now()],
             ],
             'group_user' => [
                 ['user_id' => 4, 'group_id' => 4],
             ],
         ]);
+
+        $this->database()->table('group_permission')
+            ->where('permission', 'discussion.selectBestAnswerOwnDiscussion')
+            ->delete();
     }
 
     public function allowedUsersProvider(): array
     {
         return [
             [1],
-            [2],
             [4],
         ];
     }
@@ -68,8 +74,18 @@ class SetBestAnswerTest extends TestCase
     public function notAllowedUsersProvider(): array
     {
         return [
+            [2],
             [3],
         ];
+    }
+
+    private function getCanSelectBestAnswer(array $included, int $userId): bool {
+        foreach ($included as $item) {
+            if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer']) && $item['relationships']['user']['data']['id'] == $userId) {
+                return $item['attributes']['canSelectBestAnswer'];
+            }
+        }
+        return false;
     }
 
     public function getDiscussion(int $userId): ResponseInterface
@@ -119,9 +135,8 @@ class SetBestAnswerTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
 
         $attributes = $data['data']['attributes'];
-
         $this->assertFalse($attributes['hasBestAnswer'], 'Expected no best answer post ID');
-        $this->assertTrue($attributes['canSelectBestAnswer'], 'Expected user to be able to set best answer');
+        $this->assertTrue($this->getCanSelectBestAnswer($data['included'], $userId), 'Expected user to be able to set best answer');
 
         $response = $this->setBestAnswer($userId, 3);
 
@@ -134,6 +149,13 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
+    public static function unauthorizedUsersOwnPostProvider(): array
+    {
+        return [
+            [2],
+            [3],
+        ];
+    }
     /**
      * @test
      *
@@ -148,12 +170,52 @@ class SetBestAnswerTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
 
         $attributes = $data['data']['attributes'];
-
         $this->assertFalse($attributes['hasBestAnswer'], 'Expected no best answer post ID');
-        $this->assertFalse($attributes['canSelectBestAnswer'], 'Expected user to not be able to set best answer');
+        $this->assertFalse($this->getCanSelectBestAnswer($data['included'], $userId), 'Expected user to not be able to set best answer');
 
         $response = $this->setBestAnswer($userId, 3);
 
         $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider unauthorizedUsersOwnPostProvider
+     */
+    public function user_cannot_set_own_post_as_best_answer_if_not_permitted(int $userId)
+    {
+        $postId = $userId === 2 ? 4 : 5;
+
+        $response = $this->setBestAnswer($userId, $postId);
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public static function permittedUsersOwnPostProvider(): array
+    {
+        return [
+            [1],
+            [4],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider permittedUsersOwnPostProvider
+     */
+    public function user_can_set_own_post_as_best_answer_if_permitted(int $userId)
+    {
+        $postId = $userId === 1 ? 2 : 6;
+
+        $response = $this->setBestAnswer($userId, $postId);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $attributes = $data['data']['attributes'];
+
+        $this->assertEquals($postId, $attributes['hasBestAnswer'], "Expected best answer post ID to be {$postId}");
     }
 }

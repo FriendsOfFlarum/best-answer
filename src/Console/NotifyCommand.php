@@ -94,7 +94,7 @@ class NotifyCommand extends Command
             // - The user must have permission to select a best answer on their own discussion
             // - The user must be able to select a post, whether they can select any post (including their own) or not.
             $discussions = $discussions->filter(function ($d) use ($canSelectOwn) {
-                $hasPermission = $d->user->can('selectBestAnswerOwnDiscussion', $d);
+                $hasPermission = $d->user->can('discussion.selectBestAnswerOwnDiscussion', $d);
                 $canSelectPosts = $canSelectOwn || $d->posts()->where('user_id', '!=', $d->user_id)->count() != 0;
 
                 return $hasPermission && $canSelectPosts;

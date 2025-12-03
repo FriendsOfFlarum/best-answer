@@ -120,7 +120,7 @@ class UnsetBestAnswerTest extends TestCase
 
         $attributes = $data['data']['attributes'];
         $this->assertFalse($attributes['hasBestAnswer']);
-        $this->assertTrue($attributes['canSelectBestAnswer'], 'Expected user to be able to set a best answer');
+        $this->assertTrue($this->getCanSelectBestAnswer($data['included'], 2), 'Expected user to be able to set a best answer');
 
         // Set a different post as best answer
         $response = $this->send(
@@ -148,6 +148,18 @@ class UnsetBestAnswerTest extends TestCase
         $attributes = $data['data']['attributes'];
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
+
+    private function getCanSelectBestAnswer(array $included, int $userId): bool {
+        foreach ($included as $item) {
+            if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer'])
+                && $item['relationships']['user']['data']['id'] == $userId) {
+                return $item['attributes']['canSelectBestAnswer'];
+            }
+        }
+
+        return false;
+    }
+
 
     public function noPermissionUserProvider(): array
     {
