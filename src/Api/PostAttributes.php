@@ -11,11 +11,10 @@
 
 namespace FoF\BestAnswer\Api;
 
-use Flarum\Api\Context;
-use Flarum\Api\Schema;
 use Flarum\Post\Post;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
 use Flarum\Api\Serializer\PostSerializer;
+
 class PostAttributes
 {
     public function __construct(
@@ -29,4 +28,5 @@ class PostAttributes
 
         return $attributes;
     }
+
 }

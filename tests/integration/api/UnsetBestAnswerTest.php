@@ -160,7 +160,6 @@ class UnsetBestAnswerTest extends TestCase
         return false;
     }
 
-
     public function noPermissionUserProvider(): array
     {
         return [

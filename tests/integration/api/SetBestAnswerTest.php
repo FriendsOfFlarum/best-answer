@@ -79,12 +79,14 @@ class SetBestAnswerTest extends TestCase
         ];
     }
 
-    private function getCanSelectBestAnswer(array $included, int $userId): bool {
+    private function getCanSelectBestAnswer(array $included, int $userId): bool 
+    {
         foreach ($included as $item) {
             if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer']) && $item['relationships']['user']['data']['id'] == $userId) {
                 return $item['attributes']['canSelectBestAnswer'];
             }
         }
+
         return false;
     }
 
@@ -156,6 +158,7 @@ class SetBestAnswerTest extends TestCase
             [3],
         ];
     }
+    
     /**
      * @test
      *
