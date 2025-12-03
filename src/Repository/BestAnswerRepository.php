@@ -51,13 +51,14 @@ class BestAnswerRepository
         $this->events = $events;
         $this->translator = $translator;
     }
-    
+
     public function canSelectBestAnswer(User $user, Discussion $discussion): bool
     {
         // Prevent best answers being set in a private discussion (ie byobu, etc)
         if ($discussion->is_private) {
             return false;
         }
+
         return $this->tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
             ? $user->can('discussion.selectBestAnswerOwnDiscussion', $discussion)
             : $user->can('discussion.selectBestAnswerNotOwnDiscussion', $discussion));

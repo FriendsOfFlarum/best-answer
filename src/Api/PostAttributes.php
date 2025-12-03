@@ -11,9 +11,9 @@
 
 namespace FoF\BestAnswer\Api;
 
+use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Post\Post;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
-use Flarum\Api\Serializer\PostSerializer;
 
 class PostAttributes
 {
@@ -28,5 +28,4 @@ class PostAttributes
 
         return $attributes;
     }
-
 }
