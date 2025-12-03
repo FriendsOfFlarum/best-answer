@@ -71,7 +71,7 @@ class BestAnswerRepository
         }
 
         if ($user->id === $post->user_id) {
-            return $user->can('selectBestAnswerOwnPost',$post->discussion);
+            return $user->can('selectBestAnswerOwnPost', $post->discussion);
         }
 
         return true;

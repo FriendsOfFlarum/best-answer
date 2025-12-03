@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of fof/best-answer.
  *
@@ -7,14 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace FoF\BestAnswer\tests\integration\api;
+
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Psr\Http\Message\ResponseInterface;
+
 class SetBestAnswerTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -57,6 +62,7 @@ class SetBestAnswerTest extends TestCase
             ->where('permission', 'discussion.selectBestAnswerOwnDiscussion')
             ->delete();
     }
+
     public function allowedUsersProvider(): array
     {
         return [
@@ -64,6 +70,7 @@ class SetBestAnswerTest extends TestCase
             [4],
         ];
     }
+
     public function notAllowedUsersProvider(): array
     {
         return [
@@ -73,17 +80,20 @@ class SetBestAnswerTest extends TestCase
     }
 
     /**
-     * Helper to retrieve a specific post from the JSON:API 'included' array
+     * Helper to retrieve a specific post from the JSON:API 'included' array.
      */
     protected function getPostFromResponse(array $document, int $postId)
     {
-        if (!isset($document['included'])) return null;
+        if (!isset($document['included'])) {
+            return null;
+        }
 
         foreach ($document['included'] as $resource) {
-            if ($resource['type'] === 'posts' && (int)$resource['id'] === $postId) {
+            if ($resource['type'] === 'posts' && (int) $resource['id'] === $postId) {
                 return $resource;
             }
         }
+
         return null;
     }
 
@@ -94,12 +104,13 @@ class SetBestAnswerTest extends TestCase
                 'GET',
                 '/api/discussions/1',
                 [
-                    'queryParams' => ['include' => 'posts'],
+                    'queryParams'     => ['include' => 'posts'],
                     'authenticatedAs' => $userId,
                 ]
             )
         );
     }
+
     public function setBestAnswer(int $userId, int $postId): ResponseInterface
     {
         return $this->send(
@@ -119,6 +130,7 @@ class SetBestAnswerTest extends TestCase
             )
         );
     }
+
     /**
      * @test
      *
@@ -143,6 +155,7 @@ class SetBestAnswerTest extends TestCase
 
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
+
     public static function unauthorizedUsersOwnPostProvider(): array
     {
         return [
@@ -150,6 +163,7 @@ class SetBestAnswerTest extends TestCase
             [3],
         ];
     }
+
     /**
      * @test
      *
@@ -173,6 +187,7 @@ class SetBestAnswerTest extends TestCase
         $response = $this->setBestAnswer($userId, 3);
         $this->assertEquals(403, $response->getStatusCode());
     }
+
     /**
      * @test
      *
@@ -185,6 +200,7 @@ class SetBestAnswerTest extends TestCase
 
         $this->assertEquals(403, $response->getStatusCode());
     }
+
     public static function permittedUsersOwnPostProvider(): array
     {
         return [
@@ -192,6 +208,7 @@ class SetBestAnswerTest extends TestCase
             [4],
         ];
     }
+
     /**
      * @test
      *
@@ -207,15 +224,3 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals($postId, $attributes['hasBestAnswer'], "Expected best answer post ID to be {$postId}");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
