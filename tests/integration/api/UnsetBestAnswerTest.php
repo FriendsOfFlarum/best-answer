@@ -35,7 +35,7 @@ class UnsetBestAnswerTest extends TestCase
                     'username'           => 'normal2',
                     'email'              => 'normal2@machine.local',
                     'is_email_confirmed' => 1,
-                    'best_answer_count'  => 0
+                    'best_answer_count'  => 0,
                 ],
                 ['id' => 4, 'username' => 'moderator', 'email' => 'mod:machine.local', 'is_email_confirmed' => 1],
             ],
@@ -50,7 +50,7 @@ class UnsetBestAnswerTest extends TestCase
                     'parent_id'     => null,
                     'is_restricted' => false,
                     'is_hidden'     => false,
-                    'is_qna'        => true
+                    'is_qna'        => true,
                 ],
             ],
             'discussions'      => [
@@ -62,7 +62,7 @@ class UnsetBestAnswerTest extends TestCase
                     'comment_count'       => 2,
                     'best_answer_post_id' => 2,
                     'best_answer_user_id' => 1,
-                    'best_answer_set_at'  => Carbon::now()
+                    'best_answer_set_at'  => Carbon::now(),
                 ],
             ],
             'posts'            => [
@@ -72,7 +72,7 @@ class UnsetBestAnswerTest extends TestCase
                     'user_id'       => 2,
                     'type'          => 'comment',
                     'content'       => 'post 1 - question',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 2,
@@ -80,7 +80,7 @@ class UnsetBestAnswerTest extends TestCase
                     'user_id'       => 1,
                     'type'          => 'comment',
                     'content'       => 'post 2 - answer1',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 3,
@@ -88,7 +88,7 @@ class UnsetBestAnswerTest extends TestCase
                     'user_id'       => 3,
                     'type'          => 'comment',
                     'content'       => 'post 2 - answer2',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
             ],
             'discussion_tag'   => [
@@ -118,6 +118,7 @@ class UnsetBestAnswerTest extends TestCase
                 return $resource;
             }
         }
+
         return null;
     }
 

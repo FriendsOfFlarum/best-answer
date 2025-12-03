@@ -223,4 +223,5 @@ class SetBestAnswerTest extends TestCase
         $attributes = $data['data']['attributes'];
         $this->assertEquals($postId, $attributes['hasBestAnswer'], "Expected best answer post ID to be {$postId}");
     }
+
 }
