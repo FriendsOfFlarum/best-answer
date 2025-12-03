@@ -13,6 +13,7 @@ namespace FoF\BestAnswer;
 
 use Flarum\Api\Controller;
 use Flarum\Api\Serializer;
+use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -24,6 +25,7 @@ use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
+use FoF\BestAnswer\Api\PostAttributes;
 
 return [
     (new Extend\Frontend('forum'))
@@ -68,8 +70,8 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
-    (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attributes(Api\DiscussionAttributes::class),
+    (new Extend\ApiSerializer(PostSerializer::class))
+        ->attributes(PostAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)

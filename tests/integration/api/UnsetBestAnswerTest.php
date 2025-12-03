@@ -57,6 +57,21 @@ class UnsetBestAnswerTest extends TestCase
         ]);
     }
 
+    /**
+     * Helper to retrieve a specific post from the JSON:API 'included' array
+     */
+    protected function getPostFromResponse(array $document, int $postId)
+    {
+        if (!isset($document['included'])) return null;
+
+        foreach ($document['included'] as $resource) {
+            if ($resource['type'] === 'posts' && (int)$resource['id'] === $postId) {
+                return $resource;
+            }
+        }
+        return null;
+    }
+
     public function getBestAnswerDiscussion(int $userId = 2): ResponseInterface
     {
         return $this->send(
@@ -64,6 +79,7 @@ class UnsetBestAnswerTest extends TestCase
                 'GET',
                 '/api/discussions/1',
                 [
+                    'queryParams' => ['include' => 'posts'],
                     'authenticatedAs' => $userId,
                 ]
             )
@@ -109,7 +125,7 @@ class UnsetBestAnswerTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
 
         $attributes = $data['data']['attributes'];
-        $this->assertFalse($attributes['hasBestAnswer']);
+        $this->assertFalse($attributes['hasBestAnswer'] ?? false);
 
         // Check the best answer is unset and that we are allowed to set a new one
         $response = $this->getBestAnswerDiscussion();
@@ -119,8 +135,13 @@ class UnsetBestAnswerTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
 
         $attributes = $data['data']['attributes'];
-        $this->assertFalse($attributes['hasBestAnswer']);
-        $this->assertTrue($attributes['canSelectBestAnswer'], 'Expected user to be able to set a best answer');
+
+        $this->assertFalse($attributes['hasBestAnswer'] ?? false);
+
+        $targetPost = $this->getPostFromResponse($data, 3);
+        $this->assertNotNull($targetPost, 'Post 3 should be included in response');
+
+        $this->assertTrue($targetPost['attributes']['canSelectBestAnswer'], 'Expected user to be able to set a best answer on Post 3');
 
         // Set a different post as best answer
         $response = $this->send(

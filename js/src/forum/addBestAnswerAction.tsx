@@ -10,12 +10,7 @@ import extractText from 'flarum/common/utils/extractText';
 
 export default function addBestAnswerAction() {
   const ineligible = (discussion: Discussion, post: Post) => {
-    return post.isHidden() || post.number() === 1 || !discussion.canSelectBestAnswer() || !app.session.user;
-  };
-
-  const blockSelectOwnPost = (post: Post): boolean => {
-    const user = post.user();
-    return !app.forum.attribute<boolean>('canSelectBestAnswerOwnPost') && user !== false && user.id() === app.session.user?.id();
+    return post.isHidden() || post.number() === 1 || !post.canSelectBestAnswer() || !app.session.user;
   };
 
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {
@@ -71,7 +66,7 @@ export default function addBestAnswerAction() {
 
     if (post.contentType() !== 'comment') return;
 
-    if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
+    if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
     items.add(
       'bestAnswer',
@@ -100,7 +95,7 @@ export default function addBestAnswerAction() {
 
     post.pushAttributes({ isBestAnswer });
 
-    if (ineligible(discussion, post) || blockSelectOwnPost(post) || !app.current.matches(DiscussionPage)) return;
+    if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
     items.add(
       'bestAnswer',

@@ -14,7 +14,6 @@ declare module 'flarum/common/models/Discussion' {
     hasBestAnswer(): boolean | undefined;
     bestAnswerPost(): Post | null;
     bestAnswerUser(): User | null;
-    canSelectBestAnswer(): boolean;
     bestAnswerSetAt(): Date | null;
   }
 }
@@ -36,4 +35,10 @@ declare module 'flarum/common/models/User' {
   export default interface User {
     bestAnswerCount(): number;
   }
+}
+
+declare module 'flarum/common/models/Post' {
+    export default interface Post {
+        canSelectAsBestAnswer(): boolean;
+    }
 }
