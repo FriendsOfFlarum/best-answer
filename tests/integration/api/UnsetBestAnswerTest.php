@@ -28,84 +28,84 @@ class UnsetBestAnswerTest extends TestCase
         $this->extension('fof-best-answer');
 
         $this->prepareDatabase([
-            'users' => [
+            'users'            => [
                 $this->normalUser(),
                 [
-                    'id' => 3,
-                    'username' => 'normal2',
-                    'email' => 'normal2@machine.local',
+                    'id'                 => 3,
+                    'username'           => 'normal2',
+                    'email'              => 'normal2@machine.local',
                     'is_email_confirmed' => 1,
-                    'best_answer_count' => 0
+                    'best_answer_count'  => 0
                 ],
                 ['id' => 4, 'username' => 'moderator', 'email' => 'mod:machine.local', 'is_email_confirmed' => 1],
             ],
-            'tags' => [
+            'tags'             => [
                 [
-                    'id' => 2,
-                    'name' => 'Q&A',
-                    'slug' => 'q-a',
-                    'description' => 'Q&A description',
-                    'color' => '#FF0000',
-                    'position' => 0,
-                    'parent_id' => null,
+                    'id'            => 2,
+                    'name'          => 'Q&A',
+                    'slug'          => 'q-a',
+                    'description'   => 'Q&A description',
+                    'color'         => '#FF0000',
+                    'position'      => 0,
+                    'parent_id'     => null,
                     'is_restricted' => false,
-                    'is_hidden' => false,
-                    'is_qna' => true
+                    'is_hidden'     => false,
+                    'is_qna'        => true
                 ],
             ],
-            'discussions' => [
+            'discussions'      => [
                 [
-                    'id' => 1,
-                    'title' => __CLASS__,
-                    'user_id' => 2,
-                    'created_at' => Carbon::now(),
-                    'comment_count' => 2,
+                    'id'                  => 1,
+                    'title'               => __CLASS__,
+                    'user_id'             => 2,
+                    'created_at'          => Carbon::now(),
+                    'comment_count'       => 2,
                     'best_answer_post_id' => 2,
                     'best_answer_user_id' => 1,
-                    'best_answer_set_at' => Carbon::now()
+                    'best_answer_set_at'  => Carbon::now()
                 ],
             ],
-            'posts' => [
+            'posts'            => [
                 [
-                    'id' => 1,
+                    'id'            => 1,
                     'discussion_id' => 1,
-                    'user_id' => 2,
-                    'type' => 'comment',
-                    'content' => 'post 1 - question',
-                    'created_at' => Carbon::now()
+                    'user_id'       => 2,
+                    'type'          => 'comment',
+                    'content'       => 'post 1 - question',
+                    'created_at'    => Carbon::now()
                 ],
                 [
-                    'id' => 2,
+                    'id'            => 2,
                     'discussion_id' => 1,
-                    'user_id' => 1,
-                    'type' => 'comment',
-                    'content' => 'post 2 - answer1',
-                    'created_at' => Carbon::now()
+                    'user_id'       => 1,
+                    'type'          => 'comment',
+                    'content'       => 'post 2 - answer1',
+                    'created_at'    => Carbon::now()
                 ],
                 [
-                    'id' => 3,
+                    'id'            => 3,
                     'discussion_id' => 1,
-                    'user_id' => 3,
-                    'type' => 'comment',
-                    'content' => 'post 2 - answer2',
-                    'created_at' => Carbon::now()
+                    'user_id'       => 3,
+                    'type'          => 'comment',
+                    'content'       => 'post 2 - answer2',
+                    'created_at'    => Carbon::now()
                 ],
             ],
-            'discussion_tag' => [
+            'discussion_tag'   => [
                 ['discussion_id' => 1, 'tag_id' => 2],
             ],
             'group_permission' => [
                 ['permission' => 'discussion.selectBestAnswerOwnDiscussion', 'group_id' => 3],
                 ['permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'group_id' => 4],
             ],
-            'group_user' => [
+            'group_user'       => [
                 ['user_id' => 4, 'group_id' => 4],
             ],
         ]);
     }
 
     /**
-     * Helper to retrieve a specific post from the JSON:API 'included' array
+     * Helper to retrieve a specific post from the JSON:API 'included' array.
      */
     protected function getPostFromResponse(array $document, int $postId)
     {
@@ -114,7 +114,7 @@ class UnsetBestAnswerTest extends TestCase
         }
 
         foreach ($document['included'] as $resource) {
-            if ($resource['type'] === 'posts' && (int)$resource['id'] === $postId) {
+            if ($resource['type'] === 'posts' && (int) $resource['id'] === $postId) {
                 return $resource;
             }
         }
@@ -128,7 +128,7 @@ class UnsetBestAnswerTest extends TestCase
                 'GET',
                 '/api/discussions/1',
                 [
-                    'queryParams' => ['include' => 'posts'],
+                    'queryParams'     => ['include' => 'posts'],
                     'authenticatedAs' => $userId,
                 ]
             )
@@ -156,7 +156,7 @@ class UnsetBestAnswerTest extends TestCase
                 'PATCH',
                 '/api/discussions/1',
                 [
-                    'json' => [
+                    'json'            => [
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => 0,
@@ -201,7 +201,7 @@ class UnsetBestAnswerTest extends TestCase
                 'PATCH',
                 '/api/discussions/1',
                 [
-                    'json' => [
+                    'json'            => [
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => 3,
@@ -249,7 +249,7 @@ class UnsetBestAnswerTest extends TestCase
                 'PATCH',
                 '/api/discussions/1',
                 [
-                    'json' => [
+                    'json'            => [
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => 0,
@@ -277,7 +277,7 @@ class UnsetBestAnswerTest extends TestCase
                 'PATCH',
                 '/api/discussions/1',
                 [
-                    'json' => [
+                    'json'            => [
                         'data' => [
                             'attributes' => [
                                 'bestAnswerPostId' => 0,
