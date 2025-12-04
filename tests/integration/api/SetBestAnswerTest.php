@@ -158,7 +158,7 @@ class SetBestAnswerTest extends TestCase
             [3],
         ];
     }
-    
+
     /**
      * @test
      *
