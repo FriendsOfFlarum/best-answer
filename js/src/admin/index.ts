@@ -25,14 +25,15 @@ app.initializers.add(
           permission: 'discussion.selectBestAnswerNotOwnDiscussion',
         },
         'reply'
-      ).registerPermission(
+      )
+      .registerPermission(
         {
-            icon: 'far fa-comment',
-            label: app.translator.trans('fof-best-answer.admin.permissions.allow_select_own_post'),
-            permission: 'discussion.selectBestAnswerOwnPost',
+          icon: 'far fa-comment',
+          label: app.translator.trans('fof-best-answer.admin.permissions.allow_select_own_post'),
+          permission: 'discussion.selectBestAnswerOwnPost',
         },
         'reply'
-    );
+      );
 
     addBestAnswerCountSort();
   },
