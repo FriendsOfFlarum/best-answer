@@ -64,17 +64,6 @@ class BestAnswerRepository
             : $user->can('discussion.selectBestAnswerNotOwnDiscussion', $discussion));
     }
 
-    public function canSelectBestAnswerOwnPost(User $user, Discussion $discussion): bool
-    {
-        // Prevent best answers being set in a private discussion (ie byobu, etc)
-        if ($discussion->is_private) {
-            return false;
-        }
-
-        return $this->tagEnabledForBestAnswer($discussion) && ($user->id === $discussion->user_id
-            && $user->can('discussion.fof-best-answer.allow_select_own_post', $discussion));
-    }
-
     public function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
         if (!$this->canSelectBestAnswer($user, $post->discussion)) {
