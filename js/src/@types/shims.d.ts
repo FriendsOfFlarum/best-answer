@@ -39,6 +39,6 @@ declare module 'flarum/common/models/User' {
 
 declare module 'flarum/common/models/Post' {
   export default interface Post {
-    canSelectBestAnswer(): boolean;
+    canSelectAsBestAnswer(): boolean;
   }
 }

@@ -10,7 +10,7 @@ import extractText from 'flarum/common/utils/extractText';
 
 export default function addBestAnswerAction() {
   const ineligible = (discussion: Discussion, post: Post) => {
-    return post.isHidden() || post.number() === 1 || !post.canSelectBestAnswer() || !app.session.user;
+    return post.isHidden() || post.number() === 1 || !post.canSelectAsBestAnswer() || !app.session.user;
   };
 
   const isThisBestAnswer = (discussion: Discussion, post: Post): boolean => {

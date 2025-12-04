@@ -29,7 +29,7 @@ class PostAttributes
 
     public function __invoke(PostSerializer $serializer, Post $post, array $attributes): array
     {
-        $attributes['canSelectBestAnswer'] = $this->bestAnswerRepository->canSelectPostAsBestAnswer($serializer->getActor(), $post);
+        $attributes['canSelectAsBestAnswer'] = $this->bestAnswerRepository->canSelectPostAsBestAnswer($serializer->getActor(), $post);
 
         return $attributes;
     }

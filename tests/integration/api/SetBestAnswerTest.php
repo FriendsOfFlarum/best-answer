@@ -216,7 +216,7 @@ class SetBestAnswerTest extends TestCase
         $this->assertNotNull($targetPost, 'Post 3 should be in the includes');
 
         $this->assertTrue(
-            $targetPost['attributes']['canSelectBestAnswer'],
+            $targetPost['attributes']['canSelectAsBestAnswer'],
             'Expected user to be able to set best answer on this post'
         );
 
@@ -255,7 +255,7 @@ class SetBestAnswerTest extends TestCase
         $this->assertNotNull($targetPost, 'Post 3 should be in the includes');
 
         $this->assertFalse(
-            $targetPost['attributes']['canSelectBestAnswer'],
+            $targetPost['attributes']['canSelectAsBestAnswer'],
             'Expected user to not be able to set best answer'
         );
 

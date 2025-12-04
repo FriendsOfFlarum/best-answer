@@ -192,7 +192,7 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertNotNull($targetPost, 'Post 3 should be included in response');
 
         $this->assertTrue(
-            $targetPost['attributes']['canSelectBestAnswer'],
+            $targetPost['attributes']['canSelectAsBestAnswer'],
             'Expected user to be able to set a best answer on Post 3'
         );
 
