@@ -33,14 +33,14 @@ class SetBestAnswerTest extends TestCase
                     'username'           => 'normal2',
                     'email'              => 'normal2@machine.local',
                     'is_email_confirmed' => 1,
-                    'best_answer_count'  => 0
+                    'best_answer_count'  => 0,
                 ],
                 [
                     'id'                 => 4,
                     'username'           => 'moderator',
                     'email'              => 'moderator@machine.local',
                     'is_email_confirmed' => 1,
-                    'best_answer_count'  => 0
+                    'best_answer_count'  => 0,
                 ],
             ],
             'tags'             => [
@@ -54,7 +54,7 @@ class SetBestAnswerTest extends TestCase
                     'parent_id'     => null,
                     'is_restricted' => false,
                     'is_hidden'     => false,
-                    'is_qna'        => true
+                    'is_qna'        => true,
                 ],
             ],
             'discussions'      => [
@@ -67,7 +67,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 2,
                     'type'          => 'comment',
                     'content'       => 'post 1 - question',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 2,
@@ -75,7 +75,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 1,
                     'type'          => 'comment',
                     'content'       => 'post 2 - answer1',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 3,
@@ -83,7 +83,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 3,
                     'type'          => 'comment',
                     'content'       => 'post 2 - answer2',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 4,
@@ -91,7 +91,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 2,
                     'type'          => 'comment',
                     'content'       => 'post 4 - answer by owner',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 5,
@@ -99,7 +99,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 3,
                     'type'          => 'comment',
                     'content'       => 'post 5 - answer by normal2',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
                 [
                     'id'            => 6,
@@ -107,7 +107,7 @@ class SetBestAnswerTest extends TestCase
                     'user_id'       => 4,
                     'type'          => 'comment',
                     'content'       => 'post 6 - answer by moderator',
-                    'created_at'    => Carbon::now()
+                    'created_at'    => Carbon::now(),
                 ],
             ],
             'discussion_tag'   => [
@@ -117,7 +117,7 @@ class SetBestAnswerTest extends TestCase
                 [
                     'group_id'   => 4,
                     'permission' => 'discussion.selectBestAnswerNotOwnDiscussion',
-                    'created_at' => Carbon::now()
+                    'created_at' => Carbon::now(),
                 ],
                 ['group_id' => 4, 'permission' => 'selectBestAnswerOwnPost', 'created_at' => Carbon::now()],
             ],
