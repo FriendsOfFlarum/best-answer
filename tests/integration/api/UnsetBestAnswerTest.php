@@ -65,6 +65,7 @@ class UnsetBestAnswerTest extends TestCase
                 '/api/discussions/1',
                 [
                     'authenticatedAs' => $userId,
+                    'queryParam' => ['include' => 'posts'],
                 ]
             )
         );
@@ -85,6 +86,7 @@ class UnsetBestAnswerTest extends TestCase
         $attributes = $data['data']['attributes'];
         $this->assertEquals(2, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 2');
 
+        $postId = 0;
         // Unset best answer
         $response = $this->send(
             $this->request(
@@ -94,7 +96,7 @@ class UnsetBestAnswerTest extends TestCase
                     'json' => [
                         'data' => [
                             'attributes' => [
-                                'bestAnswerPostId' => 0,
+                                'bestAnswerPostId' => $postId,
                             ],
                         ],
 
@@ -120,7 +122,7 @@ class UnsetBestAnswerTest extends TestCase
 
         $attributes = $data['data']['attributes'];
         $this->assertFalse($attributes['hasBestAnswer']);
-        $this->assertTrue($this->getCanSelectBestAnswer($data['included'], 2), 'Expected user to be able to set a best answer');
+        $this->assertTrue($this->getCanSelectBestAnswer($data['included'], $postId), 'Expected user to be able to set a best answer');
 
         // Set a different post as best answer
         $response = $this->send(
@@ -149,12 +151,19 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    private function getCanSelectBestAnswer(array $included, int $userId): bool
+    private function getCanSelectBestAnswer(array $included, int $postId): bool
     {
         foreach ($included as $item) {
-            if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer'])
-                && $item['relationships']['user']['data']['id'] == $userId) {
-                return $item['attributes']['canSelectBestAnswer'];
+            if (!isset($item['attributes']['canSelectAsBestAnswer'])) {
+                continue;
+            }
+            $currentPostId = $item['attributes']['number'];
+            if ($currentPostId === 1 || $currentPostId !== $postId) {
+                continue;
+            }
+
+            if ($item['attributes']['canSelectAsBestAnswer'] == true) {
+                return true;
             }
         }
 

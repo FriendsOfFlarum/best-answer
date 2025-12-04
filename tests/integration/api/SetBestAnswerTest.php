@@ -82,8 +82,16 @@ class SetBestAnswerTest extends TestCase
     private function getCanSelectBestAnswer(array $included, int $userId): bool
     {
         foreach ($included as $item) {
-            if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer']) && $item['relationships']['user']['data']['id'] == $userId) {
-                return $item['attributes']['canSelectBestAnswer'];
+            if (isset($item['attributes']['canSelectAsBestAnswer']) && $item['relationships']['user']['data']['id'] == $userId) {
+                $currentPostId = $item['attributes']['number'];
+
+                if ($currentPostId === 1) {
+                    continue;
+                }
+
+                if ($item['attributes']['canSelectAsBestAnswer'] == true) {
+                    return true;
+                }
             }
         }
 
@@ -98,6 +106,7 @@ class SetBestAnswerTest extends TestCase
                 '/api/discussions/1',
                 [
                     'authenticatedAs' => $userId,
+                    'queryParam' => ['include' => 'posts'],
                 ]
             )
         );

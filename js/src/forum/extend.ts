@@ -18,5 +18,5 @@ export default [
     .attribute<number>('bestAnswerCount'),
 
   new Extend.Model(Post) //
-    .attribute<boolean>('canSelectBestAnswer'),
+    .attribute<boolean>('canSelectAsBestAnswer'),
 ];
