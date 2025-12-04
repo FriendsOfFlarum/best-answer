@@ -158,7 +158,7 @@ class SetBestAnswerTest extends TestCase
         }
 
         foreach ($document['included'] as $resource) {
-            if ($resource['type'] === 'posts' && (int)$resource['id'] === $postId) {
+            if ($resource['type'] === 'posts' && (int) $resource['id'] === $postId) {
                 return $resource;
             }
         }
