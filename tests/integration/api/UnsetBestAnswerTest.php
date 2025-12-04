@@ -149,7 +149,7 @@ class UnsetBestAnswerTest extends TestCase
         $this->assertEquals(3, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 3');
     }
 
-    private function getCanSelectBestAnswer(array $included, int $userId): bool 
+    private function getCanSelectBestAnswer(array $included, int $userId): bool
     {
         foreach ($included as $item) {
             if (($item['type'] ?? null) === 'posts' && isset($item['attributes']['canSelectBestAnswer'])
