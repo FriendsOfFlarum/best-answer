@@ -105,8 +105,8 @@ class SetBestAnswerTest extends TestCase
                 'GET',
                 '/api/discussions/1',
                 [
-                    'authenticatedAs' => $userId,
-                    'queryParam' => ['include' => 'posts'],
+                    'authenticatedAs'   => $userId,
+                    'queryParam'        => ['include' => 'posts'],
                 ]
             )
         );
