@@ -115,7 +115,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function addBestAnswerAction() {
   var ineligible = function ineligible(discussion, post) {
-    return post.isHidden() || post.number() === 1 || !post.canSelectBestAnswer() || !(flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().session).user;
+    return post.isHidden() || post.number() === 1 || !post.canSelectAsBestAnswer() || !(flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().session).user;
   };
   var isThisBestAnswer = function isThisBestAnswer(discussion, post) {
     var bestAnswerPost = discussion.bestAnswerPost();
@@ -1080,7 +1080,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ([].concat(_common_extend__WEBPACK_IMPORTED_MODULE_1__["default"], [new (flarum_common_extenders__WEBPACK_IMPORTED_MODULE_2___default().Model)((flarum_common_models_Discussion__WEBPACK_IMPORTED_MODULE_0___default())) //
 .hasOne('bestAnswerPost').hasOne('bestAnswerUser').attribute('hasBestAnswer').attribute('bestAnswerSetAt', (flarum_common_Model__WEBPACK_IMPORTED_MODULE_5___default().transformDate)), new (flarum_common_extenders__WEBPACK_IMPORTED_MODULE_2___default().Model)((flarum_common_models_User__WEBPACK_IMPORTED_MODULE_4___default())) //
 .attribute('bestAnswerCount'), new (flarum_common_extenders__WEBPACK_IMPORTED_MODULE_2___default().Model)((flarum_common_models_Post__WEBPACK_IMPORTED_MODULE_3___default())) //
-.attribute('canSelectBestAnswer')]));
+.attribute('canSelectAsBestAnswer')]));
 
 /***/ }),
 
