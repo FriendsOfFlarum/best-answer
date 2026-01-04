@@ -10,4 +10,4 @@ export default function addBestAnswerCountSort() {
     map.most_best_answers = '-bestAnswerCount';
     map.least_best_answers = 'bestAnswerCount';
   });
-};
+}
