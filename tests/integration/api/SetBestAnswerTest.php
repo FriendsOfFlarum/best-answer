@@ -195,7 +195,6 @@ class SetBestAnswerTest extends TestCase
      */
     public function user_can_set_own_post_as_best_answer_if_permitted(int $userId)
     {
-
         $response = $this->setBestAnswer($userId, 5, 2);
 
         $this->assertEquals(200, $response->getStatusCode());

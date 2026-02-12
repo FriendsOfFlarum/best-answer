@@ -88,7 +88,7 @@ class NotifyCommand extends Command
 
         $errors = [];
 
-        $query->chunkById(20, function ($discussions) use ( &$errors) {
+        $query->chunkById(20, function ($discussions) use (&$errors) {
             // Filter out discussions where the user can't select a post as best answer.
             // - The user must have permission to select a best answer on their own discussion
             // - The user must be able to select a post, whether they can select any post (including their own) or not.

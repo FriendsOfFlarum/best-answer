@@ -17,7 +17,7 @@ use FoF\BestAnswer\Repository\BestAnswerRepository;
 
 class PostAttributes
 {
-   /**
+    /**
      * @var BestAnswerRepository
      */
     protected $bestAnswerRepository;
