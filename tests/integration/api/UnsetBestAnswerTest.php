@@ -120,7 +120,6 @@ class UnsetBestAnswerTest extends TestCase
 
         $attributes = $data['data']['attributes'];
         $this->assertFalse($attributes['hasBestAnswer']);
-        $this->assertTrue($attributes['canSelectBestAnswer'], 'Expected user to be able to set a best answer');
 
         // Set a different post as best answer
         $response = $this->send(

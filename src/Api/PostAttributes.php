@@ -11,11 +11,11 @@
 
 namespace FoF\BestAnswer\Api;
 
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Discussion\Discussion;
+use Flarum\Api\Serializer\PostSerializer;
+use Flarum\Post\Post;
 use FoF\BestAnswer\Repository\BestAnswerRepository;
 
-class DiscussionAttributes
+class PostAttributes
 {
     /**
      * @var BestAnswerRepository
@@ -27,9 +27,9 @@ class DiscussionAttributes
         $this->bestAnswerRepository = $bestAnswerRepository;
     }
 
-    public function __invoke(DiscussionSerializer $serializer, Discussion $discussion, array $attributes): array
+    public function __invoke(PostSerializer $serializer, Post $post, array $attributes): array
     {
-        $attributes['canSelectBestAnswer'] = $this->bestAnswerRepository->canSelectBestAnswer($serializer->getActor(), $discussion);
+        $attributes['canSelectAsBestAnswer'] = $this->bestAnswerRepository->canSelectPostAsBestAnswer($serializer->getActor(), $post);
 
         return $attributes;
     }
