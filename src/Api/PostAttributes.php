@@ -29,8 +29,6 @@ class PostAttributes
 
     public function __invoke(PostSerializer $serializer, Post $post, array $attributes): array
     {
-        resolve('log')->info($this->bestAnswerRepository->canSelectPostAsBestAnswer($serializer->getActor(), $post));
-
         $attributes['canSelectAsBestAnswer'] = $this->bestAnswerRepository->canSelectPostAsBestAnswer($serializer->getActor(), $post);
 
         return $attributes;
