@@ -33,12 +33,6 @@ export default class BestAnswerSettingsPage extends ExtensionPage {
             <div className="Section">
               {this.buildSettingComponent({
                 type: 'boolean',
-                setting: 'fof-best-answer.allow_select_own_post',
-                label: app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post'),
-                help: app.translator.trans('fof-best-answer.admin.settings.allow_select_own_post_help'),
-              })}
-              {this.buildSettingComponent({
-                type: 'boolean',
                 setting: 'fof-best-answer.use_alternative_ui',
                 label: app.translator.trans('fof-best-answer.admin.settings.use_alt_ui'),
                 help: app.translator.trans('fof-best-answer.admin.settings.use_alt_ui_help'),

@@ -25,6 +25,14 @@ app.initializers.add(
           permission: 'discussion.selectBestAnswerNotOwnDiscussion',
         },
         'reply'
+      )
+      .registerPermission(
+        {
+          icon: 'fas fa-check',
+          label: app.translator.trans('fof-best-answer.admin.permissions.allow_select_own_post'),
+          permission: 'discussion.fof-best-answer.allow_select_own_post',
+        },
+        'reply'
       );
 
     addBestAnswerCountSort();

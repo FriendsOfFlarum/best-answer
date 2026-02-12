@@ -68,8 +68,8 @@ return [
         ->type(Notification\AwardedBestAnswerBlueprint::class, Serializer\BasicDiscussionSerializer::class, ['alert'])
         ->type(Notification\BestAnswerSetInDiscussionBlueprint::class, Serializer\BasicDiscussionSerializer::class, []),
 
-    (new Extend\ApiSerializer(Serializer\DiscussionSerializer::class))
-        ->attributes(Api\DiscussionAttributes::class),
+    (new Extend\ApiSerializer(Serializer\PostSerializer::class))
+        ->attributes(Api\PostAttributes::class),
 
     (new Extend\ApiSerializer(Serializer\BasicDiscussionSerializer::class))
         ->hasOne('bestAnswerPost', Serializer\BasicPostSerializer::class)
