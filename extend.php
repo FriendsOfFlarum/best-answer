@@ -135,7 +135,7 @@ return [
         ->attributes(Api\AddTagAttributes::class),
 
     (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-audit', fn() => [
+        ->whenExtensionEnabled('flarum-audit', fn () => [
             (new Audit())
                 ->listen(BestAnswerSet::class, 'discussion.best_answer_set', function (BestAnswerSet $event) {
                     return [
