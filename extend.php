@@ -13,6 +13,7 @@ namespace FoF\BestAnswer;
 
 use Flarum\Api\Controller;
 use Flarum\Api\Serializer;
+use Flarum\Audit\Extend\Audit;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Discussion\Filter\DiscussionFilterer;
@@ -24,6 +25,8 @@ use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
+use FoF\BestAnswer\Events\BestAnswerSet;
+use FoF\BestAnswer\Events\BestAnswerUnset;
 
 return [
     (new Extend\Frontend('forum'))
@@ -130,4 +133,21 @@ return [
 
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(Api\AddTagAttributes::class),
+
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-audit', [
+            (new Audit())
+                ->listen(BestAnswerSet::class, 'discussion.best_answer_set', function (BestAnswerSet $event) {
+                    return [
+                        'discussion_id' => $event->discussion->id,
+                        'post_id'       => $event->post->id,
+                    ];
+                })
+                ->listen(BestAnswerUnset::class, 'discussion.best_answer_unset', function (BestAnswerUnset $event) {
+                    return [
+                        'discussion_id' => $event->discussion->id,
+                        'post_id'       => $event->post->id,
+                    ];
+                }),
+        ]),
 ];
