@@ -52,6 +52,7 @@
                 "color": "#fff"
             },
             "optional-dependencies": [
+                "flarum/audit",
                 "fof/follow-tags",
                 "fof/user-directory",
                 "ianm/level-ranks"
@@ -87,7 +88,8 @@
     },
     "require-dev": {
         "flarum/phpstan": "^1.8",
-        "flarum/testing": "^1.0.0"
+        "flarum/testing": "^1.0.0",
+        "flarum/audit": "^1.8"
     },
     "autoload-dev": {
         "psr-4": {
