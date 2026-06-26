@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/best-answer.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\BestAnswer\Tests\integration;
 
 use Carbon\Carbon;
@@ -97,7 +106,7 @@ class AuditTest extends TestCase
         $this->assertEquals(1, $log->actor_id);
         $this->assertEquals([
             'discussion_id' => 1,
-            'post_id' => 2,
+            'post_id'       => 2,
         ], $log->payload);
     }
 
@@ -113,7 +122,7 @@ class AuditTest extends TestCase
         $this->assertEquals(1, $log->actor_id);
         $this->assertEquals([
             'discussion_id' => 1,
-            'post_id' => 2,
+            'post_id'       => 2,
         ], $log->payload);
 
         $this->assertEquals(2, AuditLog::query()->count());
