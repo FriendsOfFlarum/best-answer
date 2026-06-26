@@ -135,19 +135,21 @@ return [
         ->attributes(Api\AddTagAttributes::class),
 
     (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-audit', fn () => [
-            (new Audit())
-                ->listen(BestAnswerSet::class, 'discussion.best_answer_set', function (BestAnswerSet $event) {
-                    return [
-                        'discussion_id' => $event->discussion->id,
-                        'post_id'       => $event->post->id,
-                    ];
-                })
-                ->listen(BestAnswerUnset::class, 'discussion.best_answer_unset', function (BestAnswerUnset $event) {
-                    return [
-                        'discussion_id' => $event->discussion->id,
-                        'post_id'       => $event->post->id,
-                    ];
-                }),
-        ]),
+        ->whenExtensionEnabled('flarum-audit', function () {
+            return [
+                (new Audit())
+                    ->listen(BestAnswerSet::class, 'discussion.best_answer_set', function (BestAnswerSet $event) {
+                        return [
+                            'discussion_id' => $event->discussion->id,
+                            'post_id'       => $event->post->id,
+                        ];
+                    })
+                    ->listen(BestAnswerUnset::class, 'discussion.best_answer_unset', function (BestAnswerUnset $event) {
+                        return [
+                            'discussion_id' => $event->discussion->id,
+                            'post_id'       => $event->post->id,
+                        ];
+                    }),
+        ];
+    }),
 ];
