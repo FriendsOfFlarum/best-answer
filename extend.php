@@ -150,6 +150,6 @@ return [
                             'post_id'       => $event->post->id,
                         ];
                     }),
-        ];
-    }),
+            ];
+        }),
 ];
