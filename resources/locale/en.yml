@@ -111,3 +111,10 @@ fof-user-directory:
     sort:
       most_best_answers: Most best answers
       least_best_answers: Least best answers
+
+flarum-audit:
+  lib:
+    browser:
+      discussion:
+        best_answer_set: Set {post} as best answer in {discussion}
+        best_answer_unset: Unset best answer for {post} in {discussion}

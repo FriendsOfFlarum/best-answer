@@ -15,13 +15,18 @@ use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
 use Flarum\Api\Sort;
+use Flarum\Audit\Extend\Audit;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
+use Flarum\Search\Database\DatabaseSearchDriver;
 use Flarum\Settings\Event\Saving as SettingsSaving;
+use Flarum\Tags\Api\Resource\TagResource;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
+use FoF\BestAnswer\Events\BestAnswerSet;
+use FoF\BestAnswer\Events\BestAnswerUnset;
 
 return [
     (new Extend\Frontend('forum'))
@@ -91,7 +96,7 @@ return [
 
     (new Extend\Conditional())
         ->whenExtensionEnabled('flarum-tags', fn () => [
-            (new Extend\ApiResource(\Flarum\Tags\Api\Resource\TagResource::class))
+            (new Extend\ApiResource( TagResource::class))
                 ->fields(fn () => [
                     Schema\Boolean::make('isQnA')
                         ->property('is_qna'),
@@ -113,6 +118,19 @@ return [
         ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
-    (new Extend\SearchDriver(\Flarum\Search\Database\DatabaseSearchDriver::class))
+    (new Extend\SearchDriver( DatabaseSearchDriver::class))
         ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class),
+
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-audit', fn() => [
+            (new Audit())
+                ->listen(BestAnswerSet::class,'discussion.best_answer_set', fn(BestAnswerSet $event) => [
+                    'discussion_id' => $event->discussion->id,
+                    'post_id' => $event->post->id,
+                ])
+                ->listen(BestAnswerUnset::class,'discussion.best_answer_unset', fn(BestAnswerUnset $event) => [
+                    'discussion_id' => $event->discussion->id,
+                    'post_id' => $event->post->id,
+                ]),
+        ]),
 ];
