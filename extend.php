@@ -96,7 +96,7 @@ return [
 
     (new Extend\Conditional())
         ->whenExtensionEnabled('flarum-tags', fn () => [
-            (new Extend\ApiResource( TagResource::class))
+            (new Extend\ApiResource(TagResource::class))
                 ->fields(fn () => [
                     Schema\Boolean::make('isQnA')
                         ->property('is_qna'),
@@ -118,19 +118,19 @@ return [
         ->command(Console\UpdateBestAnswerCounts::class)
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
-    (new Extend\SearchDriver( DatabaseSearchDriver::class))
+    (new Extend\SearchDriver(DatabaseSearchDriver::class))
         ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class),
 
     (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-audit', fn() => [
+        ->whenExtensionEnabled('flarum-audit', fn () => [
             (new Audit())
-                ->listen(BestAnswerSet::class,'discussion.best_answer_set', fn(BestAnswerSet $event) => [
+                ->listen(BestAnswerSet::class, 'discussion.best_answer_set', fn (BestAnswerSet $event) => [
                     'discussion_id' => $event->discussion->id,
-                    'post_id' => $event->post->id,
+                    'post_id'       => $event->post->id,
                 ])
-                ->listen(BestAnswerUnset::class,'discussion.best_answer_unset', fn(BestAnswerUnset $event) => [
+                ->listen(BestAnswerUnset::class, 'discussion.best_answer_unset', fn (BestAnswerUnset $event) => [
                     'discussion_id' => $event->discussion->id,
-                    'post_id' => $event->post->id,
+                    'post_id'       => $event->post->id,
                 ]),
         ]),
 ];
