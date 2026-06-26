@@ -35,21 +35,25 @@ class AuditTest extends TestCase
 
         $this->prepareDatabase([
             'audit_log' => [],
-            User::class => [
+            'users' => [
                 $this->normalUser(),
             ],
-            Tag::class => [
+            'tags' => [
                 ['id' => 1, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => '', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true],
             ],
-            Discussion::class => [
+            'discussions' => [
                 ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now(), 'comment_count' => 2],
             ],
-            Post::class => [
+            'posts' => [
                 ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'question', 'created_at' => Carbon::now()],
                 ['id' => 2, 'discussion_id' => 1, 'user_id' => 1, 'type' => 'comment', 'content' => 'answer', 'created_at' => Carbon::now()],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 1],
+            ],
+            'group_permission' => [
+                ['permission' => 'discussion.selectBestAnswerOwnDiscussion', 'group_id' => 3],
+                ['permission' => 'discussion.selectBestAnswerNotOwnDiscussion', 'group_id' => 3],
             ],
         ]);
     }
