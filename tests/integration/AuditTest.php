@@ -14,12 +14,8 @@ namespace FoF\BestAnswer\Tests\integration;
 use Carbon\Carbon;
 use Flarum\Audit\AuditLog;
 use Flarum\Audit\AuditLogger;
-use Flarum\Discussion\Discussion;
-use Flarum\Post\Post;
-use Flarum\Tags\Tag;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Flarum\User\User;
 
 class AuditTest extends TestCase
 {
@@ -35,7 +31,7 @@ class AuditTest extends TestCase
 
         $this->prepareDatabase([
             'audit_log' => [],
-            'users' => [
+            'users'     => [
                 $this->normalUser(),
             ],
             'tags' => [
