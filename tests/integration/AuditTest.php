@@ -60,10 +60,8 @@ class AuditTest extends TestCase
             $this->request('PATCH', '/api/discussions/1', [
                 'json' => [
                     'data' => [
-                        'relationships' => [
-                            'bestAnswerPost' => [
-                                'data' => ['type' => 'posts', 'id' => (string) $postId],
-                            ],
+                        'attributes' => [
+                            'bestAnswerPostId' => $postId,
                         ],
                     ],
                 ],
@@ -80,10 +78,8 @@ class AuditTest extends TestCase
             $this->request('PATCH', '/api/discussions/1', [
                 'json' => [
                     'data' => [
-                        'relationships' => [
-                            'bestAnswerPost' => [
-                                'data' => null,
-                            ],
+                        'attributes' => [
+                            'bestAnswerPostId' => 0,
                         ],
                     ],
                 ],
@@ -93,7 +89,6 @@ class AuditTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
     }
-
     /**
      * @test
      */
