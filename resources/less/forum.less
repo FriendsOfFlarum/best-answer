@@ -24,8 +24,17 @@
   }
 }
 
-.Post-footer {
+// Only widen the footer to full width when it actually renders the best-answer
+// preview block. Core lays .Post-footer out as an inline-block (height: 0) so
+// the likes/replies footer sits on the same line as the floated post actions;
+// forcing width: 100% on every .Post-footer breaks that for all posts, dropping
+// the likes/replies line below the actions with a large gap.
+// See flarum/framework#4765.
+.Post-footer:has(.item-bestAnswerPost) {
   width: 100%;
+}
+
+.Post-footer {
   .item-bestAnswerPost {
     padding: 10px 10px 0 10px;
     background-color: @best-answer-post-background;
