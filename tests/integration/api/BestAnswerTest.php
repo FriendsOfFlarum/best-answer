@@ -132,9 +132,10 @@ class BestAnswerTest extends TestCase
 
         $this->assertEquals(2, $discussion->best_answer_post_id);
 
-        $answerAuthor = User::find(2);
+        // User 2's stored count starts uncalculated (NULL), so check the count the API reports.
+        $response = $this->send($this->request('GET', '/api/users/2', ['authenticatedAs' => 1]));
 
-        $this->assertEquals(1, $answerAuthor->best_answer_count);
+        $this->assertSame(1, json_decode($response->getBody()->getContents(), true)['data']['attributes']['bestAnswerCount']);
     }
 
     #[Test]

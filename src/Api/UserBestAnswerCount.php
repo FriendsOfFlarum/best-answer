@@ -26,6 +26,7 @@ class UserBestAnswerCount
     {
         return [
             Schema\Integer::make('bestAnswerCount')
+                // NULL means not calculated yet: calculate and store it once, rather than backfilling every user in a migration.
                 ->get(fn (User $user) => $user->best_answer_count ?? $this->bestAnswers->calculateBestAnswersForUser($user)),
         ];
     }
