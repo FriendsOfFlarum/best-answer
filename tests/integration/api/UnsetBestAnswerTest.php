@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FoF\BestAnswer\tests\integration\api;
+namespace FoF\BestAnswer\Tests\integration\api;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
