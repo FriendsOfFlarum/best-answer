@@ -11,17 +11,13 @@
 
 namespace FoF\BestAnswer\Console;
 
+use Flarum\Discussion\Discussion;
 use Flarum\User\User;
-use FoF\BestAnswer\Repository\BestAnswerRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class UpdateBestAnswerCounts extends Command
 {
-    public function __construct(public BestAnswerRepository $bestAnswers)
-    {
-        parent::__construct();
-    }
-
     /**
      * @var string
      */
@@ -32,25 +28,37 @@ class UpdateBestAnswerCounts extends Command
      */
     protected $description = 'Update best answer counts for all users';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('Updating best answer counts...');
 
-        $userCount = User::count();
+        $bar = $this->output->createProgressBar(User::count());
 
-        $bar = $this->output->createProgressBar($userCount);
+        // Per chunk: one grouped count, one reset, and one write per user who has best answers.
+        User::query()->select('id')->chunkById(1000, function (Collection $users) use ($bar) {
+            $ids = $users->pluck('id')->all();
 
-        User::query()->chunkById(100, function ($users) use ($bar) {
-            foreach ($users as $user) {
-                $user->best_answer_count = $this->bestAnswers->calculateBestAnswersForUser($user);
-                $user->save();
+            $counts = Discussion::query()
+                ->join('posts', 'posts.id', '=', 'discussions.best_answer_post_id')
+                ->whereIn('posts.user_id', $ids)
+                ->groupBy('posts.user_id')
+                ->select('posts.user_id')
+                ->selectRaw('count(*) as best_answers')
+                ->pluck('best_answers', 'user_id');
 
-                $bar->advance();
+            User::query()->whereIn('id', $ids)->update(['best_answer_count' => 0]);
+
+            foreach ($counts as $userId => $count) {
+                User::query()->whereKey($userId)->update(['best_answer_count' => $count]);
             }
+
+            $bar->advance($users->count());
         });
 
         $bar->finish();
 
         $this->info('Done!');
+
+        return self::SUCCESS;
     }
 }

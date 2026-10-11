@@ -61,4 +61,41 @@ class UpdateBestAnswerCountsTest extends ConsoleTestCase
             User::query()->whereIn('id', [2, 3, 4])->orderBy('id')->pluck('best_answer_count', 'id')->all()
         );
     }
+
+    protected function addUsersWithoutBestAnswers(int $count): void
+    {
+        foreach (range(1, $count) as $i) {
+            // Encoded the way prepareDatabase() does it, so the preferences array is valid JSON.
+            $this->database()->table('users')->insert(
+                array_map(fn (mixed $value) => is_array($value) ? json_encode($value) : $value, User::factory()->raw())
+            );
+        }
+    }
+
+    protected function queriesWhenRecalculating(): int
+    {
+        $this->database()->flushQueryLog();
+        $this->database()->enableQueryLog();
+
+        $this->runCommand(['command' => 'fof:best-answer:update-counts']);
+
+        $count = count($this->database()->getQueryLog());
+        $this->database()->disableQueryLog();
+
+        return $count;
+    }
+
+    #[Test]
+    public function recalculating_does_not_query_per_user()
+    {
+        $this->runCommand(['command' => 'fof:best-answer:update-counts']);
+
+        $this->addUsersWithoutBestAnswers(3);
+        $withThreeMore = $this->queriesWhenRecalculating();
+
+        $this->addUsersWithoutBestAnswers(3);
+        $withSixMore = $this->queriesWhenRecalculating();
+
+        $this->assertSame($withThreeMore, $withSixMore);
+    }
 }
