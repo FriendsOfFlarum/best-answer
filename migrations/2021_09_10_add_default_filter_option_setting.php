@@ -15,7 +15,7 @@ return [
     'up' => function (Builder $schema) {
         $schema->getConnection()
             ->table('settings')
-            ->insert([
+            ->insertOrIgnore([
                 'key'   => 'fof-best-answer.show_filter_dropdown',
                 'value' => true,
             ]);
