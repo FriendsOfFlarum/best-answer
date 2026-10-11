@@ -28,9 +28,9 @@ class UpdateBestAnswerCountsTest extends ConsoleTestCase
         // User 3 wrote two best answers and user 4 one; every stored count starts out wrong.
         $this->prepareDatabase([
             User::class => [
-                ['id' => 2, 'best_answer_count' => 5],
-                ['id' => 3, 'best_answer_count' => 0],
-                ['id' => 4, 'best_answer_count' => null],
+                ['id' => 2, 'username' => 'asker', 'email' => 'asker@machine.local', 'best_answer_count' => 5],
+                ['id' => 3, 'username' => 'answerer', 'email' => 'answerer@machine.local', 'best_answer_count' => 0],
+                ['id' => 4, 'username' => 'helper', 'email' => 'helper@machine.local', 'best_answer_count' => null],
             ],
             Discussion::class => [
                 ['id' => 1, 'user_id' => 2, 'best_answer_post_id' => 2],
@@ -62,12 +62,18 @@ class UpdateBestAnswerCountsTest extends ConsoleTestCase
         );
     }
 
+    protected int $addedUsers = 0;
+
     protected function addUsersWithoutBestAnswers(int $count): void
     {
         foreach (range(1, $count) as $i) {
+            // Fixed names: random factory usernames can collide on the unique index.
+            $n = ++$this->addedUsers;
+            $row = User::factory()->raw(['username' => "member$n", 'email' => "member$n@machine.local"]);
+
             // Encoded the way prepareDatabase() does it, so the preferences array is valid JSON.
             $this->database()->table('users')->insert(
-                array_map(fn (mixed $value) => is_array($value) ? json_encode($value) : $value, User::factory()->raw())
+                array_map(fn (mixed $value) => is_array($value) ? json_encode($value) : $value, $row)
             );
         }
     }

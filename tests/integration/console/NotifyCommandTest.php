@@ -231,12 +231,16 @@ class NotifyCommandTest extends ConsoleTestCase
         return array_map(fn (mixed $value) => is_array($value) ? json_encode($value) : $value, $model::factory()->raw($attributes));
     }
 
+    protected int $addedAuthors = 0;
+
     protected function addDueDiscussions(int $count): void
     {
         $db = $this->database();
 
         foreach (range(1, $count) as $i) {
-            $authorId = $db->table('users')->insertGetId($this->row(User::class));
+            // Fixed names: random factory usernames can collide on the unique index.
+            $n = ++$this->addedAuthors;
+            $authorId = $db->table('users')->insertGetId($this->row(User::class, ['username' => "author$n", 'email' => "author$n@machine.local"]));
             $discussionId = $db->table('discussions')->insertGetId($this->row(Discussion::class, ['user_id' => $authorId, 'created_at' => Carbon::now()->subDays(2), 'comment_count' => 2]));
             $db->table('posts')->insert($this->row(Post::class, ['discussion_id' => $discussionId, 'number' => 1, 'user_id' => $authorId]));
             $db->table('posts')->insert($this->row(Post::class, ['discussion_id' => $discussionId, 'number' => 2, 'user_id' => 3]));

@@ -36,9 +36,9 @@ class BestAnswerNotificationsTest extends TestCase
         $this->prepareDatabase([
             User::class => [
                 $this->normalUser(),
-                ['id' => 3],
-                ['id' => 4],
-                ['id' => 5],
+                ['id' => 3, 'username' => 'answerer', 'email' => 'answerer@machine.local'],
+                ['id' => 4, 'username' => 'replier', 'email' => 'replier@machine.local'],
+                ['id' => 5, 'username' => 'bystander', 'email' => 'bystander@machine.local'],
             ],
             Tag::class => [
                 ['id' => 1, 'is_qna' => true],
