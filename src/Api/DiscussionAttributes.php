@@ -46,7 +46,7 @@ class DiscussionAttributes
             Schema\Boolean::make('canSelectBestAnswer')
                 ->get(fn (Discussion $discussion, Context $context) => $this->bestAnswerRepository->canSelectBestAnswer($context->getActor(), $discussion)),
             Schema\Attribute::make('hasBestAnswer')
-                ->get(fn (Discussion $discussion) => $discussion->bestAnswerPost !== null ? $discussion->bestAnswerPost->id : false),
+                ->get(fn (Discussion $discussion) => $discussion->best_answer_post_id ?: false),
             Schema\DateTime::make('bestAnswerSetAt'),
 
             Schema\Relationship\ToOne::make('bestAnswerPost')
