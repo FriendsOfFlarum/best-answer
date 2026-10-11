@@ -24,7 +24,7 @@ return [
 
         if (!$schema->hasColumn('discussions', 'best_answer_notified')) {
             $schema->table('discussions', function (Blueprint $table) {
-                $table->boolean('best_answer_notified');
+                $table->boolean('best_answer_notified')->default(false);
             });
 
             Discussion::query()->where('best_answer_notified', false)->update(['best_answer_notified' => 1]);
