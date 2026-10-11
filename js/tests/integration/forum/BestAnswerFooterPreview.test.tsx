@@ -70,3 +70,17 @@ it('shows the newly selected best answer on the first post without a reload', ()
   expect(firstPost).toContainRaw('Ask an admin to send a reset email.');
   expect(firstPost).not.toContainRaw('Use the forgot password link.');
 });
+
+it('removes the preview from the first post while the best answer is being unselected', () => {
+  selectBestAnswer('2');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  expect(firstPost).toContainRaw('Use the forgot password link.');
+
+  // Model.save() applies the relationship change before the response arrives, so hasBestAnswer is still set here.
+  app.store.getById('discussions', '1')!.pushData({ relationships: { bestAnswerPost: { data: null } } });
+  firstPost.redraw();
+
+  expect(firstPost).not.toContainRaw('Use the forgot password link.');
+});
