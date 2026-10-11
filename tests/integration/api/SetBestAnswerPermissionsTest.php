@@ -160,4 +160,33 @@ class SetBestAnswerPermissionsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertFalse(json_decode($response->getBody()->getContents(), true)['data']['attributes']['canSelectAsBestAnswer']);
     }
+
+    #[Test]
+    public function the_first_post_cannot_be_chosen()
+    {
+        // The admin passes every permission check, so only the first-post rule can reject this.
+        $response = $this->setBestAnswer(1, 1, 1);
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertNoBestAnswer(1);
+    }
+
+    #[Test]
+    public function a_hidden_post_cannot_be_chosen_even_by_someone_who_can_see_it()
+    {
+        $response = $this->setBestAnswer(1, 3, 1);
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertNoBestAnswer(1);
+    }
+
+    #[Test]
+    public function the_first_post_and_hidden_posts_are_not_offered_as_best_answers()
+    {
+        foreach (['1', '3'] as $postId) {
+            $response = $this->send($this->request('GET', "/api/posts/$postId", ['authenticatedAs' => 1]));
+
+            $this->assertFalse(json_decode($response->getBody()->getContents(), true)['data']['attributes']['canSelectAsBestAnswer'], "Post $postId");
+        }
+    }
 }
