@@ -52,10 +52,7 @@
                 "flarum/audit",
                 "fof/user-directory",
                 "ianm/level-ranks"
-            ],
-            "branch-alias": {
-                "2.x": "2.x-dev"
-            }
+            ]
         },
         "flagrow": {
             "discuss": "https://discuss.flarum.org/d/21894"
