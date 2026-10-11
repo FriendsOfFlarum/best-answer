@@ -57,14 +57,6 @@ export default class SolvedFilter extends Component<SolvedFilterAttrs> {
 
     if (!app.forum.attribute('showBestAnswerFilterUi')) return false;
 
-    if (!currentTag?.isQnA?.()) {
-      if (app.discussions.bestAnswer) {
-        delete app.discussions.bestAnswer;
-        app.discussions.refresh();
-      }
-      return false;
-    }
-
-    return true;
+    return !!currentTag?.isQnA?.();
   }
 }
