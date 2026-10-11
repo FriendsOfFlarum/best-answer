@@ -12,8 +12,10 @@ export default () => {
   extend(CommentPost.prototype, 'oninit', function () {
     this.subtree.check(() => {
       const discussion = this.attrs.post.discussion();
+      // hasOne() returns false, not null, when the relationship is empty.
+      const bestAnswer = discussion && discussion.hasBestAnswer() && discussion.bestAnswerPost();
 
-      return discussion && discussion.hasBestAnswer() && discussion.bestAnswerPost()?.id();
+      return bestAnswer ? bestAnswer.id() : false;
     });
   });
 
