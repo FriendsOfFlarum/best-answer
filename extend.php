@@ -100,7 +100,6 @@ return [
         ]),
 
     (new Extend\Settings())
-        ->default('fof-best-answer.schedule_on_one_server', false)
         ->default('fof-best-answer.stop_overnight', false)
         ->default('fof-best-answer.store_log_output', false)
         ->default('fof-best-answer.enabled-tags', '[]')

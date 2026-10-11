@@ -24,11 +24,8 @@ class NotifySchedule
     public function __invoke(Event $event)
     {
         $event->hourly()
-            ->withoutOverlapping();
-
-        if ((bool) $this->settings->get('fof-best-answer.schedule_on_one_server')) {
-            $event->onOneServer();
-        }
+            ->withoutOverlapping()
+            ->onOneServer();
 
         if ((bool) $this->settings->get('fof-best-answer.stop_overnight')) {
             $event->between('8:00', '21:00');
