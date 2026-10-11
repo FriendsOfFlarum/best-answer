@@ -13,11 +13,13 @@ namespace FoF\BestAnswer\Tests\integration\api;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
+use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
 use Flarum\Tags\Tag;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
+use FoF\BestAnswer\Jobs\SendNotificationWhenBestAnswerSetInDiscussion;
 use PHPUnit\Framework\Attributes\Test;
 
 class BestAnswerNotificationsTest extends TestCase
@@ -58,18 +60,18 @@ class BestAnswerNotificationsTest extends TestCase
         ]);
     }
 
-    protected function selectBestAnswer(): void
+    protected function selectBestAnswer(?string $postId = '2', int $actorId = 2): void
     {
         $response = $this->send(
             $this->request('PATCH', '/api/discussions/1', [
                 'json' => [
                     'data' => [
                         'relationships' => [
-                            'bestAnswerPost' => ['data' => ['type' => 'posts', 'id' => '2']],
+                            'bestAnswerPost' => ['data' => $postId ? ['type' => 'posts', 'id' => $postId] : null],
                         ],
                     ],
                 ],
-                'authenticatedAs' => 2,
+                'authenticatedAs' => $actorId,
             ])
         );
 
@@ -113,5 +115,40 @@ class BestAnswerNotificationsTest extends TestCase
         $this->selectBestAnswer();
 
         $this->assertSame([], $this->recipientsOf('selectBestAnswer'));
+    }
+
+    #[Test]
+    public function both_notifications_are_withdrawn_when_the_best_answer_is_removed()
+    {
+        $this->selectBestAnswer('2');
+        $this->selectBestAnswer(null);
+
+        $this->assertSame([], $this->recipientsOf('awardedBestAnswer'));
+        $this->assertSame([], $this->recipientsOf('bestAnswerInDiscussion'));
+    }
+
+    #[Test]
+    public function replacing_the_best_answer_only_leaves_notifications_about_the_new_one()
+    {
+        // A moderator replacing the asker's choice: different actors mean different notification blueprints.
+        $this->selectBestAnswer('2');
+        $this->selectBestAnswer('3', actorId: 1);
+
+        $this->assertSame([4], $this->recipientsOf('awardedBestAnswer'));
+        $this->assertSame([2, 3], $this->recipientsOf('bestAnswerInDiscussion'));
+    }
+
+    #[Test]
+    public function a_job_for_an_answer_that_has_since_been_replaced_sends_nothing()
+    {
+        $this->app();
+        $this->database()->table('discussions')->where('id', 1)->update(['best_answer_post_id' => 3, 'best_answer_user_id' => 2]);
+
+        // Queued when post 2 was chosen, but post 3 had replaced it by the time it ran.
+        $job = new SendNotificationWhenBestAnswerSetInDiscussion(Discussion::find(1), User::find(2), 2);
+        $job->handle($this->app()->getContainer()->make(NotificationSyncer::class));
+
+        $this->assertSame([], $this->recipientsOf('awardedBestAnswer'));
+        $this->assertSame([], $this->recipientsOf('bestAnswerInDiscussion'));
     }
 }

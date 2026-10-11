@@ -24,7 +24,7 @@ class QueueNotificationJobs
     public function handle(BestAnswerSet $event)
     {
         $this->queue->push(
-            new Jobs\SendNotificationWhenBestAnswerSetInDiscussion($event->discussion, $event->actor)
+            new Jobs\SendNotificationWhenBestAnswerSetInDiscussion($event->discussion, $event->actor, $event->post->id)
         );
     }
 }
