@@ -47,6 +47,7 @@ class SetBestAnswerPermissionsTest extends TestCase
                 ['id' => 1, 'user_id' => 2, 'comment_count' => 3],
                 ['id' => 2, 'user_id' => 2, 'comment_count' => 2],
                 ['id' => 3, 'user_id' => 2, 'comment_count' => 2, 'is_private' => true],
+                ['id' => 4, 'user_id' => 3, 'comment_count' => 2],
             ],
             Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'number' => 1, 'user_id' => 2],
@@ -56,11 +57,14 @@ class SetBestAnswerPermissionsTest extends TestCase
                 ['id' => 5, 'discussion_id' => 2, 'number' => 2, 'user_id' => 3],
                 ['id' => 6, 'discussion_id' => 3, 'number' => 1, 'user_id' => 2],
                 ['id' => 7, 'discussion_id' => 3, 'number' => 2, 'user_id' => 3],
+                ['id' => 8, 'discussion_id' => 4, 'number' => 1, 'user_id' => 3],
+                ['id' => 9, 'discussion_id' => 4, 'number' => 2, 'user_id' => 2],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 1],
                 ['discussion_id' => 2, 'tag_id' => 2],
                 ['discussion_id' => 3, 'tag_id' => 1],
+                ['discussion_id' => 4, 'tag_id' => 1],
             ],
         ]);
     }
@@ -116,5 +120,24 @@ class SetBestAnswerPermissionsTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertNoBestAnswer(1);
+    }
+
+    #[Test]
+    public function cannot_set_another_users_best_answer_using_a_post_from_your_own_discussion()
+    {
+        // User 2 may choose answers in discussion 1, but discussion 4 belongs to user 3.
+        $response = $this->setBestAnswer(4, 2, 2);
+
+        $this->assertEquals(422, $response->getStatusCode());
+        $this->assertNoBestAnswer(4);
+    }
+
+    #[Test]
+    public function cannot_choose_a_post_from_another_discussion()
+    {
+        $response = $this->setBestAnswer(4, 2, 1);
+
+        $this->assertEquals(422, $response->getStatusCode());
+        $this->assertNoBestAnswer(4);
     }
 }

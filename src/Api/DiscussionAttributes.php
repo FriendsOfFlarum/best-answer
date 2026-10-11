@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Flarum\Api\Context;
 use Flarum\Api\Schema;
 use Flarum\Discussion\Discussion;
+use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
@@ -57,6 +58,13 @@ class DiscussionAttributes
 
                     if ($discussion->best_answer_post_id === $post?->id) {
                         return;
+                    }
+
+                    // Permission is checked against the post's discussion, so it must be this one.
+                    if ($post && $post->discussion_id !== $discussion->id) {
+                        throw new ValidationException([], [
+                            'bestAnswerPost' => $this->translator->trans('fof-best-answer.forum.errors.mismatch'),
+                        ]);
                     }
 
                     if ($post && (!$this->bestAnswerRepository->canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
