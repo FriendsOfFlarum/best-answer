@@ -46,7 +46,8 @@ class BestAnswerRepository
 
     public function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
-        if ($post->type !== CommentPost::$type || !$this->canSelectBestAnswer($user, $post->discussion)) {
+        // Only replies can be answers, and a hidden one can't be; the forum never offers either.
+        if ($post->type !== CommentPost::$type || $post->number === 1 || $post->hidden_at !== null || !$this->canSelectBestAnswer($user, $post->discussion)) {
             return false;
         }
 
