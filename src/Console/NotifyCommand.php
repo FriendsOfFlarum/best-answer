@@ -37,7 +37,7 @@ class NotifyCommand extends Command
      */
     protected $description = 'After a configurable number of days, notifies OP of discussions with no post selected as best answer to select one.';
 
-    public function handle()
+    public function handle(): int
     {
         $days = (int) $this->settings->get('fof-best-answer.select_best_answer_reminder_days');
         $time = Carbon::now()->subDays($days);
@@ -48,7 +48,7 @@ class NotifyCommand extends Command
         if ($days <= 0) {
             $this->info('Reminders are disabled');
 
-            return;
+            return self::SUCCESS;
         }
 
         $this->info('Looking at discussions before '.$time->toDateTimeString().' but not older than '.$timeLimit->toDateTimeString());
@@ -59,6 +59,8 @@ class NotifyCommand extends Command
             ->whereIn('discussion_tag.tag_id', $tags)
             ->whereNull('discussions.best_answer_post_id')
             ->whereNull('discussions.hidden_at')
+            // A deleted author's discussions keep a NULL user_id, and there is nobody to remind.
+            ->whereNotNull('discussions.user_id')
             // NULL means not yet reminded. Rows from before the model default stay NULL rather than being backfilled, to avoid a full-table migration on large forums.
             ->where(fn ($query) => $query->whereNull('discussions.best_answer_notified')->orWhere('discussions.best_answer_notified', false))
             ->where('discussions.comment_count', '>', 1)
@@ -71,7 +73,7 @@ class NotifyCommand extends Command
         if ($count == 0) {
             $this->info('Nothing to do');
 
-            return;
+            return self::SUCCESS;
         }
 
         $errors = [];
@@ -124,6 +126,10 @@ class NotifyCommand extends Command
                 $this->output->writeln("<warning>$n >>>>>></warning> <error>$e</error>");
                 $this->line('');
             }
+
+            return self::FAILURE;
         }
+
+        return self::SUCCESS;
     }
 }

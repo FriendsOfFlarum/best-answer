@@ -14,13 +14,18 @@ namespace FoF\BestAnswer\Tests\integration\console;
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
 use Flarum\Group\Group;
+use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
 use Flarum\Tags\Tag;
 use Flarum\Testing\integration\ConsoleTestCase;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\User\User;
+use Illuminate\Console\Command;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class NotifyCommandTest extends ConsoleTestCase
 {
@@ -163,5 +168,43 @@ class NotifyCommandTest extends ConsoleTestCase
         $this->runReminders();
 
         $this->assertFalse($this->reminderSentTo(2));
+    }
+
+    #[Test]
+    public function skips_discussions_whose_author_was_deleted()
+    {
+        $this->seed();
+
+        // Discussion 2 is otherwise due, but its author's account has been deleted.
+        $this->prepareDatabase([
+            Discussion::class => [
+                ['id' => 2, 'user_id' => null, 'created_at' => Carbon::now()->subDays(2), 'comment_count' => 2],
+            ],
+            Post::class => [
+                ['id' => 3, 'discussion_id' => 2, 'number' => 1, 'user_id' => null],
+                ['id' => 4, 'discussion_id' => 2, 'number' => 2, 'user_id' => 3],
+            ],
+            'discussion_tag' => [
+                ['discussion_id' => 2, 'tag_id' => 1],
+            ],
+        ]);
+
+        $this->runReminders();
+
+        $this->assertTrue($this->reminderSentTo(2));
+    }
+
+    #[Test]
+    public function exits_with_failure_when_a_reminder_cannot_be_sent()
+    {
+        $this->seed();
+
+        $syncer = $this->createStub(NotificationSyncer::class);
+        $syncer->method('sync')->willThrowException(new RuntimeException('Mail server unavailable'));
+        $this->app()->getContainer()->instance(NotificationSyncer::class, $syncer);
+
+        $exitCode = $this->console()->run(new ArrayInput(['command' => 'fof:best-answer:notify']), new BufferedOutput());
+
+        $this->assertSame(Command::FAILURE, $exitCode);
     }
 }
