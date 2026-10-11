@@ -50,7 +50,6 @@
             },
             "optional-dependencies": [
                 "flarum/audit",
-                "fof/follow-tags",
                 "fof/user-directory",
                 "ianm/level-ranks"
             ],
