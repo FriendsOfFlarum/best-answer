@@ -74,8 +74,7 @@ return [
         ->fields(Api\DiscussionAttributes::class)
         ->endpoint(Endpoint\Show::class, function (Endpoint\Show $endpoint) {
             return $endpoint
-                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerUser'])
-                ->eagerLoad(['bestAnswerPost.user']);
+                ->addDefaultInclude(['bestAnswerPost', 'bestAnswerPost.user', 'bestAnswerUser']);
         }),
 
     (new Extend\ApiResource(Resource\PostResource::class))
