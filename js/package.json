@@ -7,7 +7,7 @@
     "@flarum/jest-config": "^2.0.2",
     "@flarum/prettier-config": "^1.0.0",
     "flarum-tsconfig": "^2.0.0",
-    "flarum-webpack-config": "^3.0.4",
+    "flarum-webpack-config": "^3.0.6",
     "prettier": "^3.8.4",
     "typescript-coverage-report": "^0.6.1",
     "webpack": "^5.108.0",
