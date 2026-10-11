@@ -55,8 +55,8 @@ class NotifyCommand extends Command
 
         $tags = Tag::where('qna_reminders', true)->pluck('id');
         $query = Discussion::query()
-            ->leftJoin('discussion_tag', 'discussion_tag.discussion_id', '=', 'discussions.id')
-            ->whereIn('discussion_tag.tag_id', $tags)
+            // A subquery rather than a join, so a discussion in several reminder tags is only reminded once.
+            ->whereIn('discussions.id', fn ($query) => $query->select('discussion_id')->from('discussion_tag')->whereIn('tag_id', $tags))
             ->whereNull('discussions.best_answer_post_id')
             ->whereNull('discussions.hidden_at')
             // A deleted author's discussions keep a NULL user_id, and there is nobody to remind.
@@ -65,8 +65,8 @@ class NotifyCommand extends Command
             ->where(fn ($query) => $query->whereNull('discussions.best_answer_notified')->orWhere('discussions.best_answer_notified', false))
             ->where('discussions.comment_count', '>', 1)
             ->where('discussions.is_private', 0)
-            ->whereDate('discussions.created_at', '<', $time->toIso8601String())
-            ->whereDate('discussions.created_at', '>', $timeLimit->toIso8601String());
+            ->where('discussions.created_at', '<', $time)
+            ->where('discussions.created_at', '>', $timeLimit);
 
         $count = $query->count();
 
@@ -78,6 +78,10 @@ class NotifyCommand extends Command
 
         $errors = [];
 
+        $query
+            ->with(['user.groups', 'tags'])
+            ->withCount(['posts as replies_by_others_count' => fn ($query) => $query->whereColumn('posts.user_id', '!=', 'discussions.user_id')]);
+
         $query->chunkById(20, function ($discussions) use (&$errors) {
             // Filter out discussions where the user can't select a post as best answer.
             // - The user must have permission to select a best answer on their own discussion
@@ -85,7 +89,7 @@ class NotifyCommand extends Command
             $discussions = $discussions->filter(function ($d) {
                 $canSelectOwn = $d->user->can('fof-best-answer.allow_select_own_post', $d);
                 $hasPermission = $d->user->can('selectBestAnswerOwnDiscussion', $d);
-                $canSelectPosts = $canSelectOwn || $d->posts()->where('user_id', '!=', $d->user_id)->count() != 0;
+                $canSelectPosts = $canSelectOwn || $d->getAttribute('replies_by_others_count') > 0;
 
                 return $hasPermission && $canSelectPosts;
             });

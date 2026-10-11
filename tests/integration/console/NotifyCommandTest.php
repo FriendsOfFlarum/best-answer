@@ -207,4 +207,69 @@ class NotifyCommandTest extends ConsoleTestCase
 
         $this->assertSame(Command::FAILURE, $exitCode);
     }
+
+    #[Test]
+    public function reminds_a_discussion_in_several_reminder_tags_once()
+    {
+        $this->seed();
+
+        $this->prepareDatabase([
+            Tag::class       => [['id' => 2, 'is_qna' => true, 'qna_reminders' => true]],
+            'discussion_tag' => [['discussion_id' => 1, 'tag_id' => 2]],
+        ]);
+
+        $this->assertStringContainsString('Sending 1 notifications', $this->runCommand(['command' => 'fof:best-answer:notify']));
+    }
+
+    /**
+     * A core factory definition as an insertable row, encoded the way prepareDatabase() does it.
+     *
+     * @param class-string<User|Discussion|Post> $model
+     */
+    protected function row(string $model, array $attributes = []): array
+    {
+        return array_map(fn (mixed $value) => is_array($value) ? json_encode($value) : $value, $model::factory()->raw($attributes));
+    }
+
+    protected function addDueDiscussions(int $count): void
+    {
+        $db = $this->database();
+
+        foreach (range(1, $count) as $i) {
+            $authorId = $db->table('users')->insertGetId($this->row(User::class));
+            $discussionId = $db->table('discussions')->insertGetId($this->row(Discussion::class, ['user_id' => $authorId, 'created_at' => Carbon::now()->subDays(2), 'comment_count' => 2]));
+            $db->table('posts')->insert($this->row(Post::class, ['discussion_id' => $discussionId, 'number' => 1, 'user_id' => $authorId]));
+            $db->table('posts')->insert($this->row(Post::class, ['discussion_id' => $discussionId, 'number' => 2, 'user_id' => 3]));
+            $db->table('discussion_tag')->insert(['discussion_id' => $discussionId, 'tag_id' => 1]);
+        }
+    }
+
+    protected function postAndTagQueriesWhenReminding(int $dueDiscussions): int
+    {
+        $this->addDueDiscussions($dueDiscussions);
+
+        $this->database()->flushQueryLog();
+        $this->database()->enableQueryLog();
+
+        $this->runReminders();
+
+        $queries = array_filter(
+            $this->database()->getQueryLog(),
+            fn (array $query) => preg_match('/["`](posts|tags)["`]/', $query['query'])
+        );
+
+        $this->database()->disableQueryLog();
+
+        return count($queries);
+    }
+
+    #[Test]
+    public function checking_discussions_for_reminders_does_not_query_posts_or_tags_per_discussion()
+    {
+        $this->seed();
+        $this->app();
+        $this->runReminders();
+
+        $this->assertSame($this->postAndTagQueriesWhenReminding(3), $this->postAndTagQueriesWhenReminding(6));
+    }
 }
