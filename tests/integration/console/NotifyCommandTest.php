@@ -13,11 +13,13 @@ namespace FoF\BestAnswer\Tests\integration\console;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
+use Flarum\Group\Group;
 use Flarum\Post\Post;
 use Flarum\Tags\Tag;
 use Flarum\Testing\integration\ConsoleTestCase;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\User\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 
 class NotifyCommandTest extends ConsoleTestCase
@@ -29,24 +31,30 @@ class NotifyCommandTest extends ConsoleTestCase
         parent::setUp();
 
         $this->extension('flarum-tags', 'fof-best-answer');
+    }
 
-        $this->setting('fof-best-answer.select_best_answer_reminder_days', 1);
+    /**
+     * An unanswered Q&A discussion by user 2, started two days ago, with an answer by user 3.
+     * With reminders set to one day, it is due a reminder unless an override says otherwise.
+     */
+    protected function seed(array $discussion = [], array $tag = [], array $answer = [], int $reminderDays = 1): void
+    {
+        $this->setting('fof-best-answer.select_best_answer_reminder_days', $reminderDays);
 
         $this->prepareDatabase([
             User::class => [
                 $this->normalUser(),
-                ['id' => 3, 'username' => 'answerer', 'email' => 'answerer@machine.local', 'is_email_confirmed' => 1],
+                ['id' => 3],
             ],
             Tag::class => [
-                ['id' => 1, 'name' => 'Q&A', 'slug' => 'q-a', 'description' => '', 'color' => '#FF0000', 'position' => 0, 'parent_id' => null, 'is_restricted' => false, 'is_hidden' => false, 'is_qna' => true, 'qna_reminders' => true],
+                ['id' => 1, 'is_qna' => true, 'qna_reminders' => true, ...$tag],
             ],
-            // NULL as stored for discussions started between the 2025_10_17 migration and the model default.
             Discussion::class => [
-                ['id' => 1, 'title' => __CLASS__, 'user_id' => 2, 'created_at' => Carbon::now()->subDays(2), 'comment_count' => 2, 'is_private' => false, 'best_answer_notified' => null],
+                ['id' => 1, 'user_id' => 2, 'created_at' => Carbon::now()->subDays(2), 'comment_count' => 2, ...$discussion],
             ],
             Post::class => [
-                ['id' => 1, 'discussion_id' => 1, 'user_id' => 2, 'type' => 'comment', 'content' => 'question', 'created_at' => Carbon::now()->subDays(2)],
-                ['id' => 2, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'answer', 'created_at' => Carbon::now()->subDays(2)],
+                ['id' => 1, 'discussion_id' => 1, 'number' => 1, 'user_id' => 2],
+                ['id' => 2, 'discussion_id' => 1, 'number' => 2, 'user_id' => 3, ...$answer],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 1],
@@ -63,10 +71,18 @@ class NotifyCommandTest extends ConsoleTestCase
             ->exists();
     }
 
+    protected function runReminders(): void
+    {
+        $this->runCommand(['command' => 'fof:best-answer:notify']);
+    }
+
     #[Test]
     public function reminds_author_when_notified_flag_is_null()
     {
-        $this->runCommand(['command' => 'fof:best-answer:notify']);
+        // NULL as stored for discussions started between the 2025_10_17 migration and the model default.
+        $this->seed(discussion: ['best_answer_notified' => null]);
+
+        $this->runReminders();
 
         $this->assertTrue($this->reminderSentTo(2));
     }
@@ -74,12 +90,7 @@ class NotifyCommandTest extends ConsoleTestCase
     #[Test]
     public function reminds_author_again_after_best_answer_is_removed()
     {
-        $this->app();
-        $this->database()->table('discussions')->where('id', 1)->update([
-            'best_answer_post_id'  => 2,
-            'best_answer_user_id'  => 2,
-            'best_answer_notified' => true,
-        ]);
+        $this->seed(discussion: ['best_answer_post_id' => 2, 'best_answer_user_id' => 2, 'best_answer_notified' => true]);
 
         $response = $this->send(
             $this->request('PATCH', '/api/discussions/1', [
@@ -96,8 +107,61 @@ class NotifyCommandTest extends ConsoleTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->runCommand(['command' => 'fof:best-answer:notify']);
+        $this->runReminders();
 
         $this->assertTrue($this->reminderSentTo(2));
+    }
+
+    public static function notDueProvider(): array
+    {
+        return [
+            'hidden discussion'       => [['hidden_at' => Carbon::now()], [], []],
+            'private discussion'      => [['is_private' => true], [], []],
+            'already answered'        => [['best_answer_post_id' => 2, 'best_answer_user_id' => 2], [], []],
+            'already reminded'        => [['best_answer_notified' => true], [], []],
+            'no replies'              => [['comment_count' => 1], [], []],
+            'started too recently'    => [['created_at' => Carbon::now()], [], []],
+            'started too long ago'    => [['created_at' => Carbon::now()->subDays(10)], [], []],
+            'tag without reminders'   => [[], ['qna_reminders' => false], []],
+            'only the author replied' => [[], [], ['user_id' => 2]],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('notDueProvider')]
+    public function does_not_remind_when_discussion_is_not_due(array $discussion, array $tag, array $answer)
+    {
+        $this->seed($discussion, $tag, $answer);
+
+        $this->runReminders();
+
+        $this->assertFalse($this->reminderSentTo(2));
+    }
+
+    #[Test]
+    public function does_not_remind_when_reminders_are_disabled()
+    {
+        $this->seed(reminderDays: 0);
+
+        $this->runReminders();
+
+        $this->assertFalse($this->reminderSentTo(2));
+    }
+
+    #[Test]
+    public function does_not_remind_author_who_cannot_select_a_best_answer()
+    {
+        $this->seed();
+
+        // Members get this permission from the extension's migration, so take it away for this test.
+        $this->app();
+        $this->database()->table('group_permission')
+            ->where('group_id', Group::MEMBER_ID)
+            ->where('permission', 'discussion.selectBestAnswerOwnDiscussion')
+            ->delete();
+
+        $this->runReminders();
+
+        $this->assertFalse($this->reminderSentTo(2));
     }
 }
