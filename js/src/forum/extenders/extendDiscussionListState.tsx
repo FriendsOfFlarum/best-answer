@@ -14,10 +14,6 @@ export default function extendDiscussionListState() {
       }
 
       params.filter[`${prepend}solved-discussions`] = 'true';
-
-      if (params.filter.q) {
-        params.filter.q += ` ${prepend}is:solved`;
-      }
     }
   });
 }
