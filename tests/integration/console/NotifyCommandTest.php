@@ -207,6 +207,7 @@ class NotifyCommandTest extends ConsoleTestCase
 
         $this->assertSame(Command::FAILURE, $exitCode);
     }
+
     #[Test]
     public function reminds_a_discussion_in_several_reminder_tags_once()
     {
