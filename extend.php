@@ -82,7 +82,9 @@ return [
         ->fields(Api\PostAttributes::class)
         ->endpoint(Endpoint\Index::class, function (Endpoint\Index $endpoint) {
             return $endpoint
-                ->addDefaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user']); // @todo: same
+                ->addDefaultInclude(['discussion.bestAnswerPost', 'discussion.bestAnswerUser', 'discussion.bestAnswerPost.user'])
+                // canSelectAsBestAnswer on each included answer reads its discussion's tags.
+                ->eagerLoad(['discussion.bestAnswerPost.user.groups', 'discussion.bestAnswerPost.discussion.tags', 'discussion.bestAnswerUser.groups']);
         }),
 
     (new Extend\ApiResource(Resource\UserResource::class))
