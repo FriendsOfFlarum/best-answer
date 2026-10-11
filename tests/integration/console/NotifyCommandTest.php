@@ -128,6 +128,7 @@ class NotifyCommandTest extends ConsoleTestCase
             'started too recently'    => [['created_at' => Carbon::now()], [], []],
             'started too long ago'    => [['created_at' => Carbon::now()->subDays(10)], [], []],
             'tag without reminders'   => [[], ['qna_reminders' => false], []],
+            'reminder tag not Q&A'    => [[], ['is_qna' => false], []],
             'only the author replied' => [[], [], ['user_id' => 2]],
         ];
     }

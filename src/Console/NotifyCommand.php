@@ -53,10 +53,13 @@ class NotifyCommand extends Command
 
         $this->info('Looking at discussions before '.$time->toDateTimeString().' but not older than '.$timeLimit->toDateTimeString());
 
-        $tags = Tag::where('qna_reminders', true)->pluck('id');
+        $reminderTags = Tag::where('qna_reminders', true)->pluck('id');
+        $qnaTags = Tag::where('is_qna', true)->pluck('id');
         $query = Discussion::query()
             // A subquery rather than a join, so a discussion in several reminder tags is only reminded once.
-            ->whereIn('discussions.id', fn ($query) => $query->select('discussion_id')->from('discussion_tag')->whereIn('tag_id', $tags))
+            ->whereIn('discussions.id', fn ($query) => $query->select('discussion_id')->from('discussion_tag')->whereIn('tag_id', $reminderTags))
+            // Only remind where a best answer can actually be chosen.
+            ->whereIn('discussions.id', fn ($query) => $query->select('discussion_id')->from('discussion_tag')->whereIn('tag_id', $qnaTags))
             ->whereNull('discussions.best_answer_post_id')
             ->whereNull('discussions.hidden_at')
             // A deleted author's discussions keep a NULL user_id, and there is nobody to remind.
