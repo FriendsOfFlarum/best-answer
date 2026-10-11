@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
 use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
+use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Tag;
@@ -45,7 +46,7 @@ class BestAnswerRepository
 
     public function canSelectPostAsBestAnswer(User $user, Post $post): bool
     {
-        if (!$this->canSelectBestAnswer($user, $post->discussion)) {
+        if ($post->type !== CommentPost::$type || !$this->canSelectBestAnswer($user, $post->discussion)) {
             return false;
         }
 
