@@ -84,3 +84,22 @@ it('removes the preview from the first post while the best answer is being unsel
 
   expect(firstPost).not.toContainRaw('Use the forgot password link.');
 });
+
+it('shows a placeholder in the preview when the best answer author was deleted', () => {
+  // A deleted author leaves the post's user_id NULL, so the post arrives without a user.
+  app.store.pushPayload({
+    data: {
+      type: 'posts',
+      id: '4',
+      attributes: { number: 4, contentType: 'comment', contentHtml: '<p>Reset it from the login page.</p>', createdAt: '2026-10-01T10:00:00Z' },
+      relationships: { discussion: { data: { type: 'discussions', id: '1' } }, user: { data: null } },
+    },
+  });
+  selectBestAnswer('4');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  expect(firstPost).toContainRaw('Reset it from the login page.');
+  expect(firstPost).toContainRaw('[deleted]');
+});
+
