@@ -61,6 +61,8 @@ return [
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->listen(BestAnswerUnset::class, Listeners\WithdrawBestAnswerNotifications::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
+        ->subscribe(Listeners\UpdateBestAnswerTags::class)
+        ->subscribe(Listeners\UnsetBestAnswerOnDeletion::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
     (new Extend\Notification())

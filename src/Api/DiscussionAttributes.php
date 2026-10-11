@@ -19,12 +19,7 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Post\Post;
-use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Tags\Event\DiscussionWasTagged;
-use Flarum\Tags\Listener\UpdateTagMetadata;
-use Flarum\Tags\Tag;
 use Flarum\User\Exception\PermissionDeniedException;
-use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
 use FoF\BestAnswer\Notification\SelectBestAnswerBlueprint;
@@ -38,8 +33,7 @@ class DiscussionAttributes
         protected BestAnswerRepository $bestAnswerRepository,
         protected NotificationSyncer $notifications,
         protected Dispatcher $bus,
-        protected TranslatorInterface $translator,
-        protected SettingsRepositoryInterface $settings
+        protected TranslatorInterface $translator
     ) {
     }
 
@@ -93,8 +87,6 @@ class DiscussionAttributes
                             // A hard delete, so a later reminder arrives as a new notification (and email) rather than an un-hidden one.
                             Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
 
-                            $this->changeTags($discussion, 'attach', $actor);
-
                             if ($previousPost) {
                                 $this->bus->dispatch(new BestAnswerUnset($discussion, $previousPost, $actor));
                             }
@@ -118,7 +110,6 @@ class DiscussionAttributes
                         $discussion->unsetRelation('bestAnswerPost');
 
                         $discussion->afterSave(function (Discussion $discussion) use ($actor, $post) {
-                            $this->changeTags($discussion, 'detach', $actor);
                             $this->bus->dispatch(new BestAnswerUnset($discussion, $post, $actor));
                         });
                     }
@@ -131,41 +122,5 @@ class DiscussionAttributes
                 ->type('users')
                 ->includable(),
         ];
-    }
-
-    protected function changeTags(Discussion $discussion, string $method, User $actor): void
-    {
-        $tagsToChange = @json_decode($this->settings->get('fof-best-answer.select_best_answer_tags'));
-
-        if (empty($tagsToChange)) {
-            return;
-        }
-
-        $validTags = Tag::query()->whereIn('id', $tagsToChange);
-
-        // Query errors if we try to attach tags that are already attached due to the unique constraint
-        if ($method === 'attach') {
-            /** @phpstan-ignore-next-line */
-            $existingTags = $discussion->tags()->pluck('id');
-            $validTags = $validTags->whereNotIn('id', $existingTags);
-        }
-
-        $validTagsIds = $validTags->pluck('id');
-
-        if ($validTagsIds->isEmpty()) {
-            return;
-        }
-
-        $oldTags = Tag::query()
-            ->whereIn('id', fn ($query) => $query->select('tag_id')->from('discussion_tag')->where('discussion_id', $discussion->id))
-            ->get()
-            ->all();
-
-        /** @phpstan-ignore-next-line */
-        $discussion->tags()->$method($validTagsIds);
-        $discussion->unsetRelation('tags');
-
-        // Keep tag counts and last-posted discussions right without DiscussionWasTagged's event post.
-        resolve(UpdateTagMetadata::class)->whenDiscussionWasTagged(new DiscussionWasTagged($discussion, $actor, $oldTags));
     }
 }
