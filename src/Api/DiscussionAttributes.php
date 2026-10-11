@@ -89,9 +89,10 @@ class DiscussionAttributes
                         $discussion->best_answer_set_at = Carbon::now();
                         $discussion->best_answer_notified = false;
 
-                        Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-
                         $discussion->afterSave(function (Discussion $discussion) use ($actor, $previousPost) {
+                            // A hard delete, so a later reminder arrives as a new notification (and email) rather than an un-hidden one.
+                            Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
+
                             $this->changeTags($discussion, 'attach', $actor);
 
                             if ($previousPost) {
