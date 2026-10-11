@@ -102,3 +102,29 @@ it('shows a placeholder in the preview when the best answer author was deleted',
   expect(firstPost).toContainRaw('Reset it from the login page.');
   expect(firstPost).toContainRaw('[deleted]');
 });
+
+it('updates the preview when the best answer is edited', () => {
+  selectBestAnswer('2');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  expect(firstPost).toContainRaw('Use the forgot password link.');
+
+  app.store.pushPayload({ data: { type: 'posts', id: '2', attributes: { contentHtml: '<p>Use the forgot password link on the login page.</p>' } } });
+  firstPost.redraw();
+
+  expect(firstPost).toContainRaw('Use the forgot password link on the login page.');
+});
+
+it('removes the preview when the best answer is hidden', () => {
+  selectBestAnswer('3');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  expect(firstPost).toContainRaw('Ask an admin to send a reset email.');
+
+  app.store.pushPayload({ data: { type: 'posts', id: '3', attributes: { hiddenAt: '2026-10-02T10:00:00Z' } } });
+  firstPost.redraw();
+
+  expect(firstPost).not.toContainRaw('Ask an admin to send a reset email.');
+});

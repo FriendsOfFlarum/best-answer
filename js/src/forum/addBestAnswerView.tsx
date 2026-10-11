@@ -17,6 +17,16 @@ export default () => {
 
       return bestAnswer ? bestAnswer.id() : false;
     });
+
+    // The first post previews the best answer, so it also redraws when that answer is edited or hidden.
+    if (this.attrs.post.number() === 1) {
+      this.subtree.check(() => {
+        const discussion = this.attrs.post.discussion();
+        const bestAnswer = discussion && discussion.hasBestAnswer() && discussion.bestAnswerPost();
+
+        return bestAnswer ? bestAnswer.freshness : false;
+      });
+    }
   });
 
   extend(CommentPost.prototype, 'headerItems', function (items) {
