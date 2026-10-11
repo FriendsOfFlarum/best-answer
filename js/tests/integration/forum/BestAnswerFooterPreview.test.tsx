@@ -102,4 +102,3 @@ it('shows a placeholder in the preview when the best answer author was deleted',
   expect(firstPost).toContainRaw('Reset it from the login page.');
   expect(firstPost).toContainRaw('[deleted]');
 });
-
