@@ -16,13 +16,12 @@ export default function extendIndexPage() {
     if (!items.has('newDiscussion')) return;
 
     const cta = items.get('newDiscussion');
-    cta.children = app.translator.trans(
+    const label = app.translator.trans(
       canStartDiscussion ? 'fof-best-answer.forum.index.ask_question' : 'fof-best-answer.forum.index.cannot_ask_question'
     );
 
-    if (items.has('startDiscussion')) {
-      items.setContent('startDiscussion', cta);
-    }
+    cta.children = label;
+    cta.attrs['aria-label'] = label;
   });
 
   extend(IndexPage.prototype, 'viewItems', function (items) {
