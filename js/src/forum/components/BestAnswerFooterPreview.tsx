@@ -19,16 +19,17 @@ export interface BestAnswerFooterPreviewAttrs extends ComponentAttrs {
 }
 
 export default class BestAnswerFooterPreview extends Component<BestAnswerFooterPreviewAttrs> {
-  user!: User;
-  post!: Post;
-  discussion!: Discussion;
+  // Mithril reuses this instance when the best answer changes, so read the current attrs rather than copying them in oninit.
+  get user(): User {
+    return this.attrs.user;
+  }
 
-  oninit(vnode: Mithril.Vnode<BestAnswerFooterPreviewAttrs, this>) {
-    super.oninit(vnode);
+  get post(): Post {
+    return this.attrs.post;
+  }
 
-    this.user = this.attrs.user;
-    this.post = this.attrs.post;
-    this.discussion = this.attrs.discussion;
+  get discussion(): Discussion {
+    return this.attrs.discussion;
   }
 
   view() {

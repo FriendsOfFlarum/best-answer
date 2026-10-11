@@ -8,6 +8,15 @@ import Button from 'flarum/common/components/Button';
 import BestAnswerFooterPreview from './components/BestAnswerFooterPreview';
 
 export default () => {
+  // Posts only redraw when their own freshness changes; the best answer lives on the discussion.
+  extend(CommentPost.prototype, 'oninit', function () {
+    this.subtree.check(() => {
+      const discussion = this.attrs.post.discussion();
+
+      return discussion && discussion.hasBestAnswer() && discussion.bestAnswerPost()?.id();
+    });
+  });
+
   extend(CommentPost.prototype, 'headerItems', function (items) {
     const post = this.attrs.post;
     const discussion = post.discussion();
