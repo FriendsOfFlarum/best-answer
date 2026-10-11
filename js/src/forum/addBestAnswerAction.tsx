@@ -90,7 +90,7 @@ export default function addBestAnswerAction() {
     const post = this.attrs.post;
     const discussion = this.attrs.post.discussion();
     let isBestAnswer = isThisBestAnswer(discussion, post);
-    let hasBestAnswer = discussion.bestAnswerPost() !== null;
+    let hasBestAnswer = !!discussion.bestAnswerPost();
 
     if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
@@ -103,7 +103,7 @@ export default function addBestAnswerAction() {
           isBestAnswer = !isBestAnswer;
 
           saveDiscussion(discussion, isBestAnswer, post).finally(() => {
-            hasBestAnswer = !!discussion.hasBestAnswer() && discussion.bestAnswerPost() !== null;
+            hasBestAnswer = !!discussion.hasBestAnswer() && !!discussion.bestAnswerPost();
             isBestAnswer = isThisBestAnswer(discussion, post);
           });
         }}
