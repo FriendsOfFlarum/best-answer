@@ -99,12 +99,6 @@ export default [
     ))
     .setting(() => ({
       type: 'boolean',
-      setting: 'fof-best-answer.schedule_on_one_server',
-      label: app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server'),
-      help: app.translator.trans('fof-best-answer.admin.settings.schedule_on_one_server_help'),
-    }))
-    .setting(() => ({
-      type: 'boolean',
       setting: 'fof-best-answer.stop_overnight',
       label: app.translator.trans('fof-best-answer.admin.settings.schedule_stop_overnight'),
       help: app.translator.trans('fof-best-answer.admin.settings.schedule_stop_overnight_help'),
