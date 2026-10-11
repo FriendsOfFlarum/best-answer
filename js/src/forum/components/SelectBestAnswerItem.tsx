@@ -66,7 +66,7 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
           {app.translator.trans('fof-best-answer.forum.best_answer_label', {
             user: this.discussion.bestAnswerUser?.(),
             time_set: this.getSetTime(this.discussion),
-            a: <a onclick={() => m.route.set(app.route.user(bestAnswerUser))} />,
+            a: ({ children }: { children: Mithril.Children }) => <Link href={app.route.user(bestAnswerUser)}>{children}</Link>,
           })}
         </span>
       );
