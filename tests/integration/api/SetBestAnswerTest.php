@@ -52,6 +52,7 @@ class SetBestAnswerTest extends TestCase
                 ['id' => 3, 'discussion_id' => 1, 'user_id' => 3, 'type' => 'comment', 'content' => 'post 2 - answer2', 'created_at' => Carbon::now()],
                 ['id' => 4, 'discussion_id' => 2, 'user_id' => 3, 'type' => 'comment', 'content' => 'question', 'created_at' => Carbon::now()],
                 ['id' => 5, 'discussion_id' => 2, 'user_id' => 3, 'type' => 'comment', 'content' => 'answer', 'created_at' => Carbon::now()],
+                ['id' => 6, 'discussion_id' => 2, 'user_id' => 4, 'type' => 'comment', 'content' => 'moderator answer', 'created_at' => Carbon::now()],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 2],
@@ -167,44 +168,27 @@ class SetBestAnswerTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    public static function unauthorizedUsersOwnPostProvider(): array
-    {
-        return [
-            [2],
-            [3],
-        ];
-    }
-
     #[Test]
-    #[DataProvider('unauthorizedUsersOwnPostProvider')]
-    public function user_cannot_set_own_post_as_best_answer_if_not_permitted(int $userId)
+    public function user_cannot_set_own_post_as_best_answer_if_not_permitted()
     {
-        $response = $this->setBestAnswer($userId, 5, 2);
+        // User 3 started discussion 2 and wrote post 5, but lacks allow_select_own_post.
+        $response = $this->setBestAnswer(3, 5, 2);
 
         $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    public static function permittedUsersOwnPostProvider(): array
-    {
-        return [
-            [1],
-            [4],
-        ];
+        $this->assertNull(Discussion::find(2)->best_answer_post_id);
     }
 
     #[Test]
-    #[DataProvider('permittedUsersOwnPostProvider')]
-    public function user_can_set_own_post_as_best_answer_if_permitted(int $userId)
+    public function user_can_set_own_post_as_best_answer_if_permitted()
     {
-        $response = $this->setBestAnswer($userId, 5, 2);
+        // User 4 wrote post 6 and holds allow_select_own_post.
+        $response = $this->setBestAnswer(4, 6, 2);
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $attributes = $data['data']['attributes'];
-
-        $this->assertEquals(5, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 5');
+        $this->assertEquals(6, $data['data']['attributes']['hasBestAnswer'], 'Expected best answer post ID to be 6');
     }
 
     public function getBestAnswerCount(int $userId): int
