@@ -33,6 +33,16 @@ composer require fof/best-answer:"*"
 composer update fof/best-answer
 ```
 
+#### Upgrading from 2.0.0-beta.8 or earlier
+
+Before this release, choosing a different best answer in a discussion left the previous answer's author with one best answer too many. After updating, recalculate every user's best answer count:
+
+```sh
+php flarum fof:best-answer:update-counts
+```
+
+The command goes through every user, so it can take a while on large forums.
+
 ### Links
 
 [![OpenCollective](https://img.shields.io/badge/donate-friendsofflarum-44AEE5?style=for-the-badge&logo=open-collective)](https://opencollective.com/fof/donate) [![GitHub](https://img.shields.io/badge/donate-datitisev-ea4aaa?style=for-the-badge&logo=github)](https://datitisev.me/donate/github)
