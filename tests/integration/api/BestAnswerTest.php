@@ -140,6 +140,10 @@ class BestAnswerTest extends TestCase
     #[Test]
     public function unsetting_best_answer_decreases_author_best_answer_count()
     {
+        // User 1 is the installer's admin, so their count can't be seeded through prepareDatabase.
+        $this->app();
+        User::query()->whereKey(1)->update(['best_answer_count' => 1]);
+
         $response = $this->send(
             $this->request(
                 'PATCH',
@@ -168,7 +172,7 @@ class BestAnswerTest extends TestCase
 
         $answerAuthor = User::find(1);
 
-        $this->assertEquals(0, $answerAuthor->best_answer_count);
+        $this->assertSame(0, $answerAuthor->best_answer_count);
     }
 
     #[Test]

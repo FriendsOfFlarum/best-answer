@@ -74,24 +74,27 @@ class NotifyCommandTest extends ConsoleTestCase
     #[Test]
     public function reminds_author_again_after_best_answer_is_removed()
     {
-        foreach (['2', null] as $postId) {
-            $response = $this->send(
-                $this->request('PATCH', '/api/discussions/1', [
-                    'json' => [
-                        'data' => [
-                            'relationships' => [
-                                'bestAnswerPost' => [
-                                    'data' => $postId ? ['type' => 'posts', 'id' => $postId] : null,
-                                ],
-                            ],
+        $this->app();
+        $this->database()->table('discussions')->where('id', 1)->update([
+            'best_answer_post_id'  => 2,
+            'best_answer_user_id'  => 2,
+            'best_answer_notified' => true,
+        ]);
+
+        $response = $this->send(
+            $this->request('PATCH', '/api/discussions/1', [
+                'json' => [
+                    'data' => [
+                        'relationships' => [
+                            'bestAnswerPost' => ['data' => null],
                         ],
                     ],
-                    'authenticatedAs' => 2,
-                ])
-            );
+                ],
+                'authenticatedAs' => 2,
+            ])
+        );
 
-            $this->assertEquals(200, $response->getStatusCode());
-        }
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->runCommand(['command' => 'fof:best-answer:notify']);
 
