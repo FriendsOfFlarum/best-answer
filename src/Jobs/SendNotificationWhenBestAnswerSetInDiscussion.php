@@ -22,13 +22,21 @@ class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
 {
     protected $settings;
 
-    public function __construct(protected ?Discussion $discussion, protected User $actor)
+    /**
+     * $postId defaults to null so jobs queued before it existed still unserialize.
+     */
+    public function __construct(protected ?Discussion $discussion, protected User $actor, protected ?int $postId = null)
     {
     }
 
     public function handle(NotificationSyncer $notifications)
     {
         if (!$this->discussion || $this->discussion->best_answer_post_id === null) {
+            return;
+        }
+
+        // The answer was replaced before this job ran; the job queued for the new answer notifies instead.
+        if ($this->postId !== null && $this->discussion->best_answer_post_id !== $this->postId) {
             return;
         }
 

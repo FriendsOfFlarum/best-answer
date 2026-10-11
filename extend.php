@@ -59,6 +59,7 @@ return [
 
     (new Extend\Event())
         ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
+        ->listen(BestAnswerUnset::class, Listeners\WithdrawBestAnswerNotifications::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
