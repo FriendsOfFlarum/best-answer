@@ -10,10 +10,9 @@ export interface BestAnswerFooterPreviewAttrs extends ComponentAttrs {
     discussion: Discussion;
 }
 export default class BestAnswerFooterPreview extends Component<BestAnswerFooterPreviewAttrs> {
-    user: User;
-    post: Post;
-    discussion: Discussion;
-    oninit(vnode: Mithril.Vnode<BestAnswerFooterPreviewAttrs, this>): void;
+    get user(): User;
+    get post(): Post;
+    get discussion(): Discussion;
     view(): JSX.Element;
     postContent(): string | null | undefined;
     /**
