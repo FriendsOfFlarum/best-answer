@@ -38,9 +38,6 @@ return [
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
-    (new Extend\ServiceProvider())
-        ->register(Providers\BestAnswerServiceProvider::class),
-
     (new Extend\Model(Discussion::class))
         ->belongsTo('bestAnswerPost', Post::class, 'best_answer_post_id')
         ->belongsTo('bestAnswerUser', User::class, 'best_answer_user_id')
@@ -61,7 +58,7 @@ return [
         ->cast('best_answer_count', 'int'),
 
     (new Extend\Event())
-        ->listen(Events\BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
+        ->listen(BestAnswerSet::class, Listeners\QueueNotificationJobs::class)
         ->subscribe(Listeners\RecalculateBestAnswerCounts::class)
         ->listen(SettingsSaving::class, Listeners\SaveTagSettings::class),
 
@@ -94,15 +91,12 @@ return [
             Sort\SortColumn::make('bestAnswerCount'),
         ]),
 
-    (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-tags', fn () => [
-            (new Extend\ApiResource(TagResource::class))
-                ->fields(fn () => [
-                    Schema\Boolean::make('isQnA')
-                        ->property('is_qna'),
-                    Schema\Boolean::make('reminders')
-                        ->property('qna_reminders'),
-                ]),
+    (new Extend\ApiResource(TagResource::class))
+        ->fields(fn () => [
+            Schema\Boolean::make('isQnA')
+                ->property('is_qna'),
+            Schema\Boolean::make('reminders')
+                ->property('qna_reminders'),
         ]),
 
     (new Extend\Settings())
