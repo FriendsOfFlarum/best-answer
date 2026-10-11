@@ -47,7 +47,8 @@ return [
         ->cast('best_answer_post_id', 'int')
         ->cast('best_answer_user_id', 'int')
         ->cast('best_answer_set_at', 'datetime')
-        ->cast('best_answer_notified', 'boolean'),
+        ->cast('best_answer_notified', 'boolean')
+        ->default('best_answer_notified', false),
 
     (new Extend\View())
         ->namespace('fof-best-answer', __DIR__.'/resources/views'),

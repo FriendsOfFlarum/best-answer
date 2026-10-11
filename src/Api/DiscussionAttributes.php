@@ -102,7 +102,7 @@ class DiscussionAttributes
                         $discussion->best_answer_post_id = null;
                         $discussion->best_answer_user_id = null;
                         $discussion->best_answer_set_at = null;
-                        $discussion->best_answer_notified = null;
+                        $discussion->best_answer_notified = false;
                         $discussion->unsetRelation('bestAnswerPost');
 
                         $discussion->afterSave(function (Discussion $discussion) use ($actor, $post) {

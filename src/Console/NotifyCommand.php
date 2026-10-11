@@ -59,7 +59,8 @@ class NotifyCommand extends Command
             ->whereIn('discussion_tag.tag_id', $tags)
             ->whereNull('discussions.best_answer_post_id')
             ->whereNull('discussions.hidden_at')
-            ->where('discussions.best_answer_notified', false)
+            // NULL means not yet reminded. Rows from before the model default stay NULL rather than being backfilled, to avoid a full-table migration on large forums.
+            ->where(fn ($query) => $query->whereNull('discussions.best_answer_notified')->orWhere('discussions.best_answer_notified', false))
             ->where('discussions.comment_count', '>', 1)
             ->where('discussions.is_private', 0)
             ->whereDate('discussions.created_at', '<', $time->toIso8601String())
