@@ -59,6 +59,7 @@ class SetBestAnswerPermissionsTest extends TestCase
                 ['id' => 7, 'discussion_id' => 3, 'number' => 2, 'user_id' => 3],
                 ['id' => 8, 'discussion_id' => 4, 'number' => 1, 'user_id' => 3],
                 ['id' => 9, 'discussion_id' => 4, 'number' => 2, 'user_id' => 2],
+                ['id' => 10, 'discussion_id' => 1, 'number' => 4, 'user_id' => 3, 'type' => 'discussionRenamed', 'content' => json_encode(['Old title', 'New title'])],
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 1],
@@ -139,5 +140,24 @@ class SetBestAnswerPermissionsTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertNoBestAnswer(4);
+    }
+
+    #[Test]
+    public function cannot_choose_an_event_post()
+    {
+        // Post 10 records user 3 renaming the discussion; only comments can be answers.
+        $response = $this->setBestAnswer(1, 10, 2);
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertNoBestAnswer(1);
+    }
+
+    #[Test]
+    public function event_posts_are_not_offered_as_best_answers()
+    {
+        $response = $this->send($this->request('GET', '/api/posts/10', ['authenticatedAs' => 2]));
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertFalse(json_decode($response->getBody()->getContents(), true)['data']['attributes']['canSelectAsBestAnswer']);
     }
 }
