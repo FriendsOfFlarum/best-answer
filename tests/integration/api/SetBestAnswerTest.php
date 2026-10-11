@@ -206,4 +206,25 @@ class SetBestAnswerTest extends TestCase
 
         $this->assertEquals(5, $attributes['hasBestAnswer'], 'Expected best answer post ID to be 5');
     }
+
+    public function getBestAnswerCount(int $userId): int
+    {
+        $response = $this->send(
+            $this->request('GET', '/api/users/'.$userId, ['authenticatedAs' => 1])
+        );
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        return $data['data']['attributes']['bestAnswerCount'];
+    }
+
+    #[Test]
+    public function replacing_best_answer_moves_count_from_previous_author_to_new_author()
+    {
+        $this->assertEquals(200, $this->setBestAnswer(1, 2)->getStatusCode());
+        $this->assertEquals(200, $this->setBestAnswer(1, 3)->getStatusCode());
+
+        $this->assertEquals(0, $this->getBestAnswerCount(1), 'Expected previous answer author to lose the count');
+        $this->assertEquals(1, $this->getBestAnswerCount(3), 'Expected new answer author to gain the count');
+    }
 }

@@ -69,6 +69,10 @@ class DiscussionAttributes
 
                     // Attaching a best answer.
                     if ($post) {
+                        $previousPost = $discussion->bestAnswerPost;
+                        // Drop the cached previous post so afterSave and the response resolve the new one.
+                        $discussion->unsetRelation('bestAnswerPost');
+
                         $discussion->best_answer_post_id = $post->id;
                         $discussion->best_answer_user_id = $actor->id;
                         $discussion->best_answer_set_at = Carbon::now();
@@ -76,8 +80,12 @@ class DiscussionAttributes
 
                         Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
 
-                        $discussion->afterSave(function (Discussion $discussion) use ($actor) {
+                        $discussion->afterSave(function (Discussion $discussion) use ($actor, $previousPost) {
                             $this->changeTags($discussion, 'attach');
+
+                            if ($previousPost) {
+                                $this->bus->dispatch(new BestAnswerUnset($discussion, $previousPost, $actor));
+                            }
 
                             $post = $discussion->bestAnswerPost;
                             $this->bus->dispatch(new BestAnswerSet($discussion, $post, $actor));
