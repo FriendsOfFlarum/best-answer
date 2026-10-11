@@ -1,4 +1,12 @@
 js/src export-ignore
+js/tests export-ignore
+js/*.cjs export-ignore
+js/*.json export-ignore
+js/admin.ts export-ignore
+js/forum.ts export-ignore
+js/yarn.lock export-ignore
+/tests export-ignore
+/phpstan.neon export-ignore
 .git* export-ignore
 
 js/dist/*.js -diff
