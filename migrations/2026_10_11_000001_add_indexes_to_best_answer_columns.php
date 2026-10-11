@@ -19,7 +19,7 @@ $columns = ['best_answer_post_id', 'best_answer_user_id'];
 return [
     'up' => function (Builder $schema) use ($columns) {
         foreach ($columns as $column) {
-            if (! $schema->hasIndex('discussions', [$column])) {
+            if (!$schema->hasIndex('discussions', [$column])) {
                 $schema->table('discussions', function (Blueprint $table) use ($column) {
                     $table->index($column);
                 });
