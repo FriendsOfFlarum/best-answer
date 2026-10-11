@@ -19,8 +19,13 @@ return [
         });
     },
     'down' => function (Builder $schema) {
+        $schema->getConnection()
+            ->table('discussions')
+            ->whereNull('best_answer_notified')
+            ->update(['best_answer_notified' => false]);
+
         $schema->table('discussions', function (Blueprint $table) {
-            $table->boolean('best_answer_notified')->change();
+            $table->boolean('best_answer_notified')->default(false)->change();
         });
     },
 ];
