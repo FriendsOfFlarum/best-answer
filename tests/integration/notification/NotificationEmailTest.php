@@ -65,9 +65,9 @@ class NotificationEmailTest extends TestCase
     public static function notifications(): array
     {
         return [
-            'awarded best answer' => [AwardedBestAnswerBlueprint::class, 3],
+            'awarded best answer'           => [AwardedBestAnswerBlueprint::class, 3],
             'best answer set in discussion' => [BestAnswerSetInDiscussionBlueprint::class, 4],
-            'select best answer' => [SelectBestAnswerBlueprint::class, 2],
+            'select best answer'            => [SelectBestAnswerBlueprint::class, 2],
         ];
     }
 
@@ -126,7 +126,7 @@ class NotificationEmailTest extends TestCase
 
         $blueprint = match ($blueprintClass) {
             SelectBestAnswerBlueprint::class => new SelectBestAnswerBlueprint($discussion),
-            default => new $blueprintClass($discussion, User::findOrFail(2)),
+            default                          => new $blueprintClass($discussion, User::findOrFail(2)),
         };
 
         $container->make(NotificationMailer::class)->send($blueprint, User::findOrFail($recipientId));
