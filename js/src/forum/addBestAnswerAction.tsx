@@ -63,8 +63,6 @@ export default function addBestAnswerAction() {
     const discussion = post.discussion();
     let isBestAnswer = isThisBestAnswer(discussion, post);
 
-    post.pushAttributes({ isBestAnswer });
-
     if (post.contentType() !== 'comment') return;
 
     if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
@@ -93,8 +91,6 @@ export default function addBestAnswerAction() {
     const discussion = this.attrs.post.discussion();
     let isBestAnswer = isThisBestAnswer(discussion, post);
     let hasBestAnswer = discussion.bestAnswerPost() !== null;
-
-    post.pushAttributes({ isBestAnswer });
 
     if (ineligible(discussion, post) || !app.current.matches(DiscussionPage)) return;
 
