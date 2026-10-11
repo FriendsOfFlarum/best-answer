@@ -33,16 +33,17 @@ class SaveTagSettingsTest extends TestCase
     }
 
     /**
-     * @return array<string, array{bool, bool}> isQnA and reminders, keyed by tag id
+     * @return array<string, array{bool, bool}> isQnA and qnaReminders, keyed by tag id
      */
     protected function tagFlags(): array
     {
-        $response = $this->send($this->request('GET', '/api/tags'));
+        // qnaReminders is only serialized for admins.
+        $response = $this->send($this->request('GET', '/api/tags', ['authenticatedAs' => 1]));
 
         $flags = [];
 
         foreach (json_decode($response->getBody()->getContents(), true)['data'] as $tag) {
-            $flags[$tag['id']] = [$tag['attributes']['isQnA'], $tag['attributes']['reminders']];
+            $flags[$tag['id']] = [$tag['attributes']['isQnA'], $tag['attributes']['qnaReminders']];
         }
 
         ksort($flags);

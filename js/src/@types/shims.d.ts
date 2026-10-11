@@ -21,7 +21,7 @@ declare module 'flarum/common/models/Discussion' {
 declare module 'ext:flarum/tags/common/models/Tag' {
   export default interface Tag {
     isQnA(): boolean;
-    reminders(): boolean;
+    qnaReminders(): boolean;
   }
 }
 
