@@ -6,6 +6,8 @@ import Post from 'flarum/common/models/Post';
 export interface ISelectBestAnswerItemAttrs extends ComponentAttrs {
     post: Post;
     discussion: Discussion;
+    /** Link the label to the answer, for places that show it away from the answer itself. */
+    linkToPost?: boolean;
 }
 export default class SelectBestAnswerItem extends Component<ISelectBestAnswerItemAttrs> {
     post: Post;
