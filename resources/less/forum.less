@@ -63,6 +63,18 @@
       display: none;
     }
 
+    // Matches core's .PostUser-name, which the preview avoids so the first post's user card isn't triggered.
+    .BestAnswerPreview-userName {
+      display: inline;
+
+      &,
+      a {
+        color: var(--heading-color);
+        font-weight: bold;
+        font-size: 14px;
+      }
+    }
+
     .Post--BestAnswer {
       margin-right: 0;
 
