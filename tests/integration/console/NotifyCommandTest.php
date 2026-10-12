@@ -134,6 +134,7 @@ class NotifyCommandTest extends ConsoleTestCase
             'only the author replied' => [[], [], ['user_id' => 2]],
             // Below, only the author's own reply could be selected; posts by others that can't be don't count.
             'only an event post by someone else' => [[], [], ['user_id' => 2], [['type' => 'discussionTagged', 'content' => [[1], [1]]]]],
+            'only a hidden reply by someone else' => [[], [], ['user_id' => 2], [['hidden_at' => Carbon::now()]]],
         ];
     }
 
