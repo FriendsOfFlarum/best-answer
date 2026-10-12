@@ -92,6 +92,8 @@ fof-best-answer:
     gambits:
       solved-discussions:
         key: solved
+      solution:
+        key: solution
 
 fof-user-directory:
   lib:
