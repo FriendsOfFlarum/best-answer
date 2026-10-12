@@ -21,6 +21,7 @@ use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
 use Flarum\Post\Post;
+use Flarum\Realtime\Extend\Realtime;
 use Flarum\Search\Database\DatabaseSearchDriver;
 use Flarum\Settings\Event\Saving as SettingsSaving;
 use Flarum\Tags\Api\Resource\TagResource;
@@ -132,5 +133,14 @@ return [
                     'discussion_id' => $event->discussion->id,
                     'post_id'       => $event->post->id,
                 ]),
+        ])
+        ->whenExtensionEnabled('flarum-realtime', fn () => [
+            (new Realtime())
+                ->broadcastModelEvent(
+                    [BestAnswerSet::class, BestAnswerUnset::class],
+                    fn (BestAnswerSet|BestAnswerUnset $event) => $event->discussion,
+                    fn (BestAnswerSet|BestAnswerUnset $event) => $event->actor,
+                    'bestAnswerEvent'
+                ),
         ]),
 ];
