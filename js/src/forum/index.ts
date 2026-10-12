@@ -11,6 +11,7 @@ import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
 import extendIndexPage from './extenders/extendIndexPage';
 import extendDiscussionListState from './extenders/extendDiscussionListState';
 import extendDiscussionComposer from './extenders/extendDiscussionComposer';
+import extendGlobalSearch from './extenders/extendGlobalSearch';
 
 export * from './components';
 
@@ -31,4 +32,5 @@ app.initializers.add('fof/best-answer', () => {
   extendIndexPage();
   extendDiscussionListState();
   extendDiscussionComposer();
+  extendGlobalSearch();
 });

@@ -64,6 +64,8 @@ fof-best-answer:
       titlePlaceholder: Question title
     user:
       best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
+    search:
+      solutions_heading: Solutions
     discussion:
       jump_to_best_answer_button: View Best Answer
   email:
