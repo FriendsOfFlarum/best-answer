@@ -4,7 +4,6 @@ import BestAnswerFooterPreview from './BestAnswerFooterPreview';
 import BestAnswerInDiscussionNotification from './BestAnswerInDiscussionNotification';
 import SelectBestAnswerItem from './SelectBestAnswerItem';
 import SelectBestAnswerNotification from './SelectBestAnswerNotification';
-import SolutionSearchItem from './SolutionSearchItem';
 import SolvedFilter from './SolvedFilter';
 export declare const components: {
     SelectBestAnswerItem: typeof SelectBestAnswerItem;
@@ -13,6 +12,5 @@ export declare const components: {
     BestAnswerBadge: typeof BestAnswerBadge;
     BestAnswerInDiscussionNotification: typeof BestAnswerInDiscussionNotification;
     SelectBestAnswerNotification: typeof SelectBestAnswerNotification;
-    SolutionSearchItem: typeof SolutionSearchItem;
     SolvedFilter: typeof SolvedFilter;
 };
