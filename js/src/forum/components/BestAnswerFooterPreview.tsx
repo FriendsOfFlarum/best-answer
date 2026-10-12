@@ -62,7 +62,13 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
 
     items.add('user', this.userItem(), 100);
     items.add('meta', this.metaItem(), 90);
-    items.add('bestAnswer', <SelectBestAnswerItem post={this.post} discussion={this.discussion} />, -100);
+    items.add(
+      'bestAnswer',
+      <li className="item-isBestAnswer">
+        <SelectBestAnswerItem post={this.post} discussion={this.discussion} />
+      </li>,
+      -100
+    );
 
     return items;
   }

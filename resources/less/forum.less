@@ -75,12 +75,14 @@
       }
     }
 
-    .Post--BestAnswer {
+    // The preview's own header list: keep its label where it sat before it had a wrapper.
+    .item-isBestAnswer {
+      margin-top: 0;
       margin-right: 0;
+    }
 
-      a .icon {
-        display: inline-block;
-      }
+    .Post--BestAnswer a .icon {
+      display: inline-block;
     }
 
     .CommentPost {
