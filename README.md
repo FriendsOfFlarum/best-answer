@@ -73,14 +73,14 @@ A reminder is a notification that asks a discussion's author to select a best an
 
 To send reminders:
 
-1. Set **Reminder frequency** to the number of days to wait after a discussion is started. `0`, the default, turns reminders off.
-2. Choose the tags in **Reminder Tags**. Pick tags that are also in **Enabled Tags**: the reminder command doesn't check whether a discussion has a Q&A tag.
+1. Set **Days before reminding** to the number of days to wait after a discussion is started. `0`, the default, turns reminders off.
+2. Choose the tags in **Reminder Tags**.
 3. Run the Flarum scheduler. Add a cron entry that calls `php flarum schedule:run` every minute, as described in the [Flarum documentation](https://docs.flarum.org/console/#schedule).
 
 The extension schedules the `fof:best-answer:notify` command to run hourly. `php flarum schedule:list` shows it. Each run reminds the author of every discussion that:
 
-- has a reminder tag
-- was started between N and N + 7 days ago, where N is the **Reminder frequency**
+- has a reminder tag, and a tag from **Enabled Tags**
+- was started between N and N + 7 days ago, where N is **Days before reminding**
 - has at least one reply
 - has no best answer, isn't hidden or private, and its author's account still exists
 - hasn't been reminded before
@@ -89,7 +89,7 @@ The author must have the **Select Best Answer (own Discussion)** permission. If 
 
 Each discussion gets one reminder at most. Setting a best answer deletes the reminder.
 
-With **Prevent reminder notifications being sent during unsocial hours** turned on, the command only runs between 08:00 and 21:00 UTC. With **Append scheduler output to log storage** turned on, the command's output is added to `storage/logs/fof-best-answer.log`.
+With **Don't send reminders overnight** turned on, the command only runs between 08:00 and 21:00 UTC. With **Log reminder runs** turned on, the command's output is added to `storage/logs/fof-best-answer.log`.
 
 ### Other settings
 
