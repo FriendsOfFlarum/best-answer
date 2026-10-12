@@ -84,7 +84,8 @@ class NotifyCommand extends Command
         $query
             ->with(['user.groups', 'tags'])
             // Only visible comments can be selected as a best answer, so event, hidden and private posts don't count.
-            ->withCount(['comments as replies_by_others_count' => fn ($query) => $query->whereColumn('posts.user_id', '!=', 'discussions.user_id')]);
+            // A deleted user's replies keep a NULL user_id, which `!=` alone would skip.
+            ->withCount(['comments as replies_by_others_count' => fn ($query) => $query->where(fn ($query) => $query->whereNull('posts.user_id')->orWhereColumn('posts.user_id', '!=', 'discussions.user_id'))]);
 
         $query->chunkById(20, function ($discussions) use (&$errors) {
             // Filter out discussions where the user can't select a post as best answer.

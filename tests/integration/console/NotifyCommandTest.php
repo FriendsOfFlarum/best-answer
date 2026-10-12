@@ -203,6 +203,17 @@ class NotifyCommandTest extends ConsoleTestCase
     }
 
     #[Test]
+    public function reminds_author_when_the_only_answer_is_by_a_deleted_user()
+    {
+        // A deleted user's posts keep a NULL user_id, and can still be selected as the best answer.
+        $this->seed(answer: ['user_id' => null]);
+
+        $this->runReminders();
+
+        $this->assertTrue($this->reminderSentTo(2));
+    }
+
+    #[Test]
     public function exits_with_failure_when_a_reminder_cannot_be_sent()
     {
         $this->seed();
