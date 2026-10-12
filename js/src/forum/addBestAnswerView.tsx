@@ -32,8 +32,9 @@ export default () => {
   extend(CommentPost.prototype, 'headerItems', function (items) {
     const post = this.attrs.post;
     const discussion = post.discussion();
+    const bestAnswer = discussion?.hasBestAnswer() && discussion.bestAnswerPost();
 
-    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost()?.id() === post.id() && !post.isHidden()) {
+    if (bestAnswer && bestAnswer.id() === post.id() && !post.isHidden()) {
       items.add('isBestAnswer', <SelectBestAnswerItem post={post} discussion={discussion} />, -100);
     }
   });
@@ -53,8 +54,9 @@ export default () => {
   extend(PostComponent.prototype, 'elementAttrs', function (elementAttrs) {
     const post = this.attrs.post;
     const discussion = post.discussion();
+    const bestAnswer = discussion?.hasBestAnswer() && discussion.bestAnswerPost();
 
-    if (discussion?.hasBestAnswer() && discussion.bestAnswerPost() && discussion.bestAnswerPost().id() === post.id() && !post.isHidden()) {
+    if (bestAnswer && bestAnswer.id() === post.id() && !post.isHidden()) {
       elementAttrs.className ? (elementAttrs.className += ' Post--bestAnswer') : (elementAttrs.className = 'Post--bestAnswer');
     }
   });
@@ -69,7 +71,7 @@ export default () => {
 
     const post = discussion.hasBestAnswer() && discussion.bestAnswerPost();
 
-    if (post && !post.isHidden() && post.number() !== 1 && !discussion.bestAnswerPost()?.isHidden()) {
+    if (post && !post.isHidden() && post.number() !== 1) {
       items.add(
         'jumpToBestAnswer',
         <Button

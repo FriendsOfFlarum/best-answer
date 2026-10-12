@@ -13,14 +13,14 @@ export default class SolvedFilter extends Component<SolvedFilterAttrs> {
   view() {
     if (!this.shouldShowFilter()) return null;
 
-    const selected = app.discussions.bestAnswer as unknown as number;
+    const selected = app.discussions.bestAnswer;
     const options = ['all', 'solved', 'unsolved'];
 
     return Dropdown.component(
       {
         buttonClassName: 'Button',
         label: app.translator.trans(
-          `fof-best-answer.forum.filter.${options[selected] || Object.keys(options).map((key) => options[Number(key)])[0]}_label`
+          `fof-best-answer.forum.filter.${options[Number(selected)] || Object.keys(options).map((key) => options[Number(key)])[0]}_label`
         ),
         accessibleToggleLabel: app.translator.trans('fof-best-answer.forum.filter.accessible_label'),
       },
