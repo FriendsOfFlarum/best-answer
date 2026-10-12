@@ -25,7 +25,7 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
   }
 
   view() {
-    return <li className="Post--BestAnswer">{this.items().toArray()}</li>;
+    return <span className="Post--BestAnswer">{this.items().toArray()}</span>;
   }
 
   getSetTime(discussion: Discussion) {

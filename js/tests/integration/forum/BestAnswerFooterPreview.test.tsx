@@ -138,3 +138,17 @@ it("keeps the preview's answerer link out of the first post's hover card", () =>
   expect(firstPost).not.toHaveElement('.item-bestAnswerPost .PostUser-name a');
   expect(firstPost).toHaveElementAttr('.item-bestAnswerPost .BestAnswerPreview-userName a', 'href');
 });
+
+it('renders the Best Answer label without nesting a list item inside a list item', () => {
+  selectBestAnswer('2');
+
+  const answer = mq(CommentPost, { post: app.store.getById<Post>('posts', '2') });
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  // Core wraps each header item in its own <li>.
+  expect(answer).toHaveElement('.Post-header li.item-isBestAnswer > .Post--BestAnswer');
+  expect(answer).not.toHaveElement('li li');
+  // The preview builds its own <ul>, so it supplies the <li> itself.
+  expect(firstPost).toHaveElement('.item-bestAnswerPost .Post-header ul > li.item-isBestAnswer > .Post--BestAnswer');
+  expect(firstPost).not.toHaveElement('.item-bestAnswerPost li li');
+});
