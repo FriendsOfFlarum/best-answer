@@ -52,7 +52,9 @@ class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
         $commenters = Post::select('user_id')
             ->where('discussion_id', $this->discussion->id)
             ->where('type', CommentPost::$type)
-            ->whereNull('hidden_at');
+            ->whereNull('hidden_at')
+            // Private comments, e.g. ones still awaiting approval, don't count, as in core's Discussion::comments().
+            ->where('is_private', false);
 
         $exclude = [$this->actor->id];
 
