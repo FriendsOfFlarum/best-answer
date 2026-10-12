@@ -11,6 +11,7 @@
 
 namespace FoF\BestAnswer;
 
+use Flarum\Api\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
@@ -99,8 +100,10 @@ return [
         ->fields(fn () => [
             Schema\Boolean::make('isQnA')
                 ->property('is_qna'),
-            Schema\Boolean::make('reminders')
-                ->property('qna_reminders'),
+            // Nothing on the forum needs the reminder flag, so only admins get it.
+            Schema\Boolean::make('qnaReminders')
+                ->property('qna_reminders')
+                ->visible(fn (Tag $tag, Context $context) => $context->getActor()->isAdmin()),
         ]),
 
     (new Extend\Settings())
