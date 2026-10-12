@@ -55,6 +55,9 @@ fof-best-answer:
     index:
       ask_question: Ask a Question
       cannot_ask_question: Cannot Ask a Question
+    deck:
+      best_answers: Best answers
+      unsolved_questions: Unsolved questions
     filter:
       all_label: All questions
       solved_label: Solved questions
