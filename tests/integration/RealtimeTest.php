@@ -83,7 +83,7 @@ class RealtimeTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/discussions/1', [
                 'authenticatedAs' => 1,
-                'json' => ['data' => ['relationships' => ['bestAnswerPost' => ['data' => $postId ? ['type' => 'posts', 'id' => (string) $postId] : null]]]],
+                'json'            => ['data' => ['relationships' => ['bestAnswerPost' => ['data' => $postId ? ['type' => 'posts', 'id' => (string) $postId] : null]]]],
             ])
         );
 
@@ -98,9 +98,9 @@ class RealtimeTest extends TestCase
         $triggers = array_filter($this->pushed, fn (object $job) => $job instanceof SendTriggerJob);
 
         return array_values(array_map(fn (SendTriggerJob $job) => (fn () => [
-            'event' => $this->event,
+            'event'      => $this->event,
             'discussion' => $this->model->id,
-            'actor' => $this->actor?->id,
+            'actor'      => $this->actor?->id,
         ])->call($job), $triggers));
     }
 
