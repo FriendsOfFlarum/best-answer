@@ -135,6 +135,8 @@ class NotifyCommandTest extends ConsoleTestCase
             // Below, only the author's own reply could be selected; posts by others that can't be don't count.
             'only an event post by someone else' => [[], [], ['user_id' => 2], [['type' => 'discussionTagged', 'content' => [[1], [1]]]]],
             'only a hidden reply by someone else' => [[], [], ['user_id' => 2], [['hidden_at' => Carbon::now()]]],
+            // As flarum/approval stores a reply awaiting approval.
+            'only a private reply by someone else' => [[], [], ['user_id' => 2], [['is_private' => true]]],
         ];
     }
 
