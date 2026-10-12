@@ -36,7 +36,7 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
     const maxLines = app.forum.attribute<number>('fof-best-answer.show_max_lines');
 
     return (
-      <div className="CommentPost" onclick={() => app.current.get('stream').goToNumber(this.post.number())}>
+      <div className="CommentPost">
         <div className="Post-header">
           <ul>{this.headerItems().toArray()}</ul>
         </div>
@@ -65,7 +65,7 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
     items.add(
       'bestAnswer',
       <li className="item-isBestAnswer">
-        <SelectBestAnswerItem post={this.post} discussion={this.discussion} />
+        <SelectBestAnswerItem post={this.post} discussion={this.discussion} linkToPost />
       </li>,
       -100
     );
