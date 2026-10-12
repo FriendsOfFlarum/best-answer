@@ -20,6 +20,7 @@ use Flarum\Audit\Extend\Audit;
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\Search\DiscussionSearcher;
 use Flarum\Extend;
+use Flarum\Post\Filter\PostSearcher;
 use Flarum\Post\Post;
 use Flarum\Search\Database\DatabaseSearchDriver;
 use Flarum\Settings\Event\Saving as SettingsSaving;
@@ -119,7 +120,8 @@ return [
         ->schedule(Console\NotifyCommand::class, Console\NotifySchedule::class),
 
     (new Extend\SearchDriver(DatabaseSearchDriver::class))
-        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class),
+        ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
+        ->addFilter(PostSearcher::class, Search\BestAnswerPostFilter::class),
 
     (new Extend\Conditional())
         ->whenExtensionEnabled('flarum-audit', fn () => [

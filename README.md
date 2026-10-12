@@ -63,6 +63,8 @@ Turn on **Display Best Answer filter dropdown** to add a filter to the discussio
 
 In discussion search, `is:solved` finds discussions with a best answer and `-is:solved` finds discussions without one.
 
+In post search, `is:solution` finds posts selected as a best answer.
+
 ### Reminders
 
 A reminder is a notification that asks a discussion's author to select a best answer.

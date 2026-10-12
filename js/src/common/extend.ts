@@ -1,4 +1,5 @@
 import BestAnswerGambit from './gambits/BestAnswerGambit';
+import SolutionGambit from './gambits/SolutionGambit';
 import Extend from 'flarum/common/extenders';
 import Tag from 'ext:flarum/tags/common/models/Tag';
 
@@ -6,5 +7,7 @@ export default [
   new Extend.Model(Tag) //
     .attribute<boolean>('isQnA')
     .attribute<boolean>('qnaReminders'),
-  new Extend.Search().gambit('discussions', BestAnswerGambit),
+  new Extend.Search() //
+    .gambit('discussions', BestAnswerGambit)
+    .gambit('posts', SolutionGambit),
 ];
