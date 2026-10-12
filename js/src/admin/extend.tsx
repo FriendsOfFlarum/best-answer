@@ -21,15 +21,6 @@ export default [
         requireParentTag: false,
       },
     }))
-    .setting(() => ({
-      type: 'flarum-tags.select-tags',
-      setting: 'fof-best-answer.remind-tags',
-      label: app.translator.trans('fof-best-answer.admin.settings.remind_tags_label'),
-      help: app.translator.trans('fof-best-answer.admin.settings.remind_tags_help'),
-      options: {
-        requireParentTag: false,
-      },
-    }))
     .customSetting(() => (
       <div className="Form-group">
         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.general')}</h3>
@@ -92,11 +83,15 @@ export default [
       placeholder: '0',
       min: 0,
     }))
-    .customSetting(() => (
-      <div className="Form-group">
-        <h3>{app.translator.trans('fof-best-answer.admin.settings.label.advanced')}</h3>
-      </div>
-    ))
+    .setting(() => ({
+      type: 'flarum-tags.select-tags',
+      setting: 'fof-best-answer.remind-tags',
+      label: app.translator.trans('fof-best-answer.admin.settings.remind_tags_label'),
+      help: app.translator.trans('fof-best-answer.admin.settings.remind_tags_help'),
+      options: {
+        requireParentTag: false,
+      },
+    }))
     .setting(() => ({
       type: 'boolean',
       setting: 'fof-best-answer.stop_overnight',
@@ -107,6 +102,7 @@ export default [
       type: 'boolean',
       setting: 'fof-best-answer.store_log_output',
       label: app.translator.trans('fof-best-answer.admin.settings.schedule_log_output'),
+      help: app.translator.trans('fof-best-answer.admin.settings.schedule_log_output_help'),
     }))
     .permission(
       () => ({

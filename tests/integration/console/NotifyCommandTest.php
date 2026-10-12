@@ -41,8 +41,9 @@ class NotifyCommandTest extends ConsoleTestCase
     /**
      * An unanswered Q&A discussion by user 2, started two days ago, with an answer by user 3.
      * With reminders set to one day, it is due a reminder unless an override says otherwise.
+     * $posts adds further posts by user 3 after the answer.
      */
-    protected function seed(array $discussion = [], array $tag = [], array $answer = [], int $reminderDays = 1): void
+    protected function seed(array $discussion = [], array $tag = [], array $answer = [], int $reminderDays = 1, array $posts = []): void
     {
         $this->setting('fof-best-answer.select_best_answer_reminder_days', $reminderDays);
 
@@ -60,6 +61,7 @@ class NotifyCommandTest extends ConsoleTestCase
             Post::class => [
                 ['id' => 1, 'discussion_id' => 1, 'number' => 1, 'user_id' => 2],
                 ['id' => 2, 'discussion_id' => 1, 'number' => 2, 'user_id' => 3, ...$answer],
+                ...array_map(fn (array $post, int $i) => ['id' => 3 + $i, 'discussion_id' => 1, 'number' => 3 + $i, 'user_id' => 3, ...$post], $posts, array_keys($posts)),
             ],
             'discussion_tag' => [
                 ['discussion_id' => 1, 'tag_id' => 1],
@@ -130,14 +132,19 @@ class NotifyCommandTest extends ConsoleTestCase
             'tag without reminders'   => [[], ['qna_reminders' => false], []],
             'reminder tag not Q&A'    => [[], ['is_qna' => false], []],
             'only the author replied' => [[], [], ['user_id' => 2]],
+            // Below, only the author's own reply could be selected; posts by others that can't be don't count.
+            'only an event post by someone else'  => [[], [], ['user_id' => 2], [['type' => 'discussionTagged', 'content' => [[1], [1]]]]],
+            'only a hidden reply by someone else' => [[], [], ['user_id' => 2], [['hidden_at' => Carbon::now()]]],
+            // As flarum/approval stores a reply awaiting approval.
+            'only a private reply by someone else' => [[], [], ['user_id' => 2], [['is_private' => true]]],
         ];
     }
 
     #[Test]
     #[DataProvider('notDueProvider')]
-    public function does_not_remind_when_discussion_is_not_due(array $discussion, array $tag, array $answer)
+    public function does_not_remind_when_discussion_is_not_due(array $discussion, array $tag, array $answer, array $posts = [])
     {
-        $this->seed($discussion, $tag, $answer);
+        $this->seed($discussion, $tag, $answer, posts: $posts);
 
         $this->runReminders();
 
@@ -189,6 +196,17 @@ class NotifyCommandTest extends ConsoleTestCase
                 ['discussion_id' => 2, 'tag_id' => 1],
             ],
         ]);
+
+        $this->runReminders();
+
+        $this->assertTrue($this->reminderSentTo(2));
+    }
+
+    #[Test]
+    public function reminds_author_when_the_only_answer_is_by_a_deleted_user()
+    {
+        // A deleted user's posts keep a NULL user_id, and can still be selected as the best answer.
+        $this->seed(answer: ['user_id' => null]);
 
         $this->runReminders();
 
