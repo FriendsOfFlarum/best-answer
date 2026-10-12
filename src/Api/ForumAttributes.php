@@ -30,9 +30,6 @@ class ForumAttributes
             Schema\Boolean::make('showBestAnswerFilterUi')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.show_filter_dropdown')),
 
-            Schema\Boolean::make('bestAnswerDiscussionSidebarJumpButton')
-                ->get(fn () => (bool) $this->settings->get('fof-best-answer.discussion_sidebar_jump_button')),
-
             Schema\Boolean::make('useAlternativeBestAnswerUi')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.use_alternative_ui')),
         ];
