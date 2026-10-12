@@ -145,3 +145,35 @@
     }
   }
 }
+
+// Search modal rows are single-line ellipsised links; a solution result stacks
+// its title and excerpts, so it opts back into wrapping.
+.SolutionSearchResult {
+  margin: 0 -16px;
+
+  > a {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 12px 15px;
+    white-space: normal;
+  }
+
+  &-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--heading-color);
+  }
+
+  &-excerpt {
+    color: var(--muted-color);
+    overflow-wrap: anywhere;
+  }
+
+  &-bestAnswer {
+    background-color: @best-answer-post-background;
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+    padding: 8px 10px;
+  }
+}

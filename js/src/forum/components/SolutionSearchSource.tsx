@@ -1,9 +1,12 @@
 import app from 'flarum/forum/app';
+import LinkButton from 'flarum/common/components/LinkButton';
 import extractText from 'flarum/common/utils/extractText';
 import type Discussion from 'flarum/common/models/Discussion';
+import type Post from 'flarum/common/models/Post';
 import type { GlobalSearchSource } from 'flarum/forum/components/GlobalSearch';
 import type Mithril from 'mithril';
 import BestAnswerGambit from '../../common/gambits/BestAnswerGambit';
+import SolutionSearchItem from './SolutionSearchItem';
 
 export default class SolutionSearchSource implements GlobalSearchSource {
   protected results = new Map<string, Discussion[]>();
@@ -40,18 +43,34 @@ export default class SolutionSearchSource implements GlobalSearchSource {
   }
 
   view(query: string): Array<Mithril.Vnode> {
-    return [];
+    query = query.toLowerCase();
+
+    return (this.results.get(query) || []).map((discussion) => <SolutionSearchItem query={query} discussion={discussion} />) as Array<Mithril.Vnode>;
   }
 
   customGrouping(): boolean {
     return false;
   }
 
-  fullPage(query: string): Mithril.Vnode | null {
-    return null;
+  fullPage(query: string): Mithril.Vnode {
+    const filter = app.search.gambits.apply('discussions', { q: this.solvedQuery(query) });
+    const q = filter.q || null;
+    delete filter.q;
+
+    return (
+      <li>
+        <LinkButton icon="fas fa-search" href={app.route('index', { q, filter })}>
+          {app.translator.trans('fof-best-answer.forum.search.all_discussions_solutions_button', { query })}
+        </LinkButton>
+      </li>
+    );
   }
 
   gotoItem(id: string): string | null {
-    return null;
+    const discussion = app.store.getById<Discussion>('discussions', id);
+
+    if (!discussion) return null;
+
+    return app.route.discussion(discussion, (discussion.bestAnswerPost() as Post | null | undefined)?.number());
   }
 }

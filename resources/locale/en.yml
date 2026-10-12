@@ -66,6 +66,7 @@ fof-best-answer:
       best-answer-count: "{count, plural, one { {count} best answer} other {{count} best answers}}"
     search:
       solutions_heading: Solutions
+      all_discussions_solutions_button: "Search all discussions with solutions for \"{query}\""
     discussion:
       jump_to_best_answer_button: View Best Answer
   email:
