@@ -50,6 +50,7 @@
             },
             "optional-dependencies": [
                 "flarum/audit",
+                "flarum/deck",
                 "flarum/realtime",
                 "fof/user-directory",
                 "ianm/level-ranks"
@@ -88,7 +89,8 @@
         "flarum/testing": "^2.0.0",
         "fof/user-directory": "^2.0.0",
         "flarum/audit": "^2.0.0",
-        "flarum/realtime": "^2.0.0"
+        "flarum/realtime": "^2.0.0",
+        "flarum/deck": "^2.0.0"
     },
     "autoload-dev": {
         "psr-4": {
