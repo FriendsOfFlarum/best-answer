@@ -179,6 +179,22 @@ class NotifyCommandTest extends ConsoleTestCase
     }
 
     #[Test]
+    public function reminds_author_whose_own_reply_is_the_only_one_they_may_select()
+    {
+        $this->seed(answer: ['user_id' => 2]);
+
+        $this->prepareDatabase([
+            'group_permission' => [
+                ['group_id' => Group::MEMBER_ID, 'permission' => 'discussion.fof-best-answer.allow_select_own_post'],
+            ],
+        ]);
+
+        $this->runReminders();
+
+        $this->assertTrue($this->reminderSentTo(2));
+    }
+
+    #[Test]
     public function skips_discussions_whose_author_was_deleted()
     {
         $this->seed();
@@ -213,18 +229,34 @@ class NotifyCommandTest extends ConsoleTestCase
         $this->assertTrue($this->reminderSentTo(2));
     }
 
+    protected function failToSendReminders(): void
+    {
+        $syncer = $this->createStub(NotificationSyncer::class);
+        $syncer->method('sync')->willThrowException(new RuntimeException('Mail server unavailable'));
+        $this->app()->getContainer()->instance(NotificationSyncer::class, $syncer);
+    }
+
     #[Test]
     public function exits_with_failure_when_a_reminder_cannot_be_sent()
     {
         $this->seed();
-
-        $syncer = $this->createStub(NotificationSyncer::class);
-        $syncer->method('sync')->willThrowException(new RuntimeException('Mail server unavailable'));
-        $this->app()->getContainer()->instance(NotificationSyncer::class, $syncer);
+        $this->failToSendReminders();
 
         $exitCode = $this->console()->run(new ArrayInput(['command' => 'fof:best-answer:notify']), new BufferedOutput());
 
         $this->assertSame(Command::FAILURE, $exitCode);
+    }
+
+    #[Test]
+    public function discussion_stays_due_when_its_reminder_cannot_be_sent()
+    {
+        $this->seed();
+        $this->failToSendReminders();
+
+        $this->console()->run(new ArrayInput(['command' => 'fof:best-answer:notify']), new BufferedOutput());
+
+        // Not marked as reminded, so the next run tries again.
+        $this->assertFalse((bool) $this->database()->table('discussions')->where('id', 1)->value('best_answer_notified'));
     }
 
     #[Test]
