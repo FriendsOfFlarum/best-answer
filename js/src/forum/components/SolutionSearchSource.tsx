@@ -23,7 +23,7 @@ export default class SolutionSearchSource implements GlobalSearchSource {
     this.results.set(query, []);
 
     const params = {
-      filter: { q: query },
+      filter: { q: this.solvedQuery(query) },
       page: { limit },
       include: 'mostRelevantPost,bestAnswerPost,tags',
     };
@@ -32,6 +32,14 @@ export default class SolutionSearchSource implements GlobalSearchSource {
       this.results.set(query, results);
       m.redraw();
     });
+  }
+
+  /**
+   * Appends the `is:solved` gambit through the gambit manager, so the
+   * translated gambit key is used.
+   */
+  solvedQuery(query: string): string {
+    return app.search.gambits.from('discussions', query, { 'solved-discussions': true });
   }
 
   view(query: string): Array<Mithril.Vnode> {
