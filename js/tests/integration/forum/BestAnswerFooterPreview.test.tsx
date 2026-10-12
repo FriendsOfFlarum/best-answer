@@ -3,6 +3,7 @@ import app from 'flarum/forum/app';
 import CommentPost from 'flarum/forum/components/CommentPost';
 import type Post from 'flarum/common/models/Post';
 import mq from 'mithril-query';
+import { jest } from '@jest/globals';
 import extend from '../../../src/forum/extend';
 import addBestAnswerView from '../../../src/forum/addBestAnswerView';
 
@@ -151,4 +152,23 @@ it('renders the Best Answer label without nesting a list item inside a list item
   // The preview builds its own <ul>, so it supplies the <li> itself.
   expect(firstPost).toHaveElement('.item-bestAnswerPost .Post-header ul > li.item-isBestAnswer > .Post--BestAnswer');
   expect(firstPost).not.toHaveElement('.item-bestAnswerPost li li');
+});
+
+it("links the preview's Best Answer label to the answer instead of making the whole box clickable", () => {
+  const stream = { goToNumber: jest.fn() };
+  app.current.set('stream', stream);
+  selectBestAnswer('2');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+  const answer = mq(CommentPost, { post: app.store.getById<Post>('posts', '2') });
+
+  expect(firstPost.first('.item-bestAnswerPost .Post--BestAnswer a').getAttribute('href')).toBe(
+    m.route.prefix + app.route.post(app.store.getById<Post>('posts', '2')!)
+  );
+
+  firstPost.click('.item-bestAnswerPost .Post-body');
+  expect(stream.goToNumber).not.toHaveBeenCalled();
+
+  // On the answer itself the label has nowhere to link to.
+  expect(answer).not.toHaveElement('.Post-header .Post--BestAnswer a[data-number]');
 });

@@ -11,6 +11,8 @@ import Post from 'flarum/common/models/Post';
 export interface ISelectBestAnswerItemAttrs extends ComponentAttrs {
   post: Post;
   discussion: Discussion;
+  /** Link the label to the answer, for places that show it away from the answer itself. */
+  linkToPost?: boolean;
 }
 
 export default class SelectBestAnswerItem extends Component<ISelectBestAnswerItemAttrs> {
@@ -42,18 +44,16 @@ export default class SelectBestAnswerItem extends Component<ISelectBestAnswerIte
   items(): ItemList<Mithril.Children> {
     const items = new ItemList<Mithril.Children>();
 
+    const label = [<Icon name="fas fa-check" />, app.translator.trans('fof-best-answer.forum.best_answer_button')];
+
     items.add(
       'post',
-      this.post ? (
-        <span>
-          <Icon name="fas fa-check" />
-          {app.translator.trans('fof-best-answer.forum.best_answer_button')}
-        </span>
-      ) : (
-        <Link href={app.route.post(this.post as Post)} data-number={(this.post as Post).number()}>
-          <Icon name="fas fa-check" />
-          {app.translator.trans('fof-best-answer.forum.best_answer_button')}
+      this.attrs.linkToPost ? (
+        <Link href={app.route.post(this.attrs.post)} data-number={this.attrs.post.number()}>
+          {label}
         </Link>
+      ) : (
+        <span>{label}</span>
       )
     );
 
