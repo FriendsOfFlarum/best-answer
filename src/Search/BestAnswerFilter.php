@@ -13,10 +13,8 @@ namespace FoF\BestAnswer\Search;
 
 use Flarum\Search\Filter\FilterInterface;
 use Flarum\Search\SearchState;
-use Flarum\Tags\Tag;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 
 class BestAnswerFilter implements FilterInterface
 {
@@ -36,13 +34,5 @@ class BestAnswerFilter implements FilterInterface
         $method = $negate ? 'whereNull' : 'whereNotNull';
 
         $query->$method('best_answer_post_id');
-    }
-
-    protected function allowedQnATags(User $actor): Collection
-    {
-        return Tag::query()
-            ->whereVisibleTo($actor)
-            ->where('is_qna', true)
-            ->pluck('id');
     }
 }

@@ -8,7 +8,6 @@ import BestAnswerInDiscussionNotification from './components/BestAnswerInDiscuss
 import extendNotifications from './extenders/extendNotifications';
 import addBestAnswerCountToUsers from './addBestAnswerCountToUsers';
 import addBestAnswerCountSort from '../common/addBestAnswerCountSort';
-import extendDiscussionsSearchSource from './extenders/extendDiscussionSearchSource';
 import extendIndexPage from './extenders/extendIndexPage';
 import extendDiscussionListState from './extenders/extendDiscussionListState';
 import extendDiscussionComposer from './extenders/extendDiscussionComposer';
@@ -29,7 +28,6 @@ app.initializers.add('fof/best-answer', () => {
   addBestAnswerCountSort();
 
   extendNotifications();
-  extendDiscussionsSearchSource();
   extendIndexPage();
   extendDiscussionListState();
   extendDiscussionComposer();

@@ -33,9 +33,6 @@ fof-best-answer:
         When a tag is Best Answer enabled, assign permissions to each user group that may set answers (own discussion, any discussion). Permissions may be assigned globally (for any Best Answer anabled tag), or on a per tag basis.
       discussion_sidebar_jump_button: Display jump to Best Answer button in discussion sidebar
       discussion_sidebar_jump_button_help: Adds a button to the discussion sidebar which jumps to the Best Answer in the stream of posts.
-    edit_tag:
-      qna_label: Enable Best Answers to be set in this tag
-      reminders: Send reminders to set a Best Answer for discussions in this tag
   forum:
     answered_badge: Answered
     this_best_answer: Select Best Answer
@@ -58,8 +55,6 @@ fof-best-answer:
     index:
       ask_question: Ask a Question
       cannot_ask_question: Cannot Ask a Question
-      solved_link: Solved discussions
-      unsolved_link: Unsolved discussions
     filter:
       all_label: All questions
       solved_label: Solved questions

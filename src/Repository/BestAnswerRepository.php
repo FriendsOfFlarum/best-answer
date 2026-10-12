@@ -11,27 +11,13 @@
 
 namespace FoF\BestAnswer\Repository;
 
-use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
-use Flarum\Foundation\ValidationException;
-use Flarum\Notification\Notification;
 use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
-use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Tags\Tag;
-use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
-use FoF\BestAnswer\Events\BestAnswerSet;
-use FoF\BestAnswer\Events\BestAnswerUnset;
-use Illuminate\Contracts\Events\Dispatcher;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BestAnswerRepository
 {
-    public function __construct(protected SettingsRepositoryInterface $settings, protected Dispatcher $events, protected TranslatorInterface $translator)
-    {
-    }
-
     public function canSelectBestAnswer(User $user, Discussion $discussion): bool
     {
         // Prevent best answers being set in a private discussion (ie byobu, etc)
@@ -104,91 +90,5 @@ class BestAnswerRepository
             ->update(['best_answer_count' => $count]);
 
         return $count;
-    }
-
-    public function removeBestAnswer(Discussion $discussion, User $actor): void
-    {
-        if (!$this->canRemoveBestAnswer($actor, $discussion)) {
-            throw new PermissionDeniedException();
-        }
-
-        /** @var Post|null $post */
-        $post = $discussion->bestAnswerPost;
-
-        if (!$post) {
-            return;
-        }
-
-        $discussion->best_answer_post_id = null;
-        $discussion->best_answer_user_id = null;
-        $discussion->best_answer_set_at = null;
-        $discussion->unsetRelation('bestAnswerPost');
-        $discussion->unsetRelation('bestAnswerUser');
-
-        $this->changeTags($discussion, 'detach');
-
-        $discussion->afterSave(function ($discussion) use ($actor, $post) {
-            $this->events->dispatch(new BestAnswerUnset($discussion, $post, $actor));
-        });
-    }
-
-    public function setBestAnswer(Discussion $discussion, User $actor, int $id): void
-    {
-        /** @var Post|null $post */
-        $post = $discussion->posts()->find($id);
-
-        if ($id && !$post) {
-            throw new ValidationException(
-                [
-                    'error' => $this->translator->trans('fof-best-answer.forum.errors.mismatch'),
-                ]
-            );
-        }
-
-        if ($post && (!$this->canSelectPostAsBestAnswer($actor, $post) || !$post->isVisibleTo($actor))) {
-            throw new PermissionDeniedException();
-        }
-
-        if ($id) {
-            $discussion->best_answer_post_id = $post->id;
-            $discussion->best_answer_user_id = $actor->id;
-            $discussion->best_answer_set_at = Carbon::now();
-
-            Notification::where('type', 'selectBestAnswer')->where('subject_id', $discussion->id)->delete();
-
-            $this->changeTags($discussion, 'attach');
-
-            $discussion->afterSave(function (Discussion $discussion) use ($actor) {
-                $post = $discussion->bestAnswerPost;
-                $this->events->dispatch(new BestAnswerSet($discussion, $post, $actor));
-            });
-        }
-    }
-
-    public function changeTags(Discussion $discussion, string $method)
-    {
-        $tagsToChange = @json_decode($this->settings->get('fof-best-answer.select_best_answer_tags'));
-
-        if (empty($tagsToChange)) {
-            return;
-        }
-
-        $validTags = Tag::query()->whereIn('id', $tagsToChange);
-
-        // Query errors if we try to attach tags that are already attached due to the unique constraint
-        if ($method === 'attach') {
-            /** @phpstan-ignore-next-line */
-            $existingTags = $discussion->tags()->pluck('id');
-            $validTags = $validTags->whereNotIn('id', $existingTags);
-        }
-
-        $validTagsIds = $validTags->pluck('id');
-
-        if ($validTagsIds->isEmpty()) {
-            return;
-        }
-
-        /** @phpstan-ignore-next-line */
-        $discussion->tags()->$method($validTagsIds);
     }
 }
