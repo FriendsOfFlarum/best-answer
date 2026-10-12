@@ -128,3 +128,13 @@ it('removes the preview when the best answer is hidden', () => {
 
   expect(firstPost).not.toContainRaw('Ask an admin to send a reset email.');
 });
+
+it("keeps the preview's answerer link out of the first post's hover card", () => {
+  selectBestAnswer('2');
+
+  const firstPost = mq(CommentPost, { post: app.store.getById<Post>('posts', '1') });
+
+  // CommentPost opens its own author's card when '.PostUser-name a' inside it is hovered.
+  expect(firstPost).not.toHaveElement('.item-bestAnswerPost .PostUser-name a');
+  expect(firstPost).toHaveElementAttr('.item-bestAnswerPost .BestAnswerPreview-userName a', 'href');
+});

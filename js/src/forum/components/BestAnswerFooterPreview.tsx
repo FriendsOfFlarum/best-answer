@@ -71,7 +71,8 @@ export default class BestAnswerFooterPreview extends Component<BestAnswerFooterP
     return (
       <li className="item-user">
         <div className="PostUser">
-          <h3 className="PostUser-name">
+          {/* Not .PostUser-name: the first post opens its own author's user card for links matching that. */}
+          <h3 className="BestAnswerPreview-userName">
             {this.user && userOnline(this.user)}
             {this.user ? <Link href={app.route.user(this.user)}>{username(this.user)}</Link> : username(this.user)}
           </h3>
