@@ -32,6 +32,15 @@ class ForumAttributes
 
             Schema\Boolean::make('useAlternativeBestAnswerUi')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.use_alternative_ui')),
+
+            Schema\Boolean::make('solutionSearchEnabled')
+                ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.solution_search')),
+
+            Schema\Boolean::make('removeSolutionResultsFromMainSearch')
+                ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.remove_solutions_from_main_search')),
+
+            Schema\Boolean::make('showTagsInSearchResults')
+                ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.display_tags')),
         ];
     }
 }
