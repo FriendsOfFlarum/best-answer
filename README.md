@@ -61,7 +61,7 @@ The select control isn't shown on hidden posts or on the first post of a discuss
 
 Turn on **Display Best Answer filter dropdown** to add a filter to the discussion list of each Q&A tag. It offers **All questions**, **Solved questions** and **Unsolved questions**.
 
-In discussion search, `is:solved` finds discussions with a best answer and `-is:solved` finds discussions without one.
+In discussion search, `is:solved` finds discussions with a best answer and `-is:solved` finds discussions without one. `is:question` finds discussions in Q&A tags, so `is:question -is:solved` finds unsolved questions.
 
 In post search, `is:solution` finds posts selected as a best answer.
 

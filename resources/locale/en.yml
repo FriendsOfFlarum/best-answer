@@ -92,6 +92,8 @@ fof-best-answer:
     gambits:
       solved-discussions:
         key: solved
+      qna:
+        key: question
       solution:
         key: solution
 
