@@ -11,9 +11,6 @@
 
 namespace FoF\BestAnswer\Listeners;
 
-use Flarum\Discussion\Event\Deleting as DiscussionDeleting;
-use Flarum\Post\Event\Deleting as PostDeleting;
-use Flarum\Post\Post;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 use FoF\BestAnswer\Events\BestAnswerUnset;
@@ -29,8 +26,6 @@ class RecalculateBestAnswerCounts
     {
         $events->listen(BestAnswerSet::class, [$this, 'addBestAnswerCount']);
         $events->listen(BestAnswerUnset::class, [$this, 'subtractBestAnswerCount']);
-        $events->listen(PostDeleting::class, [$this, 'handlePostDeletion']);
-        $events->listen(DiscussionDeleting::class, [$this, 'handleDiscussionDeletion']);
     }
 
     public function addBestAnswerCount(BestAnswerSet $event): void
@@ -41,29 +36,6 @@ class RecalculateBestAnswerCounts
     public function subtractBestAnswerCount(BestAnswerUnset $event): void
     {
         $this->decrement($event->post->user_id);
-    }
-
-    public function handlePostDeletion(PostDeleting $event): void
-    {
-        $post = $event->post;
-
-        if ($post->discussion->best_answer_post_id === $post->id) {
-            $post->discussion->best_answer_post_id = null;
-            $post->discussion->best_answer_user_id = null;
-            $post->discussion->best_answer_set_at = null;
-            $post->discussion->save();
-
-            $this->decrement($post->user_id);
-        }
-    }
-
-    public function handleDiscussionDeletion(DiscussionDeleting $event): void
-    {
-        $discussion = $event->discussion;
-
-        if ($discussion->best_answer_post_id) {
-            $this->decrement(Post::query()->whereKey($discussion->best_answer_post_id)->value('user_id'));
-        }
     }
 
     protected function increment(?int $userId): void
