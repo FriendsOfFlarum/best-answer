@@ -133,4 +133,26 @@ class DeletingBestAnswerTest extends TestCase
 
         $this->assertSame(1, $this->unsetEntriesLogged());
     }
+
+    #[Test]
+    public function deleting_the_best_answer_post_outside_the_api_unsets_it_too()
+    {
+        // e.g. a console command or another extension calling delete() on the model.
+        $this->app();
+        Post::find(2)->delete();
+
+        $this->assertNull(Discussion::find(1)->best_answer_post_id);
+        $this->assertSame(1, User::find(3)->best_answer_count);
+        $this->assertFalse($this->database()->table('discussion_tag')->where('discussion_id', 1)->where('tag_id', 3)->exists());
+        $this->assertTrue((bool) $this->database()->table('notifications')->where('id', 1)->value('is_deleted'));
+    }
+
+    #[Test]
+    public function deleting_the_discussion_outside_the_api_reduces_the_answer_authors_count_once()
+    {
+        $this->app();
+        Discussion::find(1)->delete();
+
+        $this->assertSame(1, User::find(3)->best_answer_count);
+    }
 }
