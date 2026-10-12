@@ -63,6 +63,7 @@ class BestAnswerPostFilterTest extends TestCase
 
     /**
      * @param array<string, mixed> $filter
+     *
      * @return int[]
      */
     protected function postIds(int $actorId, array $filter): array
