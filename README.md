@@ -22,6 +22,7 @@ A [Flarum](https://flarum.org) extension. Mark a post as the best answer in a di
 These extensions are optional. When one is enabled, Best Answer adds:
 
 - [flarum/audit](https://packagist.org/packages/flarum/audit): an audit log entry when a best answer is set or unset.
+- [flarum/realtime](https://packagist.org/packages/flarum/realtime): a live `bestAnswerEvent` broadcast when a best answer is set or unset.
 - [fof/user-directory](https://packagist.org/packages/fof/user-directory): "Most best answers" and "Least best answers" sort options in the user directory.
 - [ianm/level-ranks](https://packagist.org/packages/ianm/level-ranks): extra spacing beside the best answer label in post headers.
 
