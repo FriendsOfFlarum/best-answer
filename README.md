@@ -9,6 +9,7 @@ A [Flarum](https://flarum.org) extension. Mark a post as the best answer in a di
 - Allow Best Answers to be set and highlighted within a discussion
 - Set which tags support Best Answer/Q&A format
 - Filter answered/unanswered/all discussions within available tags
+- Search discussions with a Best Answer from a dedicated Solutions tab in the search modal
 - Send reminders to the OP to select a Best Answer after a configurable number of days
 - Optionally allow the OP to select one of their own follow-up posts as the Best Answer
 - Provides two layouts for the Best Answer controls
@@ -64,6 +65,14 @@ Turn on **Display Best Answer filter dropdown** to add a filter to the discussio
 In discussion search, `is:solved` finds discussions with a best answer and `-is:solved` finds discussions without one.
 
 In post search, `is:solution` finds posts selected as a best answer.
+
+### Search
+
+| Setting | Default | Effect |
+| --- | --- | --- |
+| Solution search | On | Adds a **Solutions** tab to the search modal. It searches discussions with a best answer and shows each result's best answer. |
+| Remove solutions from main search | Off | Excludes discussions with a best answer from the **Discussions** tab of the search modal, as if `-is:solved` were added to the query. |
+| Display tags in search results | On | Shows each discussion's tags in the **Solutions** tab. |
 
 ### Reminders
 

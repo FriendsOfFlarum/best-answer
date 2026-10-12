@@ -75,6 +75,29 @@ export default [
     }))
     .customSetting(() => (
       <div className="Form-group">
+        <h3>{app.translator.trans('fof-best-answer.admin.settings.label.search')}</h3>
+      </div>
+    ))
+    .setting(() => ({
+      type: 'boolean',
+      setting: 'fof-best-answer.search.solution_search',
+      label: app.translator.trans('fof-best-answer.admin.settings.solution_search'),
+      help: app.translator.trans('fof-best-answer.admin.settings.solution_search_help'),
+    }))
+    .setting(() => ({
+      type: 'boolean',
+      setting: 'fof-best-answer.search.remove_solutions_from_main_search',
+      label: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search'),
+      help: app.translator.trans('fof-best-answer.admin.settings.remove_solutions_from_main_search_help'),
+    }))
+    .setting(() => ({
+      type: 'boolean',
+      setting: 'fof-best-answer.search.display_tags',
+      label: app.translator.trans('fof-best-answer.admin.settings.display_tags'),
+      help: app.translator.trans('fof-best-answer.admin.settings.display_tags_help'),
+    }))
+    .customSetting(() => (
+      <div className="Form-group">
         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
         <p className="helpText">
           {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
