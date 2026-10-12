@@ -85,7 +85,7 @@ The extension schedules the `fof:best-answer:notify` command to run hourly. `php
 - has no best answer, isn't hidden or private, and its author's account still exists
 - hasn't been reminded before
 
-The author must have the **Select Best Answer (own Discussion)** permission. If nobody else has posted in the discussion, the author also needs **Select own post as Best Answer**.
+The author must have the **Select Best Answer (own Discussion)** permission. If no one else has posted a reply the author could select, the author also needs **Select own post as Best Answer**. Hidden replies, replies awaiting approval and event posts, such as a tag change, don't count. A reply from a deleted account does.
 
 Each discussion gets one reminder at most. Setting a best answer deletes the reminder.
 
