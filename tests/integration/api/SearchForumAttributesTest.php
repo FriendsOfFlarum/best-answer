@@ -54,14 +54,22 @@ class SearchForumAttributesTest extends TestCase
     #[Test]
     public function search_settings_reflect_the_stored_values()
     {
-        $this->setting('fof-best-answer.search.solution_search', '0');
         $this->setting('fof-best-answer.search.remove_solutions_from_main_search', '1');
         $this->setting('fof-best-answer.search.display_tags', '0');
 
         $this->assertSame([
-            'solutionSearchEnabled'               => false,
+            'solutionSearchEnabled'               => true,
             'removeSolutionResultsFromMainSearch' => true,
             'showTagsInSearchResults'             => false,
         ], $this->searchAttributes());
+    }
+
+    #[Test]
+    public function solutions_stay_in_the_main_search_while_solution_search_is_off()
+    {
+        $this->setting('fof-best-answer.search.solution_search', '0');
+        $this->setting('fof-best-answer.search.remove_solutions_from_main_search', '1');
+
+        $this->assertFalse($this->searchAttributes()['removeSolutionResultsFromMainSearch']);
     }
 }

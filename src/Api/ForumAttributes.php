@@ -36,8 +36,10 @@ class ForumAttributes
             Schema\Boolean::make('solutionSearchEnabled')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.solution_search')),
 
+            // Only with the Solutions tab, or solved discussions could not be found in search at all.
             Schema\Boolean::make('removeSolutionResultsFromMainSearch')
-                ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.remove_solutions_from_main_search')),
+                ->get(fn () => $this->settings->get('fof-best-answer.search.solution_search')
+                    && $this->settings->get('fof-best-answer.search.remove_solutions_from_main_search')),
 
             Schema\Boolean::make('showTagsInSearchResults')
                 ->get(fn () => (bool) $this->settings->get('fof-best-answer.search.display_tags')),

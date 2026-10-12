@@ -71,7 +71,7 @@ In post search, `is:solution` finds posts selected as a best answer.
 | Setting | Default | Effect |
 | --- | --- | --- |
 | Solution search | On | Adds a **Solutions** tab to the search modal. It searches discussions with a best answer and shows each result's best answer. |
-| Remove solutions from main search | Off | Excludes discussions with a best answer from the **Discussions** tab of the search modal, as if `-is:solved` were added to the query. |
+| Remove solutions from main search | Off | Excludes discussions with a best answer from the **Discussions** tab of the search modal, as if `-is:solved` were added to the query. Only applies while **Solution search** is on. |
 | Display tags in search results | On | Shows each discussion's tags in the **Solutions** tab. |
 
 ### Reminders

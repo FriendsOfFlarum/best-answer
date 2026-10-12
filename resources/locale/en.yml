@@ -35,7 +35,7 @@ fof-best-answer:
       solution_search: Solution search
       solution_search_help: Add a Solutions tab to the search modal that only searches discussions with a Best Answer.
       remove_solutions_from_main_search: Remove solutions from main search
-      remove_solutions_from_main_search_help: Exclude discussions with a Best Answer from the Discussions tab of the search modal.
+      remove_solutions_from_main_search_help: Exclude discussions with a Best Answer from the Discussions tab of the search modal. Only applies while Solution search is on.
       display_tags: Display tags in search results
       display_tags_help: Show the tags of each discussion in the Solutions search results.
       discussion_sidebar_jump_button: Display jump to Best Answer button in discussion sidebar
