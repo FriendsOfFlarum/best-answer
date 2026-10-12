@@ -78,7 +78,7 @@ export default [
         <h3>{app.translator.trans('fof-best-answer.admin.settings.label.reminders')}</h3>
         <p className="helpText">
           {app.translator.trans('fof-best-answer.admin.settings.label.reminders_notice')}{' '}
-          <a href="https://docs.flarum.org/console/#schedulerun" target="_blank">
+          <a href="https://docs.flarum.org/console/#schedule" target="_blank">
             {app.translator.trans('fof-best-answer.admin.settings.documentation')}
           </a>
         </p>
