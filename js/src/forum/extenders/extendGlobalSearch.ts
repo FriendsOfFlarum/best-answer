@@ -7,7 +7,8 @@ import SolutionSearchSource from '../components/SolutionSearchSource';
 export default function extendGlobalSearch() {
   extend(GlobalSearch.prototype, 'sourceItems', function (items: ItemList<GlobalSearchSource>) {
     if (app.forum.attribute<boolean>('solutionSearchEnabled')) {
-      items.add('solutions', new SolutionSearchSource(), 90);
+      // No priority: the first source is the modal's default tab, which stays core's discussions.
+      items.add('solutions', new SolutionSearchSource());
     }
   });
 }
