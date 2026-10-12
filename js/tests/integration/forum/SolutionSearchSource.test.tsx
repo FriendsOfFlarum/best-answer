@@ -20,12 +20,12 @@ function requestedFilter(request: jest.SpiedFunction<typeof app.request>) {
   return (request.mock.calls[0][0] as { params: { filter: Record<string, unknown> } }).params.filter;
 }
 
+afterEach(() => jest.restoreAllMocks());
+
 it('only asks the API for solved discussions matching the query', () => {
   const request = jest.spyOn(app, 'request').mockReturnValue(new Promise(() => {}));
 
   new SolutionSearchSource().search('Printer Jam', 3);
 
   expect(requestedFilter(request)).toEqual({ q: 'printer jam', 'solved-discussions': true });
-
-  request.mockRestore();
 });

@@ -3,6 +3,7 @@ import extractText from 'flarum/common/utils/extractText';
 import type Discussion from 'flarum/common/models/Discussion';
 import type { GlobalSearchSource } from 'flarum/forum/components/GlobalSearch';
 import type Mithril from 'mithril';
+import BestAnswerGambit from '../../common/gambits/BestAnswerGambit';
 
 export default class SolutionSearchSource implements GlobalSearchSource {
   protected results = new Map<string, Discussion[]>();
@@ -34,12 +35,8 @@ export default class SolutionSearchSource implements GlobalSearchSource {
     });
   }
 
-  /**
-   * Appends the `is:solved` gambit through the gambit manager, so the
-   * translated gambit key is used.
-   */
   solvedQuery(query: string): string {
-    return app.search.gambits.from('discussions', query, { 'solved-discussions': true });
+    return `${query} ${new BestAnswerGambit().fromFilter('', false)}`;
   }
 
   view(query: string): Array<Mithril.Vnode> {
