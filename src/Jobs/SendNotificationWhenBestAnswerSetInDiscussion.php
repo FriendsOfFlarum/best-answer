@@ -13,6 +13,7 @@ namespace FoF\BestAnswer\Jobs;
 
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\NotificationSyncer;
+use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 use Flarum\Queue\AbstractJob;
 use Flarum\User\User;
@@ -47,8 +48,11 @@ class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
             $notifications->sync(new Notification\AwardedBestAnswerBlueprint($this->discussion, $this->actor), [$bestAnswerAuthor]);
         }
 
-        // Send notifications to other participants of the discussion
-        $recipientsBuilder = User::whereIn('id', Post::select('user_id')->where('discussion_id', $this->discussion->id));
+        // Send notifications to the other users who have commented in the discussion and can still see it
+        $commenters = Post::select('user_id')
+            ->where('discussion_id', $this->discussion->id)
+            ->where('type', CommentPost::$type)
+            ->whereNull('hidden_at');
 
         $exclude = [$this->actor->id];
 
@@ -56,9 +60,11 @@ class SendNotificationWhenBestAnswerSetInDiscussion extends AbstractJob
             array_push($exclude, $bestAnswerAuthor->id);
         }
 
-        $recipients = $recipientsBuilder
+        $recipients = User::whereIn('id', $commenters)
             ->whereNotIn('id', $exclude)
-            ->get();
+            ->get()
+            // Visibility scopers take a single user, so no one query can find every user who can see the discussion.
+            ->filter(fn (User $user) => Discussion::whereVisibleTo($user)->whereKey($this->discussion->id)->exists());
 
         $notifications->sync(new Notification\BestAnswerSetInDiscussionBlueprint($this->discussion, $this->actor), $recipients->all());
     }
