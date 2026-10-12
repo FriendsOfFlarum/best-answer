@@ -122,6 +122,7 @@ return [
 
     (new Extend\SearchDriver(DatabaseSearchDriver::class))
         ->addFilter(DiscussionSearcher::class, Search\BestAnswerFilter::class)
+        ->addFilter(DiscussionSearcher::class, Search\QuestionFilter::class)
         ->addFilter(PostSearcher::class, Search\BestAnswerPostFilter::class),
 
     (new Extend\Conditional())
