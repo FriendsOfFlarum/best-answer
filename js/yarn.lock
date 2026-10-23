@@ -1086,10 +1086,10 @@
   resolved "https://registry.yarnpkg.com/@epic-web/invariant/-/invariant-1.0.0.tgz#1073e5dee6dd540410784990eb73e4acd25c9813"
   integrity sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==
 
-"@flarum/jest-config@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@flarum/jest-config/-/jest-config-2.0.2.tgz#d9baa94796a0facbe5a9eccaf324e77707c85508"
-  integrity sha512-V+FvD568F4Iyp80lZQo5YCXBuaodyD40243KyA35jZ8JnZgC9rurEMmJI18Xjsu7xhMiIdwbZkGJfrq1bjMFJA==
+"@flarum/jest-config@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@flarum/jest-config/-/jest-config-2.1.1.tgz#7a7a010d66c75230e990183e13fecd10db204835"
+  integrity sha512-55+ILQTmwa2FvFLlkfgm1J65A0uC4u5BQqgijketNFl6s/dFfpyLd2XxbxQICroUHQtRphp1KU4zPNqn/8fUEg==
   dependencies:
     "@types/jest" "^29.2.2"
     babel-jest "^29.3.1"
@@ -1098,7 +1098,7 @@
     clsx "^1.1.1"
     color-thief-browser "^2.0.2"
     dayjs "^1.10.7"
-    flarum-webpack-config "^3.0.0"
+    flarum-webpack-config "^3.1.0"
     flat "^5.0.2"
     focus-trap "^6.7.1"
     format-message "^6.2.4"
@@ -1106,9 +1106,9 @@
     jest-environment-jsdom "^29.3.1"
     jquery "^3.6.0"
     jquery.hotkeys "^0.1.0"
-    js-yaml "^4.3.1"
+    js-yaml "^4.3.2"
     jsdom "^24.0.0"
-    mithril "^2.2"
+    mithril "2.2.8"
     mithril-query "^4.0.1"
     nanoid "^3.3.18"
     punycode "^2.1.1"
@@ -2473,7 +2473,7 @@ entities@^6.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-6.0.1.tgz#c28c34a43379ca7f61d074130b2f5f7020a30694"
   integrity sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==
 
-envinfo@^7.14.0:
+envinfo@^7.21.0:
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.21.0.tgz#04a251be79f92548541f37d13c8b6f22940c3bae"
   integrity sha512-Lw7I8Zp5YKHFCXL7+Dz95g4CcbMEpgvqZNNq3AmlT5XAV6CgAAk6gyAMqn2zjw08K9BHfcNuKrMiCPLByGafow==
@@ -2705,10 +2705,10 @@ flarum-tsconfig@^2.0.0:
     "@types/throttle-debounce" "^2.1.0"
     dayjs "^1.10.4"
 
-flarum-webpack-config@^3.0.0, flarum-webpack-config@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/flarum-webpack-config/-/flarum-webpack-config-3.0.6.tgz#c2646ebd055f27fba32739c7740b66c341749811"
-  integrity sha512-W+XwQ8r0QFJk6njKSKWBirjt4MKrfp2ytdO8z2OQjgn0uDzNNlDXo1CgYRbAINWIOGPZv0a2+1dMP9zq/M/lMw==
+flarum-webpack-config@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/flarum-webpack-config/-/flarum-webpack-config-3.1.0.tgz#8d5d2f2a7f36447428f6d1469cefb025321084ff"
+  integrity sha512-pFM2YC30Pj0yt+AU4bU7qFMagX5J3453xVpbCXmgmf7yAYXt8E/eK2bl7P4HM54T+224wUF+38M2mywO+sJt1Q==
   dependencies:
     "@babel/core" "^7.29.6"
     "@babel/plugin-transform-object-assign" "^7.27.1"
@@ -2721,8 +2721,7 @@ flarum-webpack-config@^3.0.0, flarum-webpack-config@^3.0.6:
     babel-loader "^9.1.0"
     loader-utils "^1.4.0"
     schema-utils "^3.0.0"
-    typescript "^4.9.3"
-    webpack "^5.104.1"
+    typescript "^5.9.3"
     webpack-bundle-analyzer "^4.7.0"
 
 flat@^5.0.2:
@@ -2993,7 +2992,7 @@ iconv-lite@0.6.3:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-import-local@^3.0.2:
+import-local@^3.0.2, import-local@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/import-local/-/import-local-3.2.0.tgz#c3d5c745798c02a6f8b897726aba5100186ee260"
   integrity sha512-2SPlun1JUPWoM6t3F0dw0FkCF/jWY8kttcY4f599GLTSjh2OCuuhdTkJQsEcZzBqbXZGKMK2OqW1oZsjtf/gQA==
@@ -3573,7 +3572,7 @@ js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-js-yaml@^4.3.1:
+js-yaml@^4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.3.2.tgz#8e44fb14a2643c59726bb15787b5f1512cb3d3fb"
   integrity sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==
@@ -3865,10 +3864,10 @@ mithril-query@^4.0.1:
     pretty-html-log "1.1.1"
     yields-keycode "1.1.0"
 
-mithril@^2.2:
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/mithril/-/mithril-2.3.8.tgz#e6c74f0ffe909adc5682a05a220f6f80ceb88ff0"
-  integrity sha512-za/Yo7qXEckjm5syrSfaaI9Utf4tCUT3T1IOIYqH6Lrj7G0OZuYYLAY9SV4ygoaAf0+CNqU92MBt+7pmo53JVQ==
+mithril@2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/mithril/-/mithril-2.2.8.tgz#076410f6e5c1c36d039ee668690a9c6332f11a33"
+  integrity sha512-P9SP7y22qNdsKKGofrPMvQzTQvUjEH03eENeR5KXTj+rGFyvs+DqZyx3HS5c7K7EMOo0OYmcZnLEY/sc2ybLdQ==
 
 mrmime@^2.0.0:
   version "2.0.1"
@@ -4722,10 +4721,10 @@ typescript-coverage-report@^0.6.1:
     semantic-ui-react "^0.88.2"
     type-coverage-core "^2.17.2"
 
-typescript@^4.9.3, typescript@^4.9.5:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+typescript@^5.9.3:
+  version "5.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
+  integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
 
 uglify-js@^3.1.4:
   version "3.19.3"
@@ -4860,16 +4859,16 @@ webpack-bundle-analyzer@^4.7.0:
     sirv "^2.0.3"
     ws "^7.3.1"
 
-webpack-cli@^7.0.3:
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-7.0.3.tgz#62d3374b424bb4fabb27d088d8b2a9685b325b02"
-  integrity sha512-2E2C6A1e2El7791zQgTH7LPIuwLjRliow9OHS/qlJc9pwhZlCoL/uiwqd/1WSlXT83wJfmfDbkcqHXuXoPJZ3g==
+webpack-cli@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-7.2.3.tgz#becafbd777df5ff3e1a35ec398ad2ad54ec4d456"
+  integrity sha512-vDFU7jrfCctnN7jJQWPl+V26B51GLp11prVZXg50oeonsgeBzSTJEWmXkjHsOjTgMjlPOQM8GWLh33X9RN/0ow==
   dependencies:
     "@discoveryjs/json-ext" "^1.1.0"
     commander "^14.0.3"
     cross-spawn "^7.0.6"
-    envinfo "^7.14.0"
-    import-local "^3.0.2"
+    envinfo "^7.21.0"
+    import-local "^3.2.0"
     interpret "^3.1.1"
     rechoir "^0.8.0"
     webpack-merge "^6.0.1"
@@ -4888,7 +4887,7 @@ webpack-sources@^3.5.0:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.5.0.tgz#87bf7f5801a4e985b1f1c92b64b9620a02f76d08"
   integrity sha512-HPuy+uuoTCaaoEoI1LQ3JN9+vrPBvEesnnX1jADHy728cHSMlq4wUc4afYqahq2B1mhQVZxCXOkNTnXltr+2vQ==
 
-webpack@^5.104.1, webpack@^5.108.0:
+webpack@^5.108.0:
   version "5.108.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.108.0.tgz#f8bb9b554f25374e8dfa3e1b137b0791a56d7614"
   integrity sha512-Ln1JuYGPRTXcHECapSFSvACtHmWEN5sQqFJeLLGQ0057S7qzT2eXUz0MZUedtmIrNy3nJgnITSubIYKGED9jSQ==
