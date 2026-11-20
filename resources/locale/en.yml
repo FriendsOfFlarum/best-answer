@@ -112,3 +112,11 @@ flarum-audit:
       discussion:
         best_answer_set: Set {post} as best answer in {discussion}
         best_answer_unset: Unset best answer for {post} in {discussion}
+
+core:
+  email:
+    notification:
+      types:
+        awardedBestAnswer: Your posts being set as a best answer
+        bestAnswerInDiscussion: Best answers in discussions you took part in
+        selectBestAnswer: Reminders to select a best answer in your discussions
