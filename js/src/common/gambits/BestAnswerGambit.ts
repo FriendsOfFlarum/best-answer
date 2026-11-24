@@ -6,6 +6,10 @@ export default class BestAnswerGambit extends BooleanGambit {
     return app.translator.trans('fof-best-answer.lib.gambits.solved-discussions.key', {}, true);
   }
 
+  canonicalKey(): string {
+    return 'solved';
+  }
+
   filterKey(): string {
     return 'solved-discussions';
   }

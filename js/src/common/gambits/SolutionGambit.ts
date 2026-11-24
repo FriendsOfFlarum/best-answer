@@ -6,6 +6,10 @@ export default class SolutionGambit extends BooleanGambit {
     return app.translator.trans('fof-best-answer.lib.gambits.solution.key', {}, true);
   }
 
+  canonicalKey(): string {
+    return 'solution';
+  }
+
   filterKey(): string {
     return 'solution';
   }
