@@ -8,7 +8,7 @@
     "@flarum/prettier-config": "^1.0.0",
     "cross-env": "^10.1.0",
     "flarum-tsconfig": "^2.0.0",
-    "flarum-webpack-config": "^3.1.0",
+    "flarum-webpack-config": "^3.1.1",
     "mithril-query": "^4.0.1",
     "prettier": "^3.8.4",
     "typescript": "^5.9.3",

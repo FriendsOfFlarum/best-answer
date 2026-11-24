@@ -19,8 +19,8 @@
         }
     ],
     "require": {
-        "flarum/core": "^2.0.0",
-        "flarum/tags": "^2.0.0"
+        "flarum/core": "2.x-dev",
+        "flarum/tags": "^2.1.0-beta.1"
     },
     "authors": [
         {
@@ -64,6 +64,9 @@
                 "githubActions": true,
                 "backendTesting": true
             }
+        },
+        "branch-alias": {
+            "dev-2.x": "2.x-dev"
         }
     },
     "scripts": {
@@ -85,18 +88,18 @@
         "test:setup": "Sets up a database for use with integration tests. Execute this only once."
     },
     "require-dev": {
-        "flarum/phpstan": "^2.0.0",
-        "flarum/testing": "^2.0.0",
+        "flarum/phpstan": "^2.1.0-beta.1",
+        "flarum/testing": "^2.1.0-beta.1",
         "fof/user-directory": "^2.0.0",
-        "flarum/audit": "^2.0.0",
-        "flarum/realtime": "^2.0.0",
-        "flarum/deck": "^2.0.0"
+        "flarum/audit": "^2.1.0-beta.1",
+        "flarum/realtime": "^2.1.0-beta.1",
+        "flarum/deck": "^2.1.0-beta.1"
     },
     "autoload-dev": {
         "psr-4": {
             "FoF\\BestAnswer\\Tests\\": "tests/"
         }
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
