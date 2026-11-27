@@ -5,12 +5,10 @@ import UserCard from 'flarum/forum/components/UserCard';
 import Icon from 'flarum/common/components/Icon';
 
 import type Mithril from 'mithril';
-import type User from 'flarum/common/models/User';
 
 export default function addBestAnswerCountToUsers() {
   extend(UserCard.prototype, 'infoItems', function (items: ItemList<Mithril.Children>) {
-    // @ts-expect-error
-    const user = this.attrs.user as User;
+    const user = this.attrs.user;
 
     items.add(
       'best-answer-count',

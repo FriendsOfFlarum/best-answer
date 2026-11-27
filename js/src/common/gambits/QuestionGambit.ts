@@ -6,6 +6,10 @@ export default class QuestionGambit extends BooleanGambit {
     return app.translator.trans('fof-best-answer.lib.gambits.qna.key', {}, true);
   }
 
+  canonicalKey(): string {
+    return 'question';
+  }
+
   filterKey(): string {
     return 'qna';
   }
